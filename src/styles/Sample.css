@@ -1,0 +1,49 @@
+/* <div className="outerBox">
+<div className="firstPosition"></div>
+<div className="secondPosition"></div>
+</div> */
+
+.outerBox {
+  height: 50vw;
+  width: 50vw;
+  display: flex;
+  background: blueviolet;
+  --color1: green;
+  --color2: blueviolet;
+}
+
+.firstPosition {
+  height: 25vmin;
+  width: 25vmin;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  background: var(--color1);
+  z-index: 4;
+}
+
+.secondPosition {
+  height: 25vmin;
+  width: 25vmin;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  transform: translate(100%, 0);
+  background: var(--color2);
+}
+
+.animate {
+  animation-name: moveSquare;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes moveSquare {
+  0% {
+  }
+
+  100% {
+    transform: translate(100%, 0);
+  }
+}

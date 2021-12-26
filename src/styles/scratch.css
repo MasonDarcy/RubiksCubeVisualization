@@ -1,0 +1,111 @@
+.scene {
+  perspective: calc(var(--perspective, 800) * 1px);
+  transform-style: preserve-3d;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  --plain-height: 100;
+  --plain-width: 100;
+  --x-rotation: -24;
+  --y-rotation: -24;
+  --centroid: 8;
+}
+
+.plain {
+  background: rgba(162, 25, 230, 0.25);
+
+  height: calc(var(--plain-height, 25) * 1vmin);
+  width: calc(var(--plain-width, 25) * 1vmin);
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--x-rotation, -25) * 1deg))
+    rotateY(calc(var(--y-rotation, -25) * 1deg)) rotateX(90deg);
+}
+
+.shift {
+  animation: move 5s infinite;
+}
+
+@keyframes move {
+  0% {
+    transform: translate(-50%, -50%) translateZ(calc(var(--centroid) * 1vmin));
+  }
+  50% {
+    transform: translate(-50%, -50%) translateZ(calc(var(--centroid) * 1vmin));
+    border: 1px solid green;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) translateZ(calc(var(--centroid) * 1vmin));
+  }
+}
+
+.container {
+  --width: 20;
+  --height: calc(var(--centroid) * 2);
+  --depth: 15;
+  text-align: center;
+  vertical-align: middle;
+  height: calc(var(--depth) * 1vmin);
+  width: calc(var(--width) * 1vmin);
+  top: 50%;
+  left: 50%;
+  transform-style: preserve-3d;
+  position: absolute;
+  transform: translate(-50%, -50%) translateZ(calc(var(--centroid) * 1vmin));
+  background: rgba(204, 14, 14, 0.1);
+}
+
+.container > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  border: 1px solid lightcyan;
+  background: rgba(18, 195, 240, 0.1);
+  top: 50%;
+  left: 50%;
+}
+
+.container > div:nth-of-type(1),
+.container > div:nth-of-type(2) {
+  height: calc(var(--height) * 1vmin);
+  width: calc(var(--width) * 1vmin);
+  transform: translate(-50%, -50%) rotateX(-90deg)
+    translate3d(0, 0, calc((var(--depth) / 2) * 1vmin));
+}
+
+.container > div:nth-of-type(2) {
+  transform: translate(-50%, -50%) rotateX(-90deg)
+    translate3d(0, 0, calc((var(--depth) / 2) * -1vmin));
+}
+
+.container > div:nth-of-type(3),
+.container > div:nth-of-type(4) {
+  height: calc(var(--height) * 1vmin);
+  width: calc(var(--depth) * 1vmin);
+  --rotation: -90;
+  transform: translate(-50%, -50%) rotateX(calc(var(--rotation) * 1deg))
+    rotateY(calc(var(--rotation) * 1deg))
+    translateZ(calc((var(--width) / 2) * 1vmin));
+}
+
+.container > div:nth-of-type(4) {
+  --rotation: 90;
+  transform: translate(-50%, -50%) rotateX(calc(var(--rotation) * 1deg))
+    rotateY(calc(var(--rotation) * 1deg))
+    translateZ(calc((var(--width) / 2) * 1vmin));
+}
+
+.container > div:nth-of-type(5),
+.container > div:nth-of-type(6) {
+  height: calc(var(--depth) * 1vmin);
+  width: calc(var(--width) * 1vmin);
+
+  transform: translate(-50%, -50%) translateZ(calc((var(--centroid) * 1vmin)));
+}
+
+.container > div:nth-of-type(6) {
+  transform: translate(-50%, -50%) translateZ(calc((var(--centroid) * -1vmin)));
+}

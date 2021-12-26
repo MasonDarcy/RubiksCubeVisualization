@@ -1,0 +1,1880 @@
+.seen {
+  perspective: calc(var(--perspective, 800) * 1px);
+  transform-style: preserve-3d;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  --plain-height: 100;
+  --plain-width: 100;
+  --x-rotation: -24;
+  --y-rotation: 120;
+  --horizontalCentroid: 36;
+  --verticalCentroid: 36;
+
+  /*Cube 1---------------------------*/
+  --color1: grey;
+  --color2: white;
+  --color3: grey;
+  --color4: green;
+  --color5: red;
+  --color6: grey;
+  /*Cube 2---------------------------*/
+  --color7: grey;
+  --color8: white;
+  --color9: grey;
+  --color10: grey;
+  --color11: red;
+  --color12: grey;
+  /*Cube 3---------------------------*/
+  --color13: grey;
+  --color14: white;
+  --color15: blue;
+  --color16: grey;
+  --color17: red;
+  --color18: grey;
+  /*Cube 4---------------------------*/
+  --color19: grey;
+  --color20: grey;
+  --color21: grey;
+  --color22: green;
+  --color23: red;
+  --color24: grey;
+  /*Cube 5---------------------------*/
+  --color25: grey;
+  --color26: grey;
+  --color27: grey;
+  --color28: grey;
+  --color29: red;
+  --color30: grey;
+  /*Cube 6---------------------------*/
+  --color31: grey;
+  --color32: grey;
+  --color33: blue;
+  --color34: grey;
+  --color35: red;
+  --color36: grey;
+  /*Cube 7---------------------------*/
+  --color37: yellow;
+  --color38: grey;
+  --color39: grey;
+  --color40: green;
+  --color41: red;
+  --color42: grey;
+  /*Cube 8---------------------------*/
+  --color43: yellow;
+  --color44: grey;
+  --color45: grey;
+  --color46: grey;
+  --color47: red;
+  --color48: grey;
+  /*Cube 9---------------------------*/
+  --color49: yellow;
+  --color50: grey;
+  --color51: blue;
+  --color52: grey;
+  --color53: red;
+  --color54: grey;
+  /*2nd row ------------------------------------------------------------*/
+  /*Cube 10---------------------------*/
+  --color55: grey;
+  --color56: white;
+  --color57: grey;
+  --color58: green;
+  --color59: grey;
+  --color60: grey;
+  /*Cube 11---------------------------*/
+  --color61: grey;
+  --color62: white;
+  --color63: grey;
+  --color64: grey;
+  --color65: grey;
+  --color66: grey;
+  /*Cube 12---------------------------*/
+  --color67: grey;
+  --color68: white;
+  --color69: blue;
+  --color70: grey;
+  --color71: grey;
+  --color72: grey;
+  /*Cube 13---------------------------*/
+  --color73: grey;
+  --color74: grey;
+  --color75: grey;
+  --color76: green;
+  --color77: grey;
+  --color78: grey;
+  /*Cube 14---------------------------*/
+  --color79: grey;
+  --color80: grey;
+  --color81: grey;
+  --color82: grey;
+  --color83: grey;
+  --color84: grey;
+  /*Cube 15---------------------------*/
+  --color85: grey;
+  --color86: grey;
+  --color87: blue;
+  --color88: grey;
+  --color89: grey;
+  --color90: grey;
+  /*Cube 16---------------------------*/
+  --color91: yellow;
+  --color92: grey;
+  --color93: grey;
+  --color94: green;
+  --color95: grey;
+  --color96: grey;
+  /*Cube 17---------------------------*/
+  --color97: yellow;
+  --color98: grey;
+  --color99: grey;
+  --color100: grey;
+  --color101: grey;
+  --color102: grey;
+  /*Cube 18---------------------------*/
+  --color103: yellow;
+  --color104: grey;
+  --color105: blue;
+  --color106: grey;
+  --color107: grey;
+  --color108: grey;
+  /*Bottom row ----------------------*/
+  /*Cube 19---------------------------*/
+  --color109: grey;
+  --color110: white;
+  --color111: grey;
+  --color112: green;
+  --color113: grey;
+  --color114: orange;
+  /*Cube 20---------------------------*/
+  --color115: grey;
+  --color116: white;
+  --color117: grey;
+  --color118: grey;
+  --color119: grey;
+  --color120: orange;
+  /*Cube 21---------------------------*/
+  --color121: grey;
+  --color122: white;
+  --color123: blue;
+  --color124: grey;
+  --color125: grey;
+  --color126: orange;
+  /*Cube 22---------------------------*/
+  --color127: grey;
+  --color128: grey;
+  --color129: grey;
+  --color130: green;
+  --color131: grey;
+  --color132: orange;
+  /*Cube 23---------------------------*/
+  --color133: grey;
+  --color134: grey;
+  --color135: grey;
+  --color136: grey;
+  --color137: grey;
+  --color138: orange;
+  /*Cube 24---------------------------*/
+  --color139: grey;
+  --color140: grey;
+  --color141: blue;
+  --color142: grey;
+  --color143: grey;
+  --color144: orange;
+  /*Cube 25---------------------------*/
+  --color145: yellow;
+  --color146: grey;
+  --color147: grey;
+  --color148: green;
+  --color149: grey;
+  --color150: orange;
+  /*Cube 26---------------------------*/
+  --color151: yellow;
+  --color152: grey;
+  --color153: grey;
+  --color154: grey;
+  --color155: grey;
+  --color156: orange;
+  /*Cube 27---------------------------*/
+  --color157: yellow;
+  --color158: grey;
+  --color159: blue;
+  --color160: grey;
+  --color161: grey;
+  --color162: orange;
+}
+
+.floor {
+  background: rgba(162, 25, 230, 0.25);
+
+  height: calc(var(--plain-height, 25) * 1vmin);
+  width: calc(var(--plain-width, 25) * 1vmin);
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--x-rotation, -25) * 1deg))
+    rotateY(calc(var(--y-rotation, -25) * 1deg)) rotateX(90deg);
+}
+
+.rotatedFloor {
+  background: rgba(162, 25, 230, 0.25);
+
+  height: calc(var(--plain-height, 25) * 1vmin);
+  width: calc(var(--plain-width, 25) * 1vmin);
+  transform-style: preserve-3d;
+  transform: translate(-25%, -25%) rotateX(calc(var(--x-rotation, -25) * 1deg))
+    rotateY(calc(var(--y-rotation, -25) * 1deg));
+}
+
+.topHorizontalPlane {
+  --width: 36;
+  --height: calc(var(--horizontalCentroid) * 2);
+  --depth: 36;
+  --cubeHeight: 36;
+  text-align: center;
+  vertical-align: middle;
+  height: calc(var(--depth) * 1vmin);
+  width: calc(var(--width) * 1vmin);
+  top: 50%;
+  left: 50%;
+  transform-style: preserve-3d;
+  position: absolute;
+  transform: translate(-50%, -50%)
+    translateZ(calc(var(--horizontalCentroid) * 1vmin));
+  background: rgba(236, 205, 205, 0.3);
+}
+
+.middleHorizontalPlane {
+  --width: 36;
+  --height: calc(var(--horizontalCentroid) * 2 / 3 * 1vmin);
+  --depth: 36;
+  --cubeHeight: 36;
+  text-align: center;
+  vertical-align: middle;
+  height: calc(var(--depth) * 1vmin);
+  width: calc(var(--width) * 1vmin);
+  top: 50%;
+  left: 50%;
+  transform-style: preserve-3d;
+  position: absolute;
+  transform: translate(-50%, -50%)
+    translateZ(calc(var(--horizontalCentroid) * 2 / 3 * 1vmin));
+  background: rgba(236, 205, 205, 0.3);
+}
+
+.bottomHorizontalPlane {
+  --width: 36;
+  --height: calc(var(--horizontalCentroid) * 2 / 3 * 1vmin);
+  --depth: 36;
+  --cubeHeight: 36;
+  text-align: center;
+  vertical-align: middle;
+  height: calc(var(--depth) * 1vmin);
+  width: calc(var(--width) * 1vmin);
+  top: 50%;
+  left: 50%;
+  transform-style: preserve-3d;
+  position: absolute;
+  transform: translate(-50%, -50%)
+    translateZ(calc(var(--horizontalCentroid) * 1 / 3 * 1vmin));
+  background: rgba(236, 205, 205, 0.3);
+}
+
+.topHorizontalPlane > div {
+  /* display: none; */
+
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  /* border: 1px solid lightcyan; */
+  background: rgba(18, 195, 240, 0.1);
+}
+
+.middleHorizontalPlane > div {
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  /* border: 1px solid lightcyan; */
+  background: rgba(18, 195, 240, 0.1);
+}
+
+.bottomHorizontalPlane > div {
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  /* border: 1px solid lightcyan; */
+  background: rgba(18, 195, 240, 0.1);
+}
+
+/*Position 1 cube horizontal-----------------------------------------------------------*/
+
+.topHorizontalPlane > div:nth-child(n + 1):nth-child(-n + 6) {
+}
+
+.topHorizontalPlane > div:nth-of-type(1),
+.topHorizontalPlane > div:nth-of-type(2) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) / 3 * 1vmin));
+  background: var(--color1);
+}
+
+.topHorizontalPlane > div:nth-of-type(2) {
+  transform: translate(0%, -50%) rotateX(-90deg);
+  background: var(--color2);
+}
+
+.topHorizontalPlane > div:nth-of-type(3),
+.topHorizontalPlane > div:nth-of-type(4) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--depth) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color3);
+}
+
+.topHorizontalPlane > div:nth-of-type(4) {
+  transform: translate(-50%, 0) rotateY(90deg);
+  background: var(--color4);
+}
+
+.topHorizontalPlane > div:nth-of-type(5),
+.topHorizontalPlane > div:nth-of-type(6) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin));
+  background: var(--color5);
+}
+
+.topHorizontalPlane > div:nth-of-type(6) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin));
+  background: var(--color6);
+}
+
+/*Position 2 cube ----------------------------------------------------------------------------*/
+.topHorizontalPlane > div:nth-child(n + 7):nth-child(-n + 12) {
+}
+
+.topHorizontalPlane > div:nth-of-type(7),
+.topHorizontalPlane > div:nth-of-type(8) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) / 3 * 1vmin))
+    translateX(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color7);
+}
+
+.topHorizontalPlane > div:nth-of-type(8) {
+  background: var(--color8);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateX(calc(var(--width) * 1 / 3 * 1vmin));
+}
+
+.topHorizontalPlane > div:nth-of-type(9),
+.topHorizontalPlane > div:nth-of-type(10) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--depth) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 2 / 3 * 1vmin));
+  background: var(--color9);
+}
+
+.topHorizontalPlane > div:nth-of-type(10) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color10);
+}
+
+.topHorizontalPlane > div:nth-of-type(11),
+.topHorizontalPlane > div:nth-of-type(12) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateX(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color11);
+}
+
+.topHorizontalPlane > div:nth-of-type(12) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateX(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color12);
+}
+
+/*Position 3 cube ----------------------------------------------------------------------------*/
+.topHorizontalPlane > div:nth-child(n + 13):nth-child(-n + 18) {
+}
+
+.topHorizontalPlane > div:nth-of-type(13),
+.topHorizontalPlane > div:nth-of-type(14) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color13);
+}
+
+.topHorizontalPlane > div:nth-of-type(14) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateX(calc(var(--width) * 2 / 3 * 1vmin));
+  background: var(--color14);
+}
+
+.topHorizontalPlane > div:nth-of-type(15),
+.topHorizontalPlane > div:nth-of-type(16) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--depth) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 1vmin));
+  background: var(--color15);
+}
+
+.topHorizontalPlane > div:nth-of-type(16) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 1vmin));
+  background: var(--color16);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 2 / 3 * 1vmin));
+}
+
+.topHorizontalPlane > div:nth-of-type(17),
+.topHorizontalPlane > div:nth-of-type(18) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--cubeHeight) / 6 * 1vmin));
+  background: var(--color17);
+}
+
+.topHorizontalPlane > div:nth-of-type(18) {
+  transform: translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--cubeHeight) / 6 * -1vmin));
+  background: var(--color18);
+}
+
+/*Position 4 cube-----------------------------------------------------------------------*/
+.topHorizontalPlane > div:nth-child(n + 19):nth-child(-n + 24) {
+}
+
+.topHorizontalPlane > div:nth-of-type(19),
+.topHorizontalPlane > div:nth-of-type(20) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color19);
+}
+
+.topHorizontalPlane > div:nth-of-type(20) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color20);
+}
+.topHorizontalPlane > div:nth-of-type(21),
+.topHorizontalPlane > div:nth-of-type(22) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color21);
+}
+
+.topHorizontalPlane > div:nth-of-type(22) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color22);
+}
+
+.topHorizontalPlane > div:nth-of-type(23),
+.topHorizontalPlane > div:nth-of-type(24) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color23);
+}
+
+.topHorizontalPlane > div:nth-of-type(24) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color24);
+}
+
+/*Position 5 cube-----------------------------------------------------------------------*/
+.topHorizontalPlane > div:nth-child(n + 25):nth-child(-n + 30) {
+}
+
+.topHorizontalPlane > div:nth-of-type(25),
+.topHorizontalPlane > div:nth-of-type(26) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color25);
+}
+
+.topHorizontalPlane > div:nth-of-type(26) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color26);
+}
+.topHorizontalPlane > div:nth-of-type(27),
+.topHorizontalPlane > div:nth-of-type(28) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color27);
+}
+
+.topHorizontalPlane > div:nth-of-type(28) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color28);
+}
+
+.topHorizontalPlane > div:nth-of-type(29),
+.topHorizontalPlane > div:nth-of-type(30) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color29);
+}
+
+.topHorizontalPlane > div:nth-of-type(30) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color30);
+}
+
+/*Position 6 cube-----------------------------------------------------------------------*/
+.topHorizontalPlane > div:nth-child(n + 31):nth-child(-n + 36) {
+}
+
+.topHorizontalPlane > div:nth-of-type(31),
+.topHorizontalPlane > div:nth-of-type(32) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color31);
+}
+
+.topHorizontalPlane > div:nth-of-type(32) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color32);
+}
+.topHorizontalPlane > div:nth-of-type(33),
+.topHorizontalPlane > div:nth-of-type(34) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color33);
+}
+
+.topHorizontalPlane > div:nth-of-type(34) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color34);
+}
+
+.topHorizontalPlane > div:nth-of-type(35),
+.topHorizontalPlane > div:nth-of-type(36) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color35);
+}
+
+.topHorizontalPlane > div:nth-of-type(36) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color36);
+}
+
+/*Position 7 cube-----------------------------------------------------------------------*/
+.topHorizontalPlane > div:nth-child(n + 37):nth-child(-n + 42) {
+}
+
+.topHorizontalPlane > div:nth-of-type(37),
+.topHorizontalPlane > div:nth-of-type(38) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 1vmin));
+  background: var(--color37);
+}
+
+.topHorizontalPlane > div:nth-of-type(38) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color38);
+}
+.topHorizontalPlane > div:nth-of-type(39),
+.topHorizontalPlane > div:nth-of-type(40) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color39);
+}
+
+.topHorizontalPlane > div:nth-of-type(40) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color40);
+}
+
+.topHorizontalPlane > div:nth-of-type(41),
+.topHorizontalPlane > div:nth-of-type(42) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color41);
+}
+
+.topHorizontalPlane > div:nth-of-type(42) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color42);
+}
+
+/*cube 8---------------------------------------------------------------------------*/
+.topHorizontalPlane > div:nth-child(n + 43):nth-child(-n + 48) {
+}
+
+.topHorizontalPlane > div:nth-of-type(43),
+.topHorizontalPlane > div:nth-of-type(44) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 3 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color43);
+}
+
+.topHorizontalPlane > div:nth-of-type(44) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+
+  background: var(--color44);
+}
+.topHorizontalPlane > div:nth-of-type(45),
+.topHorizontalPlane > div:nth-of-type(46) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color45);
+}
+
+.topHorizontalPlane > div:nth-of-type(46) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color46);
+}
+
+.topHorizontalPlane > div:nth-of-type(47),
+.topHorizontalPlane > div:nth-of-type(48) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color47);
+}
+
+.topHorizontalPlane > div:nth-of-type(48) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color48);
+}
+
+/*cube 9---------------------------------------------------------------------------*/
+.topHorizontalPlane > div:nth-child(n + 49):nth-child(-n + 54) {
+}
+
+.topHorizontalPlane > div:nth-of-type(49),
+.topHorizontalPlane > div:nth-of-type(50) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 3 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color49);
+}
+
+.topHorizontalPlane > div:nth-of-type(50) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color50);
+}
+.topHorizontalPlane > div:nth-of-type(51),
+.topHorizontalPlane > div:nth-of-type(52) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color51);
+}
+
+.topHorizontalPlane > div:nth-of-type(52) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color52);
+}
+
+.topHorizontalPlane > div:nth-of-type(53),
+.topHorizontalPlane > div:nth-of-type(54) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color53);
+}
+
+.topHorizontalPlane > div:nth-of-type(54) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color54);
+}
+
+/*Middle horizontal plane----------------------------------*/
+
+.middleHorizontalPlane > div:nth-child(n + 1):nth-child(-n + 6) {
+}
+
+.middleHorizontalPlane > div:nth-of-type(1),
+.middleHorizontalPlane > div:nth-of-type(2) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) / 3 * 1vmin));
+  background: var(--color55);
+}
+
+.middleHorizontalPlane > div:nth-of-type(2) {
+  transform: translate(0%, -50%) rotateX(-90deg);
+  background: var(--color56);
+}
+
+.middleHorizontalPlane > div:nth-of-type(3),
+.middleHorizontalPlane > div:nth-of-type(4) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--depth) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color57);
+}
+
+.middleHorizontalPlane > div:nth-of-type(4) {
+  transform: translate(-50%, 0) rotateY(90deg);
+  background: var(--color58);
+}
+
+.middleHorizontalPlane > div:nth-of-type(5),
+.middleHorizontalPlane > div:nth-of-type(6) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin));
+  background: var(--color59);
+}
+
+.middleHorizontalPlane > div:nth-of-type(6) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin));
+  background: var(--color60);
+}
+
+/*Position 2 cube ----------------------------------------------------------------------------*/
+.middleHorizontalPlane > div:nth-child(n + 7):nth-child(-n + 12) {
+}
+
+.middleHorizontalPlane > div:nth-of-type(7),
+.middleHorizontalPlane > div:nth-of-type(8) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) / 3 * 1vmin))
+    translateX(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color61);
+}
+
+.middleHorizontalPlane > div:nth-of-type(8) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateX(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color62);
+}
+
+.middleHorizontalPlane > div:nth-of-type(9),
+.middleHorizontalPlane > div:nth-of-type(10) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--depth) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 2 / 3 * 1vmin));
+  background: var(--color63);
+}
+
+.middleHorizontalPlane > div:nth-of-type(10) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color64);
+}
+
+.middleHorizontalPlane > div:nth-of-type(11),
+.middleHorizontalPlane > div:nth-of-type(12) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateX(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color65);
+}
+
+.middleHorizontalPlane > div:nth-of-type(12) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateX(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color66);
+}
+
+/*Position 3 cube ----------------------------------------------------------------------------*/
+.middleHorizontalPlane > div:nth-child(n + 13):nth-child(-n + 18) {
+}
+
+.middleHorizontalPlane > div:nth-of-type(13),
+.middleHorizontalPlane > div:nth-of-type(14) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color67);
+}
+
+.middleHorizontalPlane > div:nth-of-type(14) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateX(calc(var(--width) * 2 / 3 * 1vmin));
+  background: var(--color68);
+}
+
+.middleHorizontalPlane > div:nth-of-type(15),
+.middleHorizontalPlane > div:nth-of-type(16) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--depth) / 3 * 1vmin);
+
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 1vmin));
+  background: var(--color69);
+}
+
+.middleHorizontalPlane > div:nth-of-type(16) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 2 / 3 * 1vmin));
+  background: var(--color70);
+}
+
+.middleHorizontalPlane > div:nth-of-type(17),
+.middleHorizontalPlane > div:nth-of-type(18) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--cubeHeight) / 6 * 1vmin));
+  background: var(--color71);
+}
+
+.middleHorizontalPlane > div:nth-of-type(18) {
+  transform: translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--cubeHeight) / 6 * -1vmin));
+  background: var(--color72);
+}
+
+/*Position 4 cube-----------------------------------------------------------------------*/
+.middleHorizontalPlane > div:nth-child(n + 19):nth-child(-n + 24) {
+}
+
+.middleHorizontalPlane > div:nth-of-type(19),
+.middleHorizontalPlane > div:nth-of-type(20) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color73);
+}
+
+.middleHorizontalPlane > div:nth-of-type(20) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color74);
+}
+.middleHorizontalPlane > div:nth-of-type(21),
+.middleHorizontalPlane > div:nth-of-type(22) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color75);
+}
+
+.middleHorizontalPlane > div:nth-of-type(22) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color76);
+}
+
+.middleHorizontalPlane > div:nth-of-type(23),
+.middleHorizontalPlane > div:nth-of-type(24) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color77);
+}
+
+.middleHorizontalPlane > div:nth-of-type(24) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color78);
+}
+
+/*Position 5 cube-----------------------------------------------------------------------*/
+.middleHorizontalPlane > div:nth-child(n + 25):nth-child(-n + 30) {
+}
+
+.middleHorizontalPlane > div:nth-of-type(25),
+.middleHorizontalPlane > div:nth-of-type(26) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color79);
+}
+
+.middleHorizontalPlane > div:nth-of-type(26) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color80);
+}
+.middleHorizontalPlane > div:nth-of-type(27),
+.middleHorizontalPlane > div:nth-of-type(28) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color81);
+}
+
+.middleHorizontalPlane > div:nth-of-type(28) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color82);
+}
+
+.middleHorizontalPlane > div:nth-of-type(29),
+.middleHorizontalPlane > div:nth-of-type(30) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color83);
+}
+
+.middleHorizontalPlane > div:nth-of-type(30) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color84);
+}
+
+/*Position 6 cube-----------------------------------------------------------------------*/
+.middleHorizontalPlane > div:nth-child(n + 31):nth-child(-n + 36) {
+}
+
+.middleHorizontalPlane > div:nth-of-type(31),
+.middleHorizontalPlane > div:nth-of-type(32) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color85);
+}
+
+.middleHorizontalPlane > div:nth-of-type(32) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color86);
+}
+.middleHorizontalPlane > div:nth-of-type(33),
+.middleHorizontalPlane > div:nth-of-type(34) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color87);
+}
+
+.middleHorizontalPlane > div:nth-of-type(34) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color88);
+}
+
+.middleHorizontalPlane > div:nth-of-type(35),
+.middleHorizontalPlane > div:nth-of-type(36) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color89);
+}
+
+.middleHorizontalPlane > div:nth-of-type(36) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color90);
+}
+
+/*Position 7 cube-----------------------------------------------------------------------*/
+.middleHorizontalPlane > div:nth-child(n + 37):nth-child(-n + 42) {
+}
+
+.middleHorizontalPlane > div:nth-of-type(37),
+.middleHorizontalPlane > div:nth-of-type(38) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 1vmin));
+  background: var(--color91);
+}
+
+.middleHorizontalPlane > div:nth-of-type(38) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color92);
+}
+.middleHorizontalPlane > div:nth-of-type(39),
+.middleHorizontalPlane > div:nth-of-type(40) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color93);
+}
+
+.middleHorizontalPlane > div:nth-of-type(40) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color94);
+}
+
+.middleHorizontalPlane > div:nth-of-type(41),
+.middleHorizontalPlane > div:nth-of-type(42) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color95);
+}
+
+.middleHorizontalPlane > div:nth-of-type(42) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color96);
+}
+
+/*cube 8---------------------------------------------------------------------------*/
+.middleHorizontalPlane > div:nth-child(n + 43):nth-child(-n + 48) {
+}
+
+.middleHorizontalPlane > div:nth-of-type(43),
+.middleHorizontalPlane > div:nth-of-type(44) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 3 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color97);
+}
+
+.middleHorizontalPlane > div:nth-of-type(44) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color98);
+}
+.middleHorizontalPlane > div:nth-of-type(45),
+.middleHorizontalPlane > div:nth-of-type(46) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color99);
+}
+
+.middleHorizontalPlane > div:nth-of-type(46) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color100);
+}
+
+.middleHorizontalPlane > div:nth-of-type(47),
+.middleHorizontalPlane > div:nth-of-type(48) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color101);
+}
+
+.middleHorizontalPlane > div:nth-of-type(48) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color102);
+}
+
+/*cube 9---------------------------------------------------------------------------*/
+.middleHorizontalPlane > div:nth-child(n + 49):nth-child(-n + 54) {
+}
+
+.middleHorizontalPlane > div:nth-of-type(49),
+.middleHorizontalPlane > div:nth-of-type(50) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 3 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color103);
+}
+
+.middleHorizontalPlane > div:nth-of-type(50) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color104);
+}
+.middleHorizontalPlane > div:nth-of-type(51),
+.middleHorizontalPlane > div:nth-of-type(52) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color105);
+}
+
+.middleHorizontalPlane > div:nth-of-type(52) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color106);
+}
+
+.middleHorizontalPlane > div:nth-of-type(53),
+.middleHorizontalPlane > div:nth-of-type(54) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color107);
+}
+
+.middleHorizontalPlane > div:nth-of-type(54) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color108);
+}
+
+/*Bottom horizontal plane----------------------------------*/
+
+.bottomHorizontalPlane > div:nth-child(n + 1):nth-child(-n + 6) {
+}
+
+.bottomHorizontalPlane > div:nth-of-type(1),
+.bottomHorizontalPlane > div:nth-of-type(2) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) / 3 * 1vmin));
+  background: var(--color109);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(2) {
+  transform: translate(0%, -50%) rotateX(-90deg);
+  background: var(--color110);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(3),
+.bottomHorizontalPlane > div:nth-of-type(4) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--depth) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color111);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(4) {
+  transform: translate(-50%, 0) rotateY(90deg);
+  background: var(--color112);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(5),
+.bottomHorizontalPlane > div:nth-of-type(6) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin));
+  background: var(--color113);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(6) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin));
+  background: var(--color114);
+}
+
+/*Position 2 cube ----------------------------------------------------------------------------*/
+.bottomHorizontalPlane > div:nth-child(n + 7):nth-child(-n + 12) {
+}
+
+.bottomHorizontalPlane > div:nth-of-type(7),
+.bottomHorizontalPlane > div:nth-of-type(8) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) / 3 * 1vmin))
+    translateX(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color115);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(8) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateX(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color116);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(9),
+.bottomHorizontalPlane > div:nth-of-type(10) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--depth) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 2 / 3 * 1vmin));
+  background: var(--color117);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(10) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color118);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(11),
+.bottomHorizontalPlane > div:nth-of-type(12) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateX(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color119);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(12) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateX(calc(var(--width) * 1 / 3 * 1vmin));
+  background: var(--color120);
+}
+
+/*Position 3 cube ----------------------------------------------------------------------------*/
+.bottomHorizontalPlane > div:nth-child(n + 13):nth-child(-n + 18) {
+}
+
+.bottomHorizontalPlane > div:nth-of-type(13),
+.bottomHorizontalPlane > div:nth-of-type(14) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color121);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(14) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateX(calc(var(--width) * 2 / 3 * 1vmin));
+  background: var(--color122);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(15),
+.bottomHorizontalPlane > div:nth-of-type(16) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--depth) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 1vmin));
+  background: var(--color123);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(16) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 2 / 3 * 1vmin));
+  background: var(--color124);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(17),
+.bottomHorizontalPlane > div:nth-of-type(18) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--cubeHeight) / 6 * 1vmin));
+  background: var(--color125);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(18) {
+  transform: translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--cubeHeight) / 6 * -1vmin));
+  background: var(--color126);
+}
+
+/*Position 4 cube-----------------------------------------------------------------------*/
+.bottomHorizontalPlane > div:nth-child(n + 19):nth-child(-n + 24) {
+}
+
+.bottomHorizontalPlane > div:nth-of-type(19),
+.bottomHorizontalPlane > div:nth-of-type(20) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color127);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(20) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color128);
+}
+.bottomHorizontalPlane > div:nth-of-type(21),
+.bottomHorizontalPlane > div:nth-of-type(22) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color129);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(22) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color130);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(23),
+.bottomHorizontalPlane > div:nth-of-type(24) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color131);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(24) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color132);
+}
+
+/*Position 5 cube-----------------------------------------------------------------------*/
+.bottomHorizontalPlane > div:nth-child(n + 25):nth-child(-n + 30) {
+}
+
+.bottomHorizontalPlane > div:nth-of-type(25),
+.bottomHorizontalPlane > div:nth-of-type(26) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color133);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(26) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color134);
+}
+.bottomHorizontalPlane > div:nth-of-type(27),
+.bottomHorizontalPlane > div:nth-of-type(28) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color135);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(28) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color136);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(29),
+.bottomHorizontalPlane > div:nth-of-type(30) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color137);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(30) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color138);
+}
+
+/*Position 6 cube-----------------------------------------------------------------------*/
+.bottomHorizontalPlane > div:nth-child(n + 31):nth-child(-n + 36) {
+}
+
+.bottomHorizontalPlane > div:nth-of-type(31),
+.bottomHorizontalPlane > div:nth-of-type(32) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color139);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(32) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color140);
+}
+.bottomHorizontalPlane > div:nth-of-type(33),
+.bottomHorizontalPlane > div:nth-of-type(34) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color141);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(34) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color142);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(35),
+.bottomHorizontalPlane > div:nth-of-type(36) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color143);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(36) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 1 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color144);
+}
+
+/*Position 7 cube-----------------------------------------------------------------------*/
+.bottomHorizontalPlane > div:nth-child(n + 37):nth-child(-n + 42) {
+}
+
+.bottomHorizontalPlane > div:nth-of-type(37),
+.bottomHorizontalPlane > div:nth-of-type(38) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 1vmin));
+  background: var(--color145);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(38) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color146);
+}
+.bottomHorizontalPlane > div:nth-of-type(39),
+.bottomHorizontalPlane > div:nth-of-type(40) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color147);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(40) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color148);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(41),
+.bottomHorizontalPlane > div:nth-of-type(42) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color149);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(42) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color150);
+}
+
+/*cube 8---------------------------------------------------------------------------*/
+.bottomHorizontalPlane > div:nth-child(n + 43):nth-child(-n + 48) {
+}
+
+.bottomHorizontalPlane > div:nth-of-type(43),
+.bottomHorizontalPlane > div:nth-of-type(44) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 3 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color151);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(44) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color152);
+}
+.bottomHorizontalPlane > div:nth-of-type(45),
+.bottomHorizontalPlane > div:nth-of-type(46) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color153);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(46) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color154);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(47),
+.bottomHorizontalPlane > div:nth-of-type(48) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color155);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(48) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 1 / 3 * 1vmin));
+  background: var(--color156);
+}
+
+/*cube 9---------------------------------------------------------------------------*/
+.bottomHorizontalPlane > div:nth-child(n + 49):nth-child(-n + 54) {
+}
+
+.bottomHorizontalPlane > div:nth-of-type(49),
+.bottomHorizontalPlane > div:nth-of-type(50) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 3 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color157);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(50) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color158);
+}
+.bottomHorizontalPlane > div:nth-of-type(51),
+.bottomHorizontalPlane > div:nth-of-type(52) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--cubeHeight) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--cubeHeight) * 1 / 3 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color159);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(52) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color160);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(53),
+.bottomHorizontalPlane > div:nth-of-type(54) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color161);
+}
+
+.bottomHorizontalPlane > div:nth-of-type(54) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin))
+    translateY(calc(var(--depth) * 2 / 3 * 1vmin))
+    translateX(calc(var(--depth) * 2 / 3 * 1vmin));
+  background: var(--color162);
+}
+
+/*--------------------------------------------------------------------------------*/
+.verticalPlane {
+  --width: 36;
+  --height: calc(var(--verticalCentroid) * 2);
+  --depth: 36;
+  --cubeHeight: 36;
+  text-align: center;
+  vertical-align: middle;
+  height: calc(var(--depth) * 1vmin);
+  width: calc(var(--width) * 1vmin);
+  top: 50%;
+  left: 50%;
+  transform-style: preserve-3d;
+  position: absolute;
+  background: rgba(204, 14, 14, 0.1);
+
+  transform: translate(-50%, -50%) translateX(calc(var(--width) / 3 * 1vmin))
+    rotateY(90deg) translateX(calc(var(--horizontalCentroid) * -1vmin))
+    translateX(
+      calc(calc(var(--horizontalCentroid) - var(--cubeHeight) / 2) * 1vmin)
+    )
+    rotateY(180deg);
+}
+
+.verticalPlane > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  /* border: 1px solid lightcyan; */
+  background: rgba(18, 195, 240, 0.1);
+}
+
+.verticalPlane > div:nth-child(n + 1):nth-child(-n + 6) {
+  background: var(--color4);
+}
+
+.verticalPlane > div:nth-of-type(1),
+.verticalPlane > div:nth-of-type(2) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateX(calc(var(--width) * 2 / 3 * 1vmin));
+}
+
+.verticalPlane > div:nth-of-type(2) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
+}
+
+.verticalPlane > div:nth-of-type(3),
+.verticalPlane > div:nth-of-type(4) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--depth) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 2 / 3 * 1vmin));
+}
+
+.verticalPlane > div:nth-of-type(4) {
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 1vmin));
+}
+
+.verticalPlane > div:nth-of-type(5),
+.verticalPlane > div:nth-of-type(6) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--cubeHeight) / 6 * 1vmin));
+}
+
+.verticalPlane > div:nth-of-type(6) {
+  transform: translateX(calc(var(--width) * 2 / 3 * 1vmin))
+    translateZ(calc(var(--cubeHeight) / 6 * -1vmin));
+}
+
+.verticalPlane > div:nth-child(n + 7):nth-child(-n + 12) {
+  background: var(--color6);
+}
+
+.verticalPlane > div:nth-of-type(7),
+.verticalPlane > div:nth-of-type(8) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translate(0%, -50%) rotateX(-90deg);
+}
+
+.verticalPlane > div:nth-of-type(8) {
+  transform: translate(0%, -50%) rotateX(-90deg)
+    translateZ(calc(var(--depth) / 3 * 1vmin));
+}
+
+.verticalPlane > div:nth-of-type(9),
+.verticalPlane > div:nth-of-type(10) {
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--depth) / 3 * 1vmin);
+  transform: translate(-50%, 0) rotateY(90deg)
+    translateZ(calc(var(--width) * 1 / 3 * 1vmin));
+}
+
+.verticalPlane > div:nth-of-type(10) {
+  transform: translate(-50%, 0) rotateY(90deg);
+}
+
+.verticalPlane > div:nth-of-type(11),
+.verticalPlane > div:nth-of-type(12) {
+  height: calc(var(--depth) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
+  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin));
+}
+
+.verticalPlane > div:nth-of-type(12) {
+  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin));
+}
+
+.protoShift {
+  animation-name: protoMove;
+  animation-duration: 5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes protoMove {
+  0% {
+    transform: translate(-50%, -50%)
+      translateZ(calc(var(--horizontalCentroid) * 1vmin));
+  }
+
+  100% {
+    transform: translate(-50%, -50%)
+      translateZ(calc((var(--horizontalCentroid) * 1vmin))) rotateZ(90deg);
+  }
+}
+
+.protoShiftMiddle {
+  animation-name: protoMoveMiddle;
+  animation-duration: 5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes protoMoveMiddle {
+  0% {
+    transform: translate(-50%, -50%)
+      translateZ(calc(var(--horizontalCentroid) * 2 / 3 * 1vmin));
+  }
+
+  100% {
+    transform: translate(-50%, -50%)
+      translateZ(calc(var(--horizontalCentroid) * 2 / 3 * 1vmin)) rotateZ(90deg);
+  }
+}
+
+.protoShiftBottom {
+  animation-name: protoMoveBottom;
+  animation-duration: 5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes protoMoveBottom {
+  0% {
+    transform: translate(-50%, -50%)
+      translateZ(calc(var(--horizontalCentroid) * 1 / 3 * 1vmin));
+  }
+
+  100% {
+    transform: translate(-50%, -50%)
+      translateZ(calc(var(--horizontalCentroid) * 1 / 3 * 1vmin)) rotateZ(90deg);
+  }
+}
