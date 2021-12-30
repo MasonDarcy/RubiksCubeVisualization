@@ -344,10 +344,11 @@ const translateCoord = (coord) => {
   let x, y, z;
 
   x = coord[0] + 1;
-  y = mapCoord(y);
-  z = mapCoord(z);
+  y = mapCoord(coord[1]);
+  z = mapCoord(coord[2]);
 
   return [x, y, z];
+  //[0, 2, 0]
 };
 
 //Need a function that rotates
@@ -366,6 +367,41 @@ const rotationRightMatrix = [
   [0, 1, 0],
   [-1, 0, 0],
 ];
+
+const rotationLeftMatrixX = [
+  [1, 0, 0],
+  [0, 0, -1],
+  [0, 1, 0],
+];
+
+const rotationRightMatrixX = [
+  [1, 0, 0],
+  [0, 0, 1],
+  [0, -1, 0],
+];
+
+const rotateUniverseX = (universe, direction) => {
+  const rotatedSystem = [];
+
+  for (let i = 0; i < universe.length; i++) {
+    let newCoord = [];
+    let val = 0;
+    for (let q = 0; q <= 2; q++) {
+      for (let c = 0; c <= 2; c++) {
+        val +=
+          universe[i][c] *
+          (direction == "right"
+            ? rotationRightMatrixX[q][c]
+            : rotationLeftMatrixX[q][c]);
+      }
+      newCoord.push(val);
+      val = 0;
+    }
+
+    rotatedSystem.push(newCoord);
+  }
+  return rotatedSystem;
+};
 
 const rotateUniverse = (universe, direction) => {
   const rotatedSystem = [];
@@ -398,26 +434,32 @@ const rotateUniverse = (universe, direction) => {
 //At each coordinate, map it back to array co-ords, and then put those in place
 
 const updateModel = (coords, model) => {
-  let copy = JSON.parse(JSON.stringify(model));
+  let copy = [
+    [[], [], []],
+    [[], [], []],
+    [[], [], []],
+  ];
 
   for (let z = 0; z < 3; z++) {
     for (let y = 0; y < 3; y++) {
       for (let x = 0; x < 3; x++) {
         let coordIndex = z * 9 + y * 3 + x;
         let mappedCoords = translateCoord(coords[coordIndex]);
-        copy[z][y][x] =
-          model[(mappedCoords[0], mappedCoords[1], mappedCoords[2])];
+        copy[mappedCoords[2]][mappedCoords[1]][mappedCoords[0]] =
+          model[z][y][x];
       }
     }
   }
+  console.log(copy);
   return copy;
 };
-
+//so then.. the New thing, at new[0][2][0] becomes what the model is at model[0][0][0]
 const cubeModel = {
   createTopSlice,
   modelToCoordinateArray,
   translateCoord,
   rotateUniverse,
+  rotateUniverseX,
   updateModel,
 };
 

@@ -1,0 +1,46 @@
+1. Need to determine what to rotate
+
+2. Consider cube 9
+a. It's position (1, 1, 0)
+b. moving it to the left would require a model rotation.
+
+3. Consider the cube in its neutral position
+
+4. Any lateral rotation does not require a model rotation
+
+5. All horizontal rotations require a model rotation
+
+6. There are three states the cube needs to rotate into to display every transformation
+
+7. Each cube face has four directions it can go
+
+8. Check the subsequent cubeface in that direction --
+ is it a sibling element? If so, you can rotate for free. (ish)
+
+9.If not, determine one of the two rotations -- how? 
+
+10. Basically, check the "rotation direction" .. of which there are 3 per axis, so 9 things
+
+11. I can rule out one (if I can figure out how) leaving only the target
+
+12. It's always "one" of the things for each thing so I could just memoize them
+
+a. topswizzle --> firstMutation 
+b. firstMutation --> tops
+
+13. Put all the faces into three groups. 
+
+14. Now, we know the following
+
+a. The group (two faces)
+
+b. The direction  (up, down , etc);
+
+c. We know the current model rotation
+
+d. We know the east/west are fine, north is a rotation to firstMutation
+
+e. So we just do the logic for each group i dont see a simpler way
+
+NewDay:  rotateModel90X(); When dragged south, achieves the rotation I want towards the user
+//rotate model90x turns it "right"

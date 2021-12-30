@@ -6,10 +6,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  --plain-height: 100;
-  --plain-width: 100;
+
+  /* will-change: transform; */
+  --plain-height: 50;
+  --plain-width: 50;
   --x-rotation: -24;
-  --y-rotation: 120;
+  --y-rotation: -24;
+  --z-rotation: 0;
   --horizontalCentroid: 36;
   --verticalCentroid: 36;
 
@@ -206,7 +209,7 @@
   --color162: orange;
 }
 
-.floor {
+.initialFloor {
   background: rgba(162, 25, 230, 0.25);
 
   height: calc(var(--plain-height, 25) * 1vmin);
@@ -216,13 +219,23 @@
     rotateY(calc(var(--y-rotation, -25) * 1deg)) rotateX(90deg);
 }
 
-.rotatedFloor {
+.rotatedFloor90Y {
   background: rgba(162, 25, 230, 0.25);
 
   height: calc(var(--plain-height, 25) * 1vmin);
   width: calc(var(--plain-width, 25) * 1vmin);
   transform-style: preserve-3d;
-  transform: translate(-25%, -25%) rotateX(calc(var(--x-rotation, -25) * 1deg))
+  transform: rotateX(calc(var(--x-rotation, -25) * 1deg))
+    rotateY(calc(var(--y-rotation, -25) * 1deg)) rotateX(90deg) rotateY(90deg);
+}
+
+.rotatedFloor90X {
+  background: rgba(162, 25, 230, 0.25);
+
+  height: calc(var(--plain-height, 25) * 1vmin);
+  width: calc(var(--plain-width, 25) * 1vmin);
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--x-rotation, -25) * 1deg))
     rotateY(calc(var(--y-rotation, -25) * 1deg));
 }
 
@@ -240,10 +253,10 @@
   transform-style: preserve-3d;
   position: absolute;
   transform: translate(-50%, -50%)
-    translateZ(calc(var(--horizontalCentroid) * 1vmin));
+    translateZ(calc(var(--horizontalCentroid) * 1 / 3 * 1vmin));
   background: rgba(236, 205, 205, 0.3);
 }
-
+/* translateZ(calc(var(--horizontalCentroid) * 1vmin)); */
 .middleHorizontalPlane {
   --width: 36;
   --height: calc(var(--horizontalCentroid) * 2 / 3 * 1vmin);
@@ -257,14 +270,15 @@
   left: 50%;
   transform-style: preserve-3d;
   position: absolute;
-  transform: translate(-50%, -50%)
-    translateZ(calc(var(--horizontalCentroid) * 2 / 3 * 1vmin));
+
+  transform: translate(-50%, -50%);
+  /* translateZ(calc(var(--horizontalCentroid) * 0 / 3 * 1vmin)); */
   background: rgba(236, 205, 205, 0.3);
 }
 
 .bottomHorizontalPlane {
   --width: 36;
-  --height: calc(var(--horizontalCentroid) * 2 / 3 * 1vmin);
+  --height: calc(var(--horizontalCentroid) * -1 / 3 * 1vmin);
   --depth: 36;
   --cubeHeight: 36;
   text-align: center;
@@ -276,7 +290,7 @@
   transform-style: preserve-3d;
   position: absolute;
   transform: translate(-50%, -50%)
-    translateZ(calc(var(--horizontalCentroid) * 1 / 3 * 1vmin));
+    translateZ(calc(var(--horizontalCentroid) * -1 / 3 * 1vmin));
   background: rgba(236, 205, 205, 0.3);
 }
 
@@ -1706,138 +1720,43 @@
   background: var(--color162);
 }
 
-/*--------------------------------------------------------------------------------*/
-.verticalPlane {
-  --width: 36;
-  --height: calc(var(--verticalCentroid) * 2);
-  --depth: 36;
-  --cubeHeight: 36;
-  text-align: center;
-  vertical-align: middle;
-  height: calc(var(--depth) * 1vmin);
-  width: calc(var(--width) * 1vmin);
-  top: 50%;
-  left: 50%;
-  transform-style: preserve-3d;
-  position: absolute;
-  background: rgba(204, 14, 14, 0.1);
-
-  transform: translate(-50%, -50%) translateX(calc(var(--width) / 3 * 1vmin))
-    rotateY(90deg) translateX(calc(var(--horizontalCentroid) * -1vmin))
-    translateX(
-      calc(calc(var(--horizontalCentroid) - var(--cubeHeight) / 2) * 1vmin)
-    )
-    rotateY(180deg);
-}
-
-.verticalPlane > div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  /* border: 1px solid lightcyan; */
-  background: rgba(18, 195, 240, 0.1);
-}
-
-.verticalPlane > div:nth-child(n + 1):nth-child(-n + 6) {
-  background: var(--color4);
-}
-
-.verticalPlane > div:nth-of-type(1),
-.verticalPlane > div:nth-of-type(2) {
-  height: calc(var(--cubeHeight) / 3 * 1vmin);
-  width: calc(var(--width) / 3 * 1vmin);
-  transform: translate(0%, -50%) rotateX(-90deg)
-    translateX(calc(var(--width) * 2 / 3 * 1vmin));
-}
-
-.verticalPlane > div:nth-of-type(2) {
-  transform: translate(0%, -50%) rotateX(-90deg)
-    translateX(calc(var(--width) * 2 / 3 * 1vmin))
-    translateZ(calc(var(--depth) * 1 / 3 * 1vmin));
-}
-
-.verticalPlane > div:nth-of-type(3),
-.verticalPlane > div:nth-of-type(4) {
-  height: calc(var(--cubeHeight) / 3 * 1vmin);
-  width: calc(var(--depth) / 3 * 1vmin);
-  transform: translate(-50%, 0) rotateY(90deg)
-    translateZ(calc(var(--width) * 2 / 3 * 1vmin));
-}
-
-.verticalPlane > div:nth-of-type(4) {
-  transform: translate(-50%, 0) rotateY(90deg)
-    translateZ(calc(var(--width) * 1vmin));
-}
-
-.verticalPlane > div:nth-of-type(5),
-.verticalPlane > div:nth-of-type(6) {
-  height: calc(var(--depth) / 3 * 1vmin);
-  width: calc(var(--width) / 3 * 1vmin);
-  transform: translateX(calc(var(--width) * 2 / 3 * 1vmin))
-    translateZ(calc(var(--cubeHeight) / 6 * 1vmin));
-}
-
-.verticalPlane > div:nth-of-type(6) {
-  transform: translateX(calc(var(--width) * 2 / 3 * 1vmin))
-    translateZ(calc(var(--cubeHeight) / 6 * -1vmin));
-}
-
-.verticalPlane > div:nth-child(n + 7):nth-child(-n + 12) {
-  background: var(--color6);
-}
-
-.verticalPlane > div:nth-of-type(7),
-.verticalPlane > div:nth-of-type(8) {
-  height: calc(var(--cubeHeight) / 3 * 1vmin);
-  width: calc(var(--width) / 3 * 1vmin);
-  transform: translate(0%, -50%) rotateX(-90deg);
-}
-
-.verticalPlane > div:nth-of-type(8) {
-  transform: translate(0%, -50%) rotateX(-90deg)
-    translateZ(calc(var(--depth) / 3 * 1vmin));
-}
-
-.verticalPlane > div:nth-of-type(9),
-.verticalPlane > div:nth-of-type(10) {
-  height: calc(var(--cubeHeight) / 3 * 1vmin);
-  width: calc(var(--depth) / 3 * 1vmin);
-  transform: translate(-50%, 0) rotateY(90deg)
-    translateZ(calc(var(--width) * 1 / 3 * 1vmin));
-}
-
-.verticalPlane > div:nth-of-type(10) {
-  transform: translate(-50%, 0) rotateY(90deg);
-}
-
-.verticalPlane > div:nth-of-type(11),
-.verticalPlane > div:nth-of-type(12) {
-  height: calc(var(--depth) / 3 * 1vmin);
-  width: calc(var(--width) / 3 * 1vmin);
-  transform: translateZ(calc(var(--cubeHeight) / 6 * 1vmin));
-}
-
-.verticalPlane > div:nth-of-type(12) {
-  transform: translateZ(calc(var(--cubeHeight) / 6 * -1vmin));
-}
-
-.protoShift {
-  animation-name: protoMove;
+.protoShiftLeft {
+  animation-name: protoMoveLeft;
   animation-duration: 5s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
 
-@keyframes protoMove {
+@keyframes protoMoveLeft {
   0% {
     transform: translate(-50%, -50%)
-      translateZ(calc(var(--horizontalCentroid) * 1vmin));
+      translateZ(calc(var(--horizontalCentroid) * 1 / 3 * 1vmin));
   }
 
   100% {
     transform: translate(-50%, -50%)
-      translateZ(calc((var(--horizontalCentroid) * 1vmin))) rotateZ(90deg);
+      translateZ(calc((var(--horizontalCentroid) * 1 / 3 * 1vmin)))
+      rotateZ(90deg);
+  }
+}
+
+.protoShiftRight {
+  animation-name: protoMoveRight;
+  animation-duration: 5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes protoMoveRight {
+  0% {
+    transform: translate(-50%, -50%)
+      translateZ(calc(var(--horizontalCentroid) * 1 / 3 * 1vmin));
+  }
+
+  100% {
+    transform: translate(-50%, -50%)
+      translateZ(calc((var(--horizontalCentroid) * 1 / 3 * 1vmin)))
+      rotateZ(-90deg);
   }
 }
 
@@ -1850,31 +1769,53 @@
 
 @keyframes protoMoveMiddle {
   0% {
-    transform: translate(-50%, -50%)
-      translateZ(calc(var(--horizontalCentroid) * 2 / 3 * 1vmin));
+    transform: translate(-50%, -50%);
+    /* translateZ(calc(var(--horizontalCentroid) * 2 / 3 * 1vmin)); */
   }
 
   100% {
     transform: translate(-50%, -50%)
-      translateZ(calc(var(--horizontalCentroid) * 2 / 3 * 1vmin)) rotateZ(90deg);
+      /* translateZ(calc(var(--horizontalCentroid) * 2 / 3 * 1vmin)) */
+      rotateZ(90deg);
   }
 }
 
-.protoShiftBottom {
-  animation-name: protoMoveBottom;
+.protoShiftBottomC {
+  animation-name: protoMoveBottomC;
   animation-duration: 5s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
 
-@keyframes protoMoveBottom {
+@keyframes protoMoveBottomC {
   0% {
     transform: translate(-50%, -50%)
-      translateZ(calc(var(--horizontalCentroid) * 1 / 3 * 1vmin));
+      translateZ(calc(var(--horizontalCentroid) * -1 / 3 * 1vmin));
   }
 
   100% {
     transform: translate(-50%, -50%)
-      translateZ(calc(var(--horizontalCentroid) * 1 / 3 * 1vmin)) rotateZ(90deg);
+      translateZ(calc(var(--horizontalCentroid) * -1 / 3 * 1vmin))
+      rotateZ(90deg);
+  }
+}
+
+.protoShiftBottomCC {
+  animation-name: protoMoveBottomCC;
+  animation-duration: 5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes protoMoveBottomCC {
+  0% {
+    transform: translate(-50%, -50%)
+      translateZ(calc(var(--horizontalCentroid) * -1 / 3 * 1vmin));
+  }
+
+  100% {
+    transform: translate(-50%, -50%)
+      translateZ(calc(var(--horizontalCentroid) * -1 / 3 * 1vmin))
+      rotateZ(-90deg);
   }
 }
