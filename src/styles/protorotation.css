@@ -1720,14 +1720,14 @@
   background: var(--color162);
 }
 
-.protoShiftLeft {
-  animation-name: protoMoveLeft;
+.protoShiftTopC {
+  animation-name: protoMoveTopC;
   animation-duration: 5s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
 
-@keyframes protoMoveLeft {
+@keyframes protoMoveTopC {
   0% {
     transform: translate(-50%, -50%)
       translateZ(calc(var(--horizontalCentroid) * 1 / 3 * 1vmin));
@@ -1740,14 +1740,14 @@
   }
 }
 
-.protoShiftRight {
-  animation-name: protoMoveRight;
+.protoShiftTopCC {
+  animation-name: protoMoveTopCC;
   animation-duration: 5s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
 
-@keyframes protoMoveRight {
+@keyframes protoMoveTopCC {
   0% {
     transform: translate(-50%, -50%)
       translateZ(calc(var(--horizontalCentroid) * 1 / 3 * 1vmin));
@@ -1760,14 +1760,14 @@
   }
 }
 
-.protoShiftMiddle {
-  animation-name: protoMoveMiddle;
+.protoShiftMiddleC {
+  animation-name: protoMoveMiddleC;
   animation-duration: 5s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
 
-@keyframes protoMoveMiddle {
+@keyframes protoMoveMiddleC {
   0% {
     transform: translate(-50%, -50%);
     /* translateZ(calc(var(--horizontalCentroid) * 2 / 3 * 1vmin)); */
@@ -1777,6 +1777,26 @@
     transform: translate(-50%, -50%)
       /* translateZ(calc(var(--horizontalCentroid) * 2 / 3 * 1vmin)) */
       rotateZ(90deg);
+  }
+}
+
+.protoShiftMiddleCC {
+  animation-name: protoMoveMiddleCC;
+  animation-duration: 5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes protoMoveMiddleCC {
+  0% {
+    transform: translate(-50%, -50%);
+    /* translateZ(calc(var(--horizontalCentroid) * 2 / 3 * 1vmin)); */
+  }
+
+  100% {
+    transform: translate(-50%, -50%)
+      /* translateZ(calc(var(--horizontalCentroid) * 2 / 3 * 1vmin)) */
+      rotateZ(-90deg);
   }
 }
 

@@ -10,6 +10,8 @@ const ProtoRotation = () => {
   const [middleClassName, setMiddleClassName] = useState(null);
   const [bottomClassName, setBottomClassName] = useState(null);
   const [model, setModel] = useState(cubeModel.createTopSlice());
+  const [liminalModel, setLiminalModel] = useState(null);
+
   const [rotation, setRotation] = useState("initialFloor");
   const [oldX, setOldX] = useState(0);
   const [oldY, setOldY] = useState(0);
@@ -66,7 +68,8 @@ const ProtoRotation = () => {
 
     let copy = JSON.parse(JSON.stringify(model));
     copy[sliceNum] = swapped;
-    setModel(copy);
+    return copy;
+    //setModel(copy);
   };
 
   const dispatchRotateEvent = () => {
@@ -82,19 +85,54 @@ const ProtoRotation = () => {
           case "cc":
             setBottomClassName("protoShiftBottomCC");
             console.log("DRE: CC");
-
             break;
         }
         break;
       case "middle":
+        switch (rotationDirection) {
+          case "c":
+            setMiddleClassName("protoShiftMiddleC");
+            console.log("DRE: C");
+            break;
+          case "cc":
+            setMiddleClassName("protoShiftMiddleCC");
+            console.log("DRE: CC");
+            break;
+        }
         break;
-      case "bottom":
+      case "top":
+        switch (rotationDirection) {
+          case "c":
+            setTopClassName("protoShiftTopC");
+            console.log("DRE: C");
+            break;
+          case "cc":
+            setTopClassName("protoShiftTopCC");
+            console.log("DRE: CC");
+            break;
+        }
+        break;
     }
 
     setTimeout(() => {
       //need slice num
-      rotateModelAndRecolor(planeToNum());
-      console.log("rotate and recolor??");
+      let copy = rotateModelAndRecolor(planeToNum());
+      //This rotation needs to be conditionally performed.
+      //
+      console.log(`rotationToBe: ${rotationToBe}`);
+      switch (rotationToBe) {
+        case "initialFloor":
+          break;
+        case "rotatedFloor90Y":
+          copy = rotateModelNeg90Y(copy);
+          break;
+        case "rotatedFloor90X":
+          copy = rotateModelNeg90X(copy);
+          break;
+      }
+
+      setModel(copy);
+      console.log("rotate and recolor");
     }, 5000);
   };
 
@@ -115,23 +153,64 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
-
       return;
     } else {
       if (topClassName) {
-        colorUtils.remapSliceColors(0, model, el);
+        switch (rotationToBe) {
+          case "initialFloor":
+            colorUtils.remapSliceColors(0, model, el);
+            break;
+          case "rotatedFloor90Y":
+            colorUtils.remapAllColors(model, el, "left");
+            break;
+          case "rotatedFloor90X":
+            colorUtils.remapAllColorsX(model, el, "left");
+            break;
+        }
+        setRotationToBe("initialFloor");
+        setRotation("initialFloor");
         setTopClassName(null);
       } else if (middleClassName) {
-        colorUtils.remapSliceColors(1, model, el);
+        switch (rotationToBe) {
+          case "initialFloor":
+            colorUtils.remapSliceColors(1, model, el);
+            break;
+          case "rotatedFloor90Y":
+            colorUtils.remapAllColors(model, el, "left");
+            break;
+          case "rotatedFloor90X":
+            colorUtils.remapAllColorsX(model, el, "left");
+            break;
+        }
+        setRotationToBe("initialFloor");
+        setRotation("initialFloor");
         setMiddleClassName(null);
       } else if (bottomClassName) {
-        colorUtils.remapSliceColors(2, model, el);
+        console.log(rotationToBe);
+        switch (rotationToBe) {
+          case "initialFloor":
+            colorUtils.remapSliceColors(2, model, el);
+            break;
+          case "rotatedFloor90Y":
+            colorUtils.remapAllColors(model, el, "left");
+            break;
+          case "rotatedFloor90X":
+            colorUtils.remapAllColorsX(model, el, "left");
+            break;
+        }
+
+        setRotationToBe("initialFloor");
+        setRotation("initialFloor");
         setBottomClassName(null);
       } else {
         console.log(`rotation to be: ${rotationToBe}`);
         switch (rotationToBe) {
           case "initialFloor":
-            // dispatchRotateEvent();
+            // console.log(model);
+            // colorUtils.remapSliceColors(2, model, el);
+            // colorUtils.remapAllColorsX(model, el, "left");
+            //    setRotation(rotationToBe);
+            dispatchRotateEvent();
             break;
           case "rotatedFloor90Y":
             setRotation(rotationToBe);
@@ -139,6 +218,7 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
             dispatchRotateEvent();
             break;
           case "rotatedFloor90X":
+            console.log("First useEffect call");
             setRotation(rotationToBe);
             colorUtils.remapAllColorsX(model, el, "right");
             dispatchRotateEvent();
@@ -173,8 +253,8 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
     setModel(newModel);
   }
 
-  function rotateModelNeg90Y() {
-    let copy = JSON.parse(JSON.stringify(model));
+  function rotateModelNeg90Y(matrix) {
+    let copy = JSON.parse(JSON.stringify(matrix));
     let coords = cubeModel.modelToCoordinateArray();
     //"left" here controls direction I think
     console.log(coords);
@@ -183,8 +263,9 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
     let newModel = cubeModel.updateModel(shiftedUniverse, copy);
     console.log(model);
     console.log(newModel);
-    setRotationToBe("initialFloor");
-    setModel(newModel);
+    //setRotationToBe("initialFloor");
+    //setModel(newModel);
+    return newModel;
   }
 
   function rotateModel90X() {
@@ -203,8 +284,8 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
     console.log("RotateModel90X called");
   }
 
-  function rotateModelNeg90X() {
-    let copy = JSON.parse(JSON.stringify(model));
+  function rotateModelNeg90X(matrix) {
+    let copy = JSON.parse(JSON.stringify(matrix));
     let coords = cubeModel.modelToCoordinateArray();
     //"left" here controls direction I think
     console.log(coords);
@@ -213,8 +294,9 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
     let newModel = cubeModel.updateModel(shiftedUniverse, copy);
     console.log(model);
     console.log(newModel);
-    setRotationToBe("initialFloor");
-    setModel(newModel);
+    //setRotationToBe("initialFloor");
+    return newModel;
+    //setModel(newModel);
   }
 
   /*---------------------------------------------------------------------------.*/
@@ -256,6 +338,7 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
       } else if (e.pageX == oldX && e.pageY > oldY) {
         setDirection("South");
         console.log("South");
+        animationDelegator(e.target.id, "south");
         setMouseDown(false);
       } else if (e.pageX == oldX && e.pageY < oldY) {
         console.log("North");
@@ -308,6 +391,14 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
                   `id: ${id}, rotation: ${rotation}, direction: ${direction}`
                 );
                 setRotationDirection("c");
+                setTargetSlice("bottom");
+                rotateModel90Y();
+                break;
+              case "south":
+                console.log(
+                  `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+                );
+                setRotationDirection("cc");
                 setTargetSlice("bottom");
                 rotateModel90Y();
                 break;
