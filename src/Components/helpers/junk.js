@@ -247,3 +247,164 @@
 //       }
 //     }
 //   }, [model]);
+
+// remappedDirection = xPerspectiveRemap(direction);
+// console.log(remappedDirection);
+// switch (remappedDirection) {
+//   case "west":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("c");
+//     setTargetSlice("top");
+//     setRotationToBe("initialFloor");
+//     dispatchRotateEvent("top", "c");
+//     break;
+//   case "east":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("cc");
+//     setTargetSlice("top");
+//     setRotationToBe("initialFloor");
+//     dispatchRotateEvent("top", "cc");
+//     break;
+//   case "north":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("cc");
+//     setTargetSlice("bottom");
+//     rotateModel90Y();
+//     break;
+//   case "south":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("c");
+//     setTargetSlice("bottom");
+//     rotateModel90Y();
+//     break;
+// }
+// break;
+
+// remappedDirection = xPerspectiveRemap(direction);
+// console.log(remappedDirection);
+// switch (remappedDirection) {
+//   case "west":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("c");
+//     setTargetSlice("top");
+//     setRotationToBe("initialFloor");
+//     dispatchRotateEvent("top", "c");
+//     break;
+//   case "east":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("cc");
+//     setTargetSlice("top");
+//     setRotationToBe("initialFloor");
+//     dispatchRotateEvent("top", "cc");
+//     break;
+//   case "north":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("c");
+//     setTargetSlice("bottom");
+//     rotateModel90X();
+//     break;
+//   case "south":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("cc");
+//     setTargetSlice("bottom");
+//     rotateModel90X();
+//     break;
+// }
+// break;
+// break;
+
+// remappedDirection = xPerspectiveRemap(direction);
+// console.log(remappedDirection);
+// switch (remappedDirection) {
+//   case "west":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("c");
+//     setTargetSlice("top");
+//     setRotationToBe("initialFloor");
+//     dispatchRotateEvent("top", "c");
+//     break;
+//   case "east":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("cc");
+//     setTargetSlice("top");
+//     setRotationToBe("initialFloor");
+//     dispatchRotateEvent("top", "cc");
+//     break;
+//   case "north":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("cc");
+//     setTargetSlice("bottom");
+//     rotateModel90X();
+//     break;
+//   case "south":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("c");
+//     setTargetSlice("bottom");
+//     rotateModel90X();
+//     break;
+// }
+//break;
+
+// remappedDirection = xPerspectiveRemap(direction);
+// console.log(remappedDirection);
+// switch (remappedDirection) {
+//   case "west":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("c");
+//     setTargetSlice("top");
+//     setRotationToBe("initialFloor");
+//     dispatchRotateEvent("top", "c");
+//     break;
+//   case "east":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("cc");
+//     setTargetSlice("top");
+//     setRotationToBe("initialFloor");
+//     dispatchRotateEvent("top", "cc");
+//     break;
+//   case "north":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("c");
+//     setTargetSlice("bottom");
+//     rotateModel90Y();
+//     break;
+//   case "south":
+//     console.log(
+//       `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+//     );
+//     setRotationDirection("cc");
+//     setTargetSlice("bottom");
+//     rotateModel90Y();
+//     break;
+// }
+//break;

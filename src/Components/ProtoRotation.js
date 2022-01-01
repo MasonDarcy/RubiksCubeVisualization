@@ -48,28 +48,35 @@ const ProtoRotation = () => {
   const xPerspectiveRemap = (direction) => {
     let degree = xRotation % 360;
 
-    if (direction == "west" || direction == "east") {
+    // if (direction == "west" || direction == "east") {
+    //   return direction;
+    // } else {
+    if (
+      (degree >= -90 && degree <= 90) ||
+      (degree >= 270 && degree <= 360) ||
+      (degree > -360 && degree < -270)
+    ) {
+      // if (direction == "north" || direction == "south") {
+      //   return direction;
+      // }
       return direction;
     } else {
-      if (
-        (degree >= -90 && degree <= 90) ||
-        (degree >= 270 && degree <= 360) ||
-        (degree > -360 && degree < -270)
-      ) {
-        if (direction == "north" || direction == "south") {
-          return direction;
-        }
-      } else {
-        if (direction == "south") {
-          return "north";
-        } else {
-          return "south";
-        }
+      if (direction == "south") {
+        return "north";
+      }
+      if (direction == "north") {
+        return "south";
+      }
+      if (direction == "east") {
+        return "west";
+      }
+      if (direction == "west") {
+        return "east";
       }
     }
   };
 
-  const getPerspectiveDirection = (direction) => {
+  const getPerspectiveDirection = (direction, reverse) => {
     let degree = yRotation % 360;
     if (degree < 0) {
       degree = 360 + degree;
@@ -98,25 +105,27 @@ const ProtoRotation = () => {
 
     if (degree < 315 && degree >= 225) {
       console.log("P2");
-      directionIndex = (directionIndex + 7) % 4;
+      reverse
+        ? (directionIndex = (directionIndex + 7) % 4)
+        : (directionIndex = (directionIndex + 1) % 4);
     }
 
     if (degree < 225 && degree > 135) {
       console.log("P3");
-      directionIndex = (directionIndex + 6) % 4;
+      reverse
+        ? (directionIndex = (directionIndex + 6) % 4)
+        : (directionIndex = (directionIndex + 2) % 4);
     }
 
     if (degree > 45 && degree <= 135) {
       console.log("P4");
-      directionIndex = (directionIndex + 5) % 4;
+      reverse
+        ? (directionIndex = (directionIndex + 5) % 4)
+        : (directionIndex = (directionIndex + 3) % 4);
     }
 
-    console.log(-1 % 4);
-    console.log(-2 % 4);
-    console.log(-3 % 4);
-    console.log(-5 % 4);
     let p1 = ["north", "west", "south", "east"];
-    console.log(`Margeee: ${Math.abs(directionIndex)}`);
+    //  console.log(`Margeee: ${Math.abs(directionIndex)}`);
 
     return p1[Math.abs(directionIndex)];
   };
@@ -499,234 +508,326 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
     setOldY(e.pageY);
   };
 
+  const testHelper = (rotationDirection) => {
+    if (rotationDirection == "c") {
+      return "cc";
+    } else {
+      return "c";
+    }
+  };
+
+  const redData = {
+    northFunc: rotateModel90Y,
+    westFunc: rotateModel90X,
+    rotationOrder: ["cc", "c"],
+  };
+
+  const orangeData = {
+    northFunc: rotateModel90Y,
+    westFunc: rotateModel90X,
+    rotationOrder: ["c", "c"],
+  };
+
+  const whiteData = {
+    northFunc: rotateModel90Y,
+    westFunc: null,
+    rotationOrder: ["c", "cc"],
+  };
+
+  const greenData = {
+    northFunc: rotateModel90X,
+    westFunc: null,
+    rotationOrder: ["c", "c"],
+  };
+
+  const blueData = {
+    northFunc: rotateModel90X,
+    westFunc: null,
+    rotationOrder: ["c", "cc"],
+  };
+
+  const yellowData = {
+    northFunc: rotateModel90Y,
+    westFunc: null,
+    rotationOrder: ["c", "c"],
+  };
+
+  const animate = (direction, sliceTuple, colorData, reverse, xReverse) => {
+    console.log(`degree: ${yRotation}`);
+    let remappedDirection;
+    if (xReverse) {
+      remappedDirection = xPerspectiveRemap(direction);
+    } else {
+      remappedDirection = getPerspectiveDirection(direction, reverse);
+    }
+
+    console.log(`RemappedDirection: ${remappedDirection}`);
+
+    switch (remappedDirection) {
+      case "west":
+        setRotationDirection(colorData.rotationOrder[0]);
+        setTargetSlice(sliceTuple[0]);
+        if (colorData.westFunc) {
+          colorData.westFunc();
+        } else {
+          setRotationToBe("initialFloor");
+          dispatchRotateEvent(sliceTuple[0], colorData.rotationOrder[0]);
+        }
+        break;
+      case "east":
+        setRotationDirection(testHelper(colorData.rotationOrder[0]));
+        setTargetSlice(sliceTuple[0]);
+        if (colorData.westFunc) {
+          colorData.westFunc();
+        } else {
+          setRotationToBe("initialFloor");
+          dispatchRotateEvent(
+            sliceTuple[0],
+            testHelper(colorData.rotationOrder[0])
+          );
+        }
+        break;
+      case "north":
+        setRotationDirection(colorData.rotationOrder[1]);
+        setTargetSlice(sliceTuple[1]);
+        if (colorData.northFunc) {
+          colorData.northFunc();
+        } else {
+          setRotationToBe("initialFloor");
+        }
+        break;
+      case "south":
+        setRotationDirection(testHelper(colorData.rotationOrder[1]));
+        setTargetSlice(sliceTuple[1]);
+        if (colorData.northFunc) {
+          colorData.northFunc();
+        } else {
+          setRotationToBe("initialFloor");
+        }
+        break;
+    }
+  };
+
   const animationDelegator = (id, direction) => {
     /*Logic here to determine direction as a function of viewer perspective.*/
     let remappedDirection = 0;
+    let sliceTuple;
     switch (id) {
       case "redSideOneOne":
-        console.log(`degree: ${yRotation}`);
-        remappedDirection = getPerspectiveDirection(direction);
-        console.log(`RemappedDirection: ${remappedDirection}`);
-
-        switch (remappedDirection) {
-          case "west":
-            console.log(
-              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-            );
-            setRotationDirection("cc");
-            setTargetSlice("bottom");
-            rotateModel90X();
-            break;
-          case "east":
-            console.log(
-              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-            );
-            setRotationDirection("c");
-            setTargetSlice("bottom");
-            rotateModel90X();
-            break;
-          case "north":
-            console.log(
-              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-            );
-            setRotationDirection("c");
-            setTargetSlice("bottom");
-            rotateModel90Y();
-            break;
-          case "south":
-            console.log(
-              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-            );
-            setRotationDirection("cc");
-            setTargetSlice("bottom");
-            rotateModel90Y();
-            break;
-        }
+        sliceTuple = ["bottom", "bottom"];
+        animate(direction, sliceTuple, redData);
         break;
-
       case "redSideOneTwo":
+        sliceTuple = ["bottom", "middle"];
+        animate(direction, sliceTuple, redData);
         break;
       case "redSideOneThree":
+        sliceTuple = ["bottom", "top"];
+        animate(direction, sliceTuple, redData);
         break;
       case "redSideTwoOne":
+        sliceTuple = ["middle", "bottom"];
+        animate(direction, sliceTuple, redData);
         break;
       case "redSideTwoTwo":
+        sliceTuple = ["middle", "middle"];
+        animate(direction, sliceTuple, redData);
         break;
       case "redSideTwoThree":
+        sliceTuple = ["middle", "top"];
+        animate(direction, sliceTuple, redData);
         break;
       case "redSideThreeOne":
+        sliceTuple = ["top", "bottom"];
+        animate(direction, sliceTuple, redData);
         break;
       case "redSideThreeTwo":
+        sliceTuple = ["top", "middle"];
+        animate(direction, sliceTuple, redData);
         break;
       case "redSideThreeThree":
+        sliceTuple = ["top", "top"];
+        animate(direction, sliceTuple, redData);
         break;
       case "orangeSideOneOne":
-        console.log(`degree: ${yRotation}`);
-        remappedDirection = getPerspectiveDirection(direction);
-
-        console.log(`RemappedDirection: ${remappedDirection}`);
-
-        switch (remappedDirection) {
-          case "west":
-            console.log(
-              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-            );
-            setRotationDirection("c");
-            setTargetSlice("bottom");
-            rotateModel90X();
-            break;
-          case "east":
-            console.log(
-              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-            );
-            setRotationDirection("cc");
-            setTargetSlice("bottom");
-            rotateModel90X();
-            break;
-          case "north":
-            console.log(
-              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-            );
-            setRotationDirection("c");
-            setTargetSlice("bottom");
-            rotateModel90Y();
-            break;
-          case "south":
-            console.log(
-              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-            );
-            setRotationDirection("cc");
-            setTargetSlice("bottom");
-            rotateModel90Y();
-            break;
-        }
+        sliceTuple = ["bottom", "bottom"];
+        animate(direction, sliceTuple, orangeData, true);
         break;
-
       case "orangeSideOneTwo":
+        sliceTuple = ["bottom", "middle"];
+        animate(direction, sliceTuple, orangeData, true);
         break;
       case "orangeSideOneThree":
+        sliceTuple = ["bottom", "top"];
+        animate(direction, sliceTuple, orangeData, true);
         break;
       case "orangeSideTwoOne":
+        sliceTuple = ["middle", "bottom"];
+        animate(direction, sliceTuple, orangeData, true);
         break;
       case "orangeSideTwoTwo":
+        sliceTuple = ["middle", "middle"];
+        animate(direction, sliceTuple, orangeData, true);
         break;
       case "orangeSideTwoThree":
+        sliceTuple = ["middle", "top"];
+        animate(direction, sliceTuple, orangeData, true);
         break;
       case "orangeSideThreeOne":
+        sliceTuple = ["top", "bottom"];
+        animate(direction, sliceTuple, orangeData, true);
         break;
       case "orangeSideThreeTwo":
+        sliceTuple = ["top", "middle"];
+        animate(direction, sliceTuple, orangeData, true);
         break;
       case "orangeSideThreeThree":
+        sliceTuple = ["top", "top"];
+        animate(direction, sliceTuple, orangeData, true);
         break;
       case "whiteSideOneOne":
+        sliceTuple = ["top", "bottom"];
+        animate(direction, sliceTuple, whiteData, false, true);
         break;
       case "whiteSideOneTwo":
+        sliceTuple = ["top", "middle"];
+        animate(direction, sliceTuple, whiteData, false, true);
         break;
       case "whiteSideOneThree":
+        sliceTuple = ["top", "top"];
+        animate(direction, sliceTuple, whiteData, false, true);
         break;
       case "whiteSideTwoOne":
+        sliceTuple = ["middle", "bottom"];
+        animate(direction, sliceTuple, whiteData, false, true);
         break;
       case "whiteSideTwoTwo":
+        sliceTuple = ["middle", "middle"];
+        animate(direction, sliceTuple, whiteData, false, true);
         break;
       case "whiteSideTwoThree":
+        sliceTuple = ["middle", "top"];
+        animate(direction, sliceTuple, whiteData, false, true);
         break;
       case "whiteSideThreeOne":
+        sliceTuple = ["bottom", "bottom"];
+        animate(direction, sliceTuple, whiteData, false, true);
         break;
       case "whiteSideThreeTwo":
+        sliceTuple = ["bottom", "middle"];
+        animate(direction, sliceTuple, whiteData, false, true);
         break;
       case "whiteSideThreeThree":
+        sliceTuple = ["bottom", "top"];
+        animate(direction, sliceTuple, whiteData, false, true);
         break;
       case "greenSideOneOne":
+        sliceTuple = ["top", "bottom"];
+        animate(direction, sliceTuple, greenData, false, true);
         break;
       case "greenSideOneTwo":
+        sliceTuple = ["top", "middle"];
+        animate(direction, sliceTuple, greenData, false, true);
         break;
       case "greenSideOneThree":
+        sliceTuple = ["top", "top"];
+        animate(direction, sliceTuple, greenData, false, true);
         break;
       case "greenSideTwoOne":
+        sliceTuple = ["middle", "bottom"];
+        animate(direction, sliceTuple, greenData, false, true);
         break;
       case "greenSideTwoTwo":
+        sliceTuple = ["middle", "middle"];
+        animate(direction, sliceTuple, greenData, false, true);
         break;
       case "greenSideTwoThree":
+        sliceTuple = ["middle", "top"];
+        animate(direction, sliceTuple, greenData, false, true);
         break;
       case "greenSideThreeOne":
+        sliceTuple = ["bottom", "bottom"];
+        animate(direction, sliceTuple, greenData, false, true);
         break;
       case "greenSideThreeTwo":
+        sliceTuple = ["bottom", "middle"];
+        animate(direction, sliceTuple, greenData, false, true);
         break;
       case "greenSideThreeThree":
+        sliceTuple = ["bottom", "top"];
+        animate(direction, sliceTuple, greenData, false, true);
         break;
       case "blueSideOneOne":
+        sliceTuple = ["top", "bottom"];
+        animate(direction, sliceTuple, blueData, false, true);
         break;
       case "blueSideOneTwo":
+        sliceTuple = ["top", "middle"];
+        animate(direction, sliceTuple, blueData, false, true);
         break;
       case "blueSideOneThree":
+        sliceTuple = ["top", "top"];
+        animate(direction, sliceTuple, blueData, false, true);
         break;
       case "blueSideTwoOne":
+        sliceTuple = ["middle", "bottom"];
+        animate(direction, sliceTuple, blueData, false, true);
         break;
       case "blueSideTwoTwo":
+        sliceTuple = ["middle", "middle"];
+        animate(direction, sliceTuple, blueData, false, true);
         break;
       case "blueSideTwoThree":
+        sliceTuple = ["middle", "top"];
+        animate(direction, sliceTuple, blueData, false, true);
         break;
       case "blueSideThreeOne":
+        sliceTuple = ["bottom", "bottom"];
+        animate(direction, sliceTuple, blueData, false, true);
         break;
       case "blueSideThreeTwo":
+        sliceTuple = ["bottom", "middle"];
+        animate(direction, sliceTuple, blueData, false, true);
         break;
       case "blueSideThreeThree":
+        sliceTuple = ["bottom", "top"];
+        animate(direction, sliceTuple, blueData, false, true);
         break;
       case "yellowSideOneOne":
-        remappedDirection = xPerspectiveRemap(direction);
-        console.log(remappedDirection);
-        switch (remappedDirection) {
-          case "west":
-            console.log(
-              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-            );
-            setRotationDirection("cc");
-            setTargetSlice("top");
-            setRotationToBe("initialFloor");
-            dispatchRotateEvent("top", "cc");
-            break;
-          case "east":
-            console.log(
-              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-            );
-            setRotationDirection("c");
-            setTargetSlice("top");
-            setRotationToBe("initialFloor");
-            dispatchRotateEvent("top", "c");
-            break;
-          case "north":
-            console.log(
-              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-            );
-            setRotationDirection("c");
-            setTargetSlice("bottom");
-            rotateModel90Y();
-            break;
-          case "south":
-            console.log(
-              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-            );
-            setRotationDirection("cc");
-            setTargetSlice("bottom");
-            rotateModel90Y();
-            break;
-        }
+        sliceTuple = ["top", "bottom"];
+        animate(direction, sliceTuple, yellowData, false, true);
         break;
       case "yellowSideOneTwo":
+        sliceTuple = ["top", "middle"];
+        animate(direction, sliceTuple, yellowData, false, true);
         break;
       case "yellowSideOneThree":
+        sliceTuple = ["top", "top"];
+        animate(direction, sliceTuple, yellowData, false, true);
         break;
       case "yellowSideTwoOne":
+        sliceTuple = ["middle", "bottom"];
+        animate(direction, sliceTuple, yellowData, false, true);
         break;
       case "yellowSideTwoTwo":
+        sliceTuple = ["middle", "middle"];
+        animate(direction, sliceTuple, yellowData, false, true);
         break;
       case "yellowSideTwoThree":
+        sliceTuple = ["middle", "top"];
+        animate(direction, sliceTuple, yellowData, false, true);
         break;
       case "yellowSideThreeOne":
+        sliceTuple = ["bottom", "bottom"];
+        animate(direction, sliceTuple, yellowData, false, true);
         break;
       case "yellowSideThreeTwo":
+        sliceTuple = ["bottom", "middle"];
+        animate(direction, sliceTuple, yellowData, false, true);
         break;
       case "yellowSideThreeThree":
+        sliceTuple = ["bottom", "top"];
+        animate(direction, sliceTuple, yellowData, false, true);
         break;
     }
   };
@@ -746,65 +847,101 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
           className={`topHorizontalPlane ${topClassName}`}
         >
           <div>1t</div>
-          <div id="whiteSideOneOne">2t</div>
+          <div id="whiteSideOneOne" onMouseDown={initial}>
+            2t
+          </div>
           <div>3t</div>
-          <div id="greenSideOneOne">4t</div>
+          <div id="greenSideOneOne" onMouseDown={initial}>
+            4t
+          </div>
           <div id="redSideOneOne" onMouseDown={initial}>
             {" "}
             5t
           </div>
           <div>6t</div>
           <div>7t</div>
-          <div id="whiteSideOneTwo">8t</div>
+          <div id="whiteSideOneTwo" onMouseDown={initial}>
+            8t
+          </div>
           <div>9t</div>
           <div>10t</div>
-          <div id="redSideOneTwo">11t </div>
+          <div id="redSideOneTwo" onMouseDown={initial}>
+            11t{" "}
+          </div>
           <div>12t</div>
           <div>13t</div>
-          <div id="whiteSideOneThree">14t</div>
-          <div id="blueSideOneOne">15t</div>
+          <div id="whiteSideOneThree" onMouseDown={initial}>
+            14t
+          </div>
+          <div id="blueSideOneOne" onMouseDown={initial}>
+            15t
+          </div>
           <div>16t</div>
-          <div id="redSideOneThree">17t</div>
+          <div id="redSideOneThree" onMouseDown={initial}>
+            17t
+          </div>
           <div>18t</div>
           <div>19t</div>
           <div>20t</div>
           <div>21t</div>
-          <div id="greenSideOneTwo">22t</div>
-          <div id="redSideTwoOne">23t</div>
+          <div id="greenSideOneTwo" onMouseDown={initial}>
+            22t
+          </div>
+          <div id="redSideTwoOne" onMouseDown={initial}>
+            23t
+          </div>
           <div>24t</div>
           <div>25t</div>
           <div>26t</div>
-          <div id="yellowSideOneOne">27t</div>
+          <div id="yellowSideOneOne" onMouseDown={initial}>
+            27t
+          </div>
           <div>28t</div>
-          <div id="redSideTwoTwo">29t</div>
+          <div id="redSideTwoTwo" onMouseDown={initial}>
+            29t
+          </div>
           <div>30t</div>
           <div>31t</div>
           <div>32t</div>
-          <div>33t</div>
-          <div id="blueSideOneTwo">34t</div>
-          <div id="redSideTwoThree">35t</div>
+          <div id="blueSideOneTwo" onMouseDown={initial}>
+            33t{" "}
+          </div>
+          <div>34t</div>
+          <div id="redSideTwoThree" onMouseDown={initial}>
+            35t
+          </div>
           <div>36t</div>
           <div id="yellowSideOneOne" onMouseDown={initial}>
             37t
           </div>
           <div>38t</div>
           <div>39t</div>
-          <div id="greenSideOneThree">40t</div>
-          <div id="redSideThreeOne">41t</div>
+          <div id="greenSideOneThree" onMouseDown={initial}>
+            40t
+          </div>
+          <div id="redSideThreeOne" onMouseDown={initial}>
+            41t
+          </div>
           <div>42t</div>
-          <div id="yellowSideOneTwo">43t</div>
+          <div id="yellowSideOneTwo" onMouseDown={initial}>
+            43t
+          </div>
           <div>44t</div>
           <div>45t</div>
           <div>46t</div>
-          <div id="redSideThreeTwo">47t</div>
+          <div id="redSideThreeTwo" onMouseDown={initial}>
+            47t
+          </div>
           <div>48t</div>
           <div onMouseDown={initial} id="yellowSideOneThree">
             49t
           </div>
           <div>50t</div>
-          <div id="blueSideOneThree">51t</div>
+          <div id="blueSideOneThree" onMouseDown={initial}>
+            51t
+          </div>
           <div>52t</div>
-          <div onMouseDown={initial} className="redSideThreeThree">
+          <div id="redSideThreeThree" onMouseDown={initial}>
             53t
           </div>
           <div>54t</div>
@@ -823,27 +960,39 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
           }}
         >
           <div>1</div>
-          <div id="whiteSideTwoOne">2</div>
+          <div id="whiteSideTwoOne" onMouseDown={initial}>
+            2
+          </div>
           <div>3</div>
-          <div id="greenSideTwoOne">4</div>
+          <div id="greenSideTwoOne" onMouseDown={initial}>
+            4
+          </div>
           <div>5</div>
           <div>6</div>
           <div>7</div>
-          <div id="whiteSideTwoTwo">8</div>
+          <div id="whiteSideTwoTwo" onMouseDown={initial}>
+            8
+          </div>
           <div>9</div>
           <div>10</div>
           <div>11</div>
           <div>12</div>
           <div>13</div>
-          <div id="whiteSideTwoThree">14</div>
-          <div id="blueSideTwoOne">15</div>
+          <div id="whiteSideTwoThree" onMouseDown={initial}>
+            14
+          </div>
+          <div id="blueSideTwoOne" onMouseDown={initial}>
+            15
+          </div>
           <div>16</div>
           <div>17</div>
           <div>18</div>
           <div>19</div>
           <div>20</div>
           <div>21</div>
-          <div id="greenSideTwoTwo">22</div>
+          <div id="greenSideTwoTwo" onMouseDown={initial}>
+            22
+          </div>
           <div>23</div>
           <div>24</div>
           <div>25</div>
@@ -854,25 +1003,37 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
           <div>30</div>
           <div>31</div>
           <div>32</div>
-          <div id="blueSideTwoTwo">33</div>
+          <div id="blueSideTwoTwo" onMouseDown={initial}>
+            33
+          </div>
           <div>34</div>
           <div>35</div>
           <div>36</div>
-          <div id="yellowSideTwoOne">37</div>
+          <div id="yellowSideTwoOne" onMouseDown={initial}>
+            37
+          </div>
           <div>38</div>
           <div>39</div>
-          <div id="greenSideTwoThree">40</div>
+          <div id="greenSideTwoThree" onMouseDown={initial}>
+            40
+          </div>
           <div>41</div>
           <div>42</div>
-          <div id="yellowSideTwoTwo">43</div>
+          <div id="yellowSideTwoTwo" onMouseDown={initial}>
+            43
+          </div>
           <div>44</div>
           <div>45</div>
           <div>46</div>
           <div>47</div>
           <div>48</div>
-          <div id="yellowSideTwoThree">49</div>
+          <div id="yellowSideTwoThree" onMouseDown={initial}>
+            49
+          </div>
           <div>50</div>
-          <div id="blueSideTwoThree">51</div>
+          <div id="blueSideTwoThree" onMouseDown={initial}>
+            51
+          </div>
           <div>52</div>
           <div>53</div>
           <div>54</div>
@@ -891,61 +1052,101 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
           }}
         >
           <div>1a</div>
-          <div id="whiteSideThreeOne">2a</div>
+          <div id="whiteSideThreeOne" onMouseDown={initial}>
+            2a
+          </div>
           <div>3a</div>
-          <div id="greenSideThreeOne">4a</div>
+          <div id="greenSideThreeOne" onMouseDown={initial}>
+            4a
+          </div>
           <div>5a</div>
           <div id="orangeSideOneOne" onMouseDown={initial}>
             6a
           </div>
           <div>7a</div>
-          <div id="whiteSideThreeTwo">8a</div>
+          <div id="whiteSideThreeTwo" onMouseDown={initial}>
+            8a
+          </div>
           <div>9a</div>
           <div>10a</div>
           <div>11a</div>
-          <div id="orangeSideOneTwo">12a</div>
+          <div id="orangeSideOneTwo" onMouseDown={initial}>
+            12a
+          </div>
           <div>13a</div>
-          <div id="whiteSideThreeThree">14a</div>
-          <div id="blueSideThreeOne">15a</div>
+          <div id="whiteSideThreeThree" onMouseDown={initial}>
+            14a
+          </div>
+          <div id="blueSideThreeOne" onMouseDown={initial}>
+            15a
+          </div>
           <div>16a</div>
           <div>17a</div>
-          <div id="orangeSideOneThree">18a</div>
+          <div id="orangeSideOneThree" onMouseDown={initial}>
+            18a
+          </div>
           <div>19a</div>
           <div>20a</div>
           <div>21a</div>
-          <div id="greenSideThreeTwo">22a</div>
+          <div id="greenSideThreeTwo" onMouseDown={initial}>
+            22a
+          </div>
           <div>23a</div>
-          <div id="orangeSideTwoOne">24a</div>
+          <div id="orangeSideTwoOne" onMouseDown={initial}>
+            24a
+          </div>
           <div>25a</div>
           <div>26a</div>
           <div>27a</div>
           <div>28a</div>
           <div>29a</div>
-          <div id="orangeSideTwoTwo">30a</div>
+          <div id="orangeSideTwoTwo" onMouseDown={initial}>
+            30a
+          </div>
           <div>31a</div>
           <div>32a</div>
-          <div id="blueSideThreeTwo">33a</div>
+          <div id="blueSideThreeTwo" onMouseDown={initial}>
+            33a
+          </div>
           <div>34a</div>
           <div>35a</div>
-          <div id="orangeSideTwoThree">36a</div>
-          <div id="yellowSideThreeOne">37a</div>
+          <div id="orangeSideTwoThree" onMouseDown={initial}>
+            36a
+          </div>
+          <div id="yellowSideThreeOne" onMouseDown={initial}>
+            37a
+          </div>
           <div>38a</div>
           <div>39a</div>
-          <div id="greenSideThreeThree">40a</div>
+          <div id="greenSideThreeThree" onMouseDown={initial}>
+            40a
+          </div>
           <div>41a</div>
-          <div id="orangeSideThreeOne">42a</div>
-          <div id="yellowSideThreeTwo">43a</div>
+          <div id="orangeSideThreeOne" onMouseDown={initial}>
+            42a
+          </div>
+          <div id="yellowSideThreeTwo" onMouseDown={initial}>
+            43a
+          </div>
           <div>44a</div>
           <div>45a</div>
           <div>46a</div>
           <div>47a</div>
-          <div id="orangeSideThreeTwo">48a</div>
-          <div id="yellowSideThreeThree">49a</div>
+          <div id="orangeSideThreeTwo" onMouseDown={initial}>
+            48a
+          </div>
+          <div id="yellowSideThreeThree" onMouseDown={initial}>
+            49a
+          </div>
           <div>50a</div>
-          <div id="blueSideThreeThree">51a</div>
+          <div id="blueSideThreeThree" onMouseDown={initial}>
+            51a
+          </div>
           <div>52a</div>
           <div>53a</div>
-          <div id="orangeSideThreeThree">54a</div>
+          <div id="orangeSideThreeThree" onMouseDown={initial}>
+            54a
+          </div>
           <div>55a</div>
           <div>56a</div>
           <div>57a</div>
