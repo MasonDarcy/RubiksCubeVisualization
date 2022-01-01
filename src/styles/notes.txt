@@ -44,3 +44,54 @@ e. So we just do the logic for each group i dont see a simpler way
 
 NewDay:  rotateModel90X(); When dragged south, achieves the rotation I want towards the user
 //rotate model90x turns it "right"
+
+11. Process of animation
+
+a. Mousemove triggers animateDelegator() function
+
+b. animateDelegator() function may trigger a hard rotation rotateModel90X();
+
+c. The rotateModel function will trigger a model change, and useEffect() is called
+
+d. useEffect() has no animations to play yet, so it does the following
+    1. Remaps all the colors for the model.
+    2. Re-orients the model for the animation
+    3. calls dispatchRotateEvent(); 
+
+e. dispatchRotateEvent 
+1. uses state information from the target div to trigger an animation.
+2. Sets up a delayed listener that then mutates the model by applying the rotations
+associated with the animation. 
+3. This triggers useEffect()
+
+f. the useEffect() is triggered by the model change
+1. resets the animation class state 
+2. repaints the model so its consistent
+
+So, I think I need to get into the setTimeout and change the model exactly once.
+
+1. Upside down issues
+
+a. P1
+N-->N
+E-->E
+S-->S 
+W-->W
+
+b. P2
+N -->E 
+E --> S
+S --> W
+W --> N
+
+c. P3
+N --> S
+E --> W
+S --> N
+W --> E
+
+c P4
+N --> W
+E --> N
+S --> E
+W --> S

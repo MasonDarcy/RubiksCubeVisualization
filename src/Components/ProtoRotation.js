@@ -45,7 +45,132 @@ const ProtoRotation = () => {
     }
   };
 
-  const rotateModelAndRecolor = (sliceNum) => {
+  const xPerspectiveRemap = (direction) => {
+    let degree = xRotation % 360;
+
+    if (direction == "west" || direction == "east") {
+      return direction;
+    } else {
+      if (
+        (degree >= -90 && degree <= 90) ||
+        (degree >= 270 && degree <= 360) ||
+        (degree > -360 && degree < -270)
+      ) {
+        if (direction == "north" || direction == "south") {
+          return direction;
+        }
+      } else {
+        if (direction == "south") {
+          return "north";
+        } else {
+          return "south";
+        }
+      }
+    }
+  };
+
+  const getPerspectiveDirection = (direction) => {
+    let degree = yRotation % 360;
+    if (degree < 0) {
+      degree = 360 + degree;
+    }
+
+    let directionIndex = 0;
+
+    switch (direction) {
+      case "north":
+        directionIndex = 0;
+        break;
+      case "west":
+        directionIndex = 1;
+        break;
+      case "south":
+        directionIndex = 2;
+        break;
+      case "east":
+        directionIndex = 3;
+        break;
+    }
+
+    if (degree < 45 || degree > 315) {
+      console.log("P1");
+    }
+
+    if (degree < 315 && degree >= 225) {
+      console.log("P2");
+      directionIndex = (directionIndex + 7) % 4;
+    }
+
+    if (degree < 225 && degree > 135) {
+      console.log("P3");
+      directionIndex = (directionIndex + 6) % 4;
+    }
+
+    if (degree > 45 && degree <= 135) {
+      console.log("P4");
+      directionIndex = (directionIndex + 5) % 4;
+    }
+
+    console.log(-1 % 4);
+    console.log(-2 % 4);
+    console.log(-3 % 4);
+    console.log(-5 % 4);
+    let p1 = ["north", "west", "south", "east"];
+    console.log(`Margeee: ${Math.abs(directionIndex)}`);
+
+    return p1[Math.abs(directionIndex)];
+  };
+
+  const getPerspectiveDirectionOrange = (direction) => {
+    let degree = yRotation % 360;
+    if (degree < 0) {
+      degree = 360 + degree;
+    }
+
+    let directionIndex = 0;
+
+    switch (direction) {
+      case "north":
+        directionIndex = 0;
+        break;
+      case "east":
+        directionIndex = 1;
+        break;
+      case "south":
+        directionIndex = 2;
+        break;
+      case "west":
+        directionIndex = 3;
+        break;
+    }
+
+    if (degree < 45 || degree > 315) {
+      console.log("P1");
+    }
+
+    if (degree < 315 && degree >= 225) {
+      console.log("P2");
+      directionIndex = (directionIndex + 1) % 4;
+    }
+
+    if (degree < 225 && degree > 135) {
+      console.log("P3");
+      directionIndex = (directionIndex + 2) % 4;
+    }
+
+    if (degree > 45 && degree <= 135) {
+      console.log("P4");
+      directionIndex = (directionIndex + 3) % 4;
+    }
+
+    let p1 = ["north", "east", "south", "west"];
+
+    console.log(`Direction index: ${directionIndex}`);
+
+    return p1[Math.abs(directionIndex)];
+  };
+
+  const rotateModelAndRecolor = (sliceNum, rotationDirection) => {
     let rotationFunction;
     let swapped;
 
@@ -56,7 +181,7 @@ const ProtoRotation = () => {
       swapped = tools.rotate90(model[sliceNum]);
     } else {
       rotationFunction = tools.rotateColors90CC;
-      console.log(`sliceNum: ${sliceNum}`);
+      //  console.log(`sliceNum: ${sliceNum}`);
       swapped = tools.rotate90CC(model[sliceNum]);
     }
 
@@ -72,9 +197,9 @@ const ProtoRotation = () => {
     //setModel(copy);
   };
 
-  const dispatchRotateEvent = () => {
-    console.log(targetSlice);
-    console.log(rotationDirection);
+  const dispatchRotateEvent = (targetSlice, rotationDirection) => {
+    console.log(`targetSlice: ${targetSlice}`);
+    // console.log(rotationDirection);
     switch (targetSlice) {
       case "bottom":
         switch (rotationDirection) {
@@ -101,6 +226,7 @@ const ProtoRotation = () => {
         }
         break;
       case "top":
+        console.log(rotationDirection);
         switch (rotationDirection) {
           case "c":
             setTopClassName("protoShiftTopC");
@@ -116,10 +242,14 @@ const ProtoRotation = () => {
 
     setTimeout(() => {
       //need slice num
-      let copy = rotateModelAndRecolor(planeToNum());
+      let copy = rotateModelAndRecolor(
+        planeToNum(targetSlice),
+        rotationDirection
+      );
       //This rotation needs to be conditionally performed.
       //
-      console.log(`rotationToBe: ${rotationToBe}`);
+      // console.log(`rotationToBe: ${rotationToBe}`);
+
       switch (rotationToBe) {
         case "initialFloor":
           break;
@@ -132,11 +262,11 @@ const ProtoRotation = () => {
       }
 
       setModel(copy);
-      console.log("rotate and recolor");
+      //  console.log("rotate and recolor");
     }, 5000);
   };
 
-  function planeToNum() {
+  function planeToNum(targetSlice) {
     switch (targetSlice) {
       case "top":
         return 0;
@@ -156,6 +286,7 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
       return;
     } else {
       if (topClassName) {
+        console.log(`Rotation to be: ${rotationToBe}`);
         switch (rotationToBe) {
           case "initialFloor":
             colorUtils.remapSliceColors(0, model, el);
@@ -186,7 +317,7 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
         setRotation("initialFloor");
         setMiddleClassName(null);
       } else if (bottomClassName) {
-        console.log(rotationToBe);
+        //  console.log(rotationToBe);
         switch (rotationToBe) {
           case "initialFloor":
             colorUtils.remapSliceColors(2, model, el);
@@ -203,25 +334,26 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
         setRotation("initialFloor");
         setBottomClassName(null);
       } else {
-        console.log(`rotation to be: ${rotationToBe}`);
+        //   console.log(`rotation to be: ${rotationToBe}`);
+        console.log("Use effect else called.");
         switch (rotationToBe) {
           case "initialFloor":
             // console.log(model);
             // colorUtils.remapSliceColors(2, model, el);
             // colorUtils.remapAllColorsX(model, el, "left");
             //    setRotation(rotationToBe);
-            dispatchRotateEvent();
+            dispatchRotateEvent(targetSlice, rotationDirection);
             break;
           case "rotatedFloor90Y":
             setRotation(rotationToBe);
             colorUtils.remapAllColors(model, el, "right");
-            dispatchRotateEvent();
+            dispatchRotateEvent(targetSlice, rotationDirection);
             break;
           case "rotatedFloor90X":
-            console.log("First useEffect call");
+            //    console.log("First useEffect call");
             setRotation(rotationToBe);
             colorUtils.remapAllColorsX(model, el, "right");
-            dispatchRotateEvent();
+            dispatchRotateEvent(targetSlice, rotationDirection);
             break;
         }
       }
@@ -241,7 +373,7 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
   function rotateModel90Y() {
     let copy = JSON.parse(JSON.stringify(model));
     let coords = cubeModel.modelToCoordinateArray();
-    console.log(coords);
+    //console.log(coords);
 
     //"left" here controls direction I think
     let shiftedUniverse = cubeModel.rotateUniverse(coords, "left");
@@ -257,12 +389,12 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
     let copy = JSON.parse(JSON.stringify(matrix));
     let coords = cubeModel.modelToCoordinateArray();
     //"left" here controls direction I think
-    console.log(coords);
+    //  console.log(coords);
     let shiftedUniverse = cubeModel.rotateUniverse(coords, "right");
-    console.log(shiftedUniverse);
+    // console.log(shiftedUniverse);
     let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-    console.log(model);
-    console.log(newModel);
+    // console.log(model);
+    // console.log(newModel);
     //setRotationToBe("initialFloor");
     //setModel(newModel);
     return newModel;
@@ -281,19 +413,19 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
     // console.log(newModel);
     setRotationToBe("rotatedFloor90X");
     setModel(newModel);
-    console.log("RotateModel90X called");
+    // console.log("RotateModel90X called");
   }
 
   function rotateModelNeg90X(matrix) {
     let copy = JSON.parse(JSON.stringify(matrix));
     let coords = cubeModel.modelToCoordinateArray();
     //"left" here controls direction I think
-    console.log(coords);
+    // console.log(coords);
     let shiftedUniverse = cubeModel.rotateUniverseX(coords, "left");
-    console.log(shiftedUniverse);
+    // console.log(shiftedUniverse);
     let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-    console.log(model);
-    console.log(newModel);
+    // console.log(model);
+    // console.log(newModel);
     //setRotationToBe("initialFloor");
     return newModel;
     //setModel(newModel);
@@ -319,10 +451,13 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
     if (e.currentTarget === e.target) {
       if (setMouseDownRotation) {
         setMouseDownRotation(false);
-        console.log(xRotation);
+
         setXRotation(xRotation + initialMouseXPos - e.pageY);
         setYRotation(yRotation + e.pageX - initialMouseYPos);
-        console.log(isXUpsideDown());
+        console.log(`isUpsideDown: ${isXUpsideDown()}`);
+
+        //  console.log(yRotation % 360);
+        //  getPerspectiveDirection();
       }
     }
   };
@@ -331,22 +466,22 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
     e.preventDefault();
     if (mouseDown) {
       if (e.pageX > oldX && e.pageY == oldY) {
-        console.log("East");
+        console.log("Mousemove: East");
         setDirection("East");
         animationDelegator(e.target.id, "east");
         setMouseDown(false);
       } else if (e.pageX == oldX && e.pageY > oldY) {
-        setDirection("South");
+        setDirection("Mousemove: South");
         console.log("South");
         animationDelegator(e.target.id, "south");
         setMouseDown(false);
       } else if (e.pageX == oldX && e.pageY < oldY) {
-        console.log("North");
+        console.log("Mousemove: North");
         setDirection("North");
         animationDelegator(e.target.id, "north");
         setMouseDown(false);
       } else if (e.pageX < oldX && e.pageY == oldY) {
-        console.log("West");
+        console.log("Mousemove: West");
         setDirection("West");
         animationDelegator(e.target.id, "west");
         setMouseDown(false);
@@ -365,47 +500,50 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
   };
 
   const animationDelegator = (id, direction) => {
+    /*Logic here to determine direction as a function of viewer perspective.*/
+    let remappedDirection = 0;
     switch (id) {
       case "redSideOneOne":
-        switch (rotation) {
-          case "initialFloor":
-            switch (direction) {
-              case "west":
-                console.log(
-                  `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-                );
-                setRotationDirection("cc");
-                setTargetSlice("bottom");
-                rotateModel90X();
-                break;
-              case "east":
-                console.log(
-                  `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-                );
-                setRotationDirection("c");
-                setTargetSlice("bottom");
-                rotateModel90X();
-                break;
-              case "north":
-                console.log(
-                  `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-                );
-                setRotationDirection("c");
-                setTargetSlice("bottom");
-                rotateModel90Y();
-                break;
-              case "south":
-                console.log(
-                  `id: ${id}, rotation: ${rotation}, direction: ${direction}`
-                );
-                setRotationDirection("cc");
-                setTargetSlice("bottom");
-                rotateModel90Y();
-                break;
-            }
+        console.log(`degree: ${yRotation}`);
+        remappedDirection = getPerspectiveDirection(direction);
+        console.log(`RemappedDirection: ${remappedDirection}`);
+
+        switch (remappedDirection) {
+          case "west":
+            console.log(
+              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+            );
+            setRotationDirection("cc");
+            setTargetSlice("bottom");
+            rotateModel90X();
+            break;
+          case "east":
+            console.log(
+              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+            );
+            setRotationDirection("c");
+            setTargetSlice("bottom");
+            rotateModel90X();
+            break;
+          case "north":
+            console.log(
+              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+            );
+            setRotationDirection("c");
+            setTargetSlice("bottom");
+            rotateModel90Y();
+            break;
+          case "south":
+            console.log(
+              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+            );
+            setRotationDirection("cc");
+            setTargetSlice("bottom");
+            rotateModel90Y();
             break;
         }
         break;
+
       case "redSideOneTwo":
         break;
       case "redSideOneThree":
@@ -423,7 +561,47 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
       case "redSideThreeThree":
         break;
       case "orangeSideOneOne":
+        console.log(`degree: ${yRotation}`);
+        remappedDirection = getPerspectiveDirection(direction);
+
+        console.log(`RemappedDirection: ${remappedDirection}`);
+
+        switch (remappedDirection) {
+          case "west":
+            console.log(
+              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+            );
+            setRotationDirection("c");
+            setTargetSlice("bottom");
+            rotateModel90X();
+            break;
+          case "east":
+            console.log(
+              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+            );
+            setRotationDirection("cc");
+            setTargetSlice("bottom");
+            rotateModel90X();
+            break;
+          case "north":
+            console.log(
+              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+            );
+            setRotationDirection("c");
+            setTargetSlice("bottom");
+            rotateModel90Y();
+            break;
+          case "south":
+            console.log(
+              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+            );
+            setRotationDirection("cc");
+            setTargetSlice("bottom");
+            rotateModel90Y();
+            break;
+        }
         break;
+
       case "orangeSideOneTwo":
         break;
       case "orangeSideOneThree":
@@ -495,6 +673,44 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
       case "blueSideThreeThree":
         break;
       case "yellowSideOneOne":
+        remappedDirection = xPerspectiveRemap(direction);
+        console.log(remappedDirection);
+        switch (remappedDirection) {
+          case "west":
+            console.log(
+              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+            );
+            setRotationDirection("cc");
+            setTargetSlice("top");
+            setRotationToBe("initialFloor");
+            dispatchRotateEvent("top", "cc");
+            break;
+          case "east":
+            console.log(
+              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+            );
+            setRotationDirection("c");
+            setTargetSlice("top");
+            setRotationToBe("initialFloor");
+            dispatchRotateEvent("top", "c");
+            break;
+          case "north":
+            console.log(
+              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+            );
+            setRotationDirection("c");
+            setTargetSlice("bottom");
+            rotateModel90Y();
+            break;
+          case "south":
+            console.log(
+              `id: ${id}, rotation: ${rotation}, direction: ${direction}`
+            );
+            setRotationDirection("cc");
+            setTargetSlice("bottom");
+            rotateModel90Y();
+            break;
+        }
         break;
       case "yellowSideOneTwo":
         break;
@@ -568,7 +784,9 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
           <div id="blueSideOneTwo">34t</div>
           <div id="redSideTwoThree">35t</div>
           <div>36t</div>
-          <div id="yellowSideOneOne">37t</div>
+          <div id="yellowSideOneOne" onMouseDown={initial}>
+            37t
+          </div>
           <div>38t</div>
           <div>39t</div>
           <div id="greenSideOneThree">40t</div>
@@ -677,7 +895,9 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
           <div>3a</div>
           <div id="greenSideThreeOne">4a</div>
           <div>5a</div>
-          <div id="orangeSideOneOne">6a</div>
+          <div id="orangeSideOneOne" onMouseDown={initial}>
+            6a
+          </div>
           <div>7a</div>
           <div id="whiteSideThreeTwo">8a</div>
           <div>9a</div>

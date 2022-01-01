@@ -450,7 +450,7 @@ const updateModel = (coords, model) => {
       }
     }
   }
-  console.log(copy);
+  // console.log(copy);
   return copy;
 };
 //so then.. the New thing, at new[0][2][0] becomes what the model is at model[0][0][0]
