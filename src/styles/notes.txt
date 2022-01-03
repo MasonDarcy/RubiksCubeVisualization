@@ -95,3 +95,38 @@ N --> W
 E --> N
 S --> E
 W --> S
+
+1. TODO list
+
+a. Better user input (longer dashes)
+
+- xChange and yChange
+
+determine which changed more with Math.abs (gives you n-s, or w-e)
+determine if they're negative or positive (n-s or w-e)
+
+
+b. Lockout during animation, allow some time to recolor before user can  input again
+
+c. Fix mousedown issue when rotating (i think this is causing some real issues)
+
+d. Investigate lag 
+
+e. General refactoring
+
+f. Investigate further styling
+
+g. Auto solver? Random initializer
+
+h. Deploy
+
+
+Issue with mousedown 
+
+a. New idea
+
+b. Mousedown goes down
+
+c. Now, mouseover initializes some original co-ordinates
+
+d. On mouserelease, fire the direction calculator and animation.

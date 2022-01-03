@@ -1,15 +1,18 @@
 .seen {
-  perspective: calc(var(--perspective, 800) * 1px);
+  perspective: calc(var(--perspective, 1000) * 1px);
   transform-style: preserve-3d;
   height: 100vh;
   width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
+  outline: 1px solid transparent;
+
+  -webkit-backface-visibility: hidden;
 
   /* will-change: transform; */
-  --plain-height: 50;
-  --plain-width: 50;
+  --plain-height: 10;
+  --plain-width: 10;
   --x-rotation: -24;
   --y-rotation: -24;
   --z-rotation: 0;
@@ -210,8 +213,7 @@
 }
 
 .initialFloor {
-  background: rgba(162, 25, 230, 0.25);
-
+  background: rgba(57, 224, 66, 0.966);
   height: calc(var(--plain-height, 25) * 1vmin);
   width: calc(var(--plain-width, 25) * 1vmin);
   transform-style: preserve-3d;
@@ -318,6 +320,17 @@
   position: absolute;
   /* border: 1px solid lightcyan; */
   background: rgba(18, 195, 240, 0.1);
+}
+
+.topHorizontalPlane > div > p {
+  display: none;
+}
+.middleHorizontalPlane > div > p {
+  display: none;
+}
+
+.bottomHorizontalPlane > div > p {
+  display: none;
 }
 
 /*Position 1 cube horizontal-----------------------------------------------------------*/
@@ -1722,7 +1735,7 @@
 
 .protoShiftTopC {
   animation-name: protoMoveTopC;
-  animation-duration: 5s;
+  animation-duration: 1s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
@@ -1742,7 +1755,7 @@
 
 .protoShiftTopCC {
   animation-name: protoMoveTopCC;
-  animation-duration: 5s;
+  animation-duration: 1s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
@@ -1762,7 +1775,7 @@
 
 .protoShiftMiddleC {
   animation-name: protoMoveMiddleC;
-  animation-duration: 5s;
+  animation-duration: 1s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
@@ -1782,7 +1795,7 @@
 
 .protoShiftMiddleCC {
   animation-name: protoMoveMiddleCC;
-  animation-duration: 5s;
+  animation-duration: 1s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
@@ -1802,7 +1815,7 @@
 
 .protoShiftBottomC {
   animation-name: protoMoveBottomC;
-  animation-duration: 5s;
+  animation-duration: 1s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
@@ -1822,7 +1835,7 @@
 
 .protoShiftBottomCC {
   animation-name: protoMoveBottomCC;
-  animation-duration: 5s;
+  animation-duration: 1s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }

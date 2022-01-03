@@ -2,65 +2,47 @@ import "../styles/protorotation.css";
 import { useState, useRef, useEffect } from "react";
 import tools from "./helpers/util";
 import colorUtils from "./helpers/colorHelper";
+import perspectiveUtils from "./helpers/perspectiveTools";
+
 import cubeModel from "./helpers/cubeModel";
-const { v4: uuidv4 } = require("uuid");
 
 const ProtoRotation = () => {
   const [topClassName, setTopClassName] = useState(null);
   const [middleClassName, setMiddleClassName] = useState(null);
   const [bottomClassName, setBottomClassName] = useState(null);
   const [model, setModel] = useState(cubeModel.createTopSlice());
-  const [liminalModel, setLiminalModel] = useState(null);
-
+  const [animating, setAnimating] = useState(false);
   const [rotation, setRotation] = useState("initialFloor");
-  const [oldX, setOldX] = useState(0);
-  const [oldY, setOldY] = useState(0);
   const [mouseDown, setMouseDown] = useState(false);
   const [mouseDownRotation, setMouseDownRotation] = useState(false);
   const [rotationDirection, setRotationDirection] = useState(null);
-  const [direction, setDirection] = useState(null);
   const [targetSlice, setTargetSlice] = useState(null);
   const el = useRef(null);
   const plane = useRef(null);
   const firstRender = useRef(true);
-  const [lastSelected, setLastSelected] = useState(null);
-  const [triggerAnimation, setTriggerAnimation] = useState(false);
+  const xRef = useRef(null);
+  const yRef = useRef(null);
+  const targetRef = useRef(null);
+  const calculatingRef = useRef(false);
   const [initialMouseYPos, setInitialMouseYPos] = useState(null);
   const [initialMouseXPos, setInitialMouseXPos] = useState(null);
   const [xRotation, setXRotation] = useState(-24);
   const [yRotation, setYRotation] = useState(-24);
   const [rotationToBe, setRotationToBe] = useState(null);
 
-  const isXUpsideDown = () => {
-    let degree = xRotation % 360;
-    console.log(degree);
-    if (
-      (degree >= -90 && degree <= 90) ||
-      (degree >= 270 && degree <= 360) ||
-      (degree > -360 && degree < -270)
-    ) {
-      return "up";
-    } else {
-      return "down";
-    }
-  };
-
   const xPerspectiveRemap = (direction) => {
     let degree = xRotation % 360;
 
-    // if (direction == "west" || direction == "east") {
-    //   return direction;
-    // } else {
     if (
       (degree >= -90 && degree <= 90) ||
       (degree >= 270 && degree <= 360) ||
       (degree > -360 && degree < -270)
     ) {
-      // if (direction == "north" || direction == "south") {
-      //   return direction;
-      // }
+      console.log("Not upside down");
       return direction;
     } else {
+      console.log("Is upside down");
+
       if (direction == "south") {
         return "north";
       }
@@ -125,56 +107,6 @@ const ProtoRotation = () => {
     }
 
     let p1 = ["north", "west", "south", "east"];
-    //  console.log(`Margeee: ${Math.abs(directionIndex)}`);
-
-    return p1[Math.abs(directionIndex)];
-  };
-
-  const getPerspectiveDirectionOrange = (direction) => {
-    let degree = yRotation % 360;
-    if (degree < 0) {
-      degree = 360 + degree;
-    }
-
-    let directionIndex = 0;
-
-    switch (direction) {
-      case "north":
-        directionIndex = 0;
-        break;
-      case "east":
-        directionIndex = 1;
-        break;
-      case "south":
-        directionIndex = 2;
-        break;
-      case "west":
-        directionIndex = 3;
-        break;
-    }
-
-    if (degree < 45 || degree > 315) {
-      console.log("P1");
-    }
-
-    if (degree < 315 && degree >= 225) {
-      console.log("P2");
-      directionIndex = (directionIndex + 1) % 4;
-    }
-
-    if (degree < 225 && degree > 135) {
-      console.log("P3");
-      directionIndex = (directionIndex + 2) % 4;
-    }
-
-    if (degree > 45 && degree <= 135) {
-      console.log("P4");
-      directionIndex = (directionIndex + 3) % 4;
-    }
-
-    let p1 = ["north", "east", "south", "west"];
-
-    console.log(`Direction index: ${directionIndex}`);
 
     return p1[Math.abs(directionIndex)];
   };
@@ -185,12 +117,10 @@ const ProtoRotation = () => {
 
     if (rotationDirection == "c") {
       rotationFunction = tools.rotateColors90C;
-      console.log(`sliceNum: ${sliceNum}`);
 
       swapped = tools.rotate90(model[sliceNum]);
     } else {
       rotationFunction = tools.rotateColors90CC;
-      //  console.log(`sliceNum: ${sliceNum}`);
       swapped = tools.rotate90CC(model[sliceNum]);
     }
 
@@ -203,22 +133,17 @@ const ProtoRotation = () => {
     let copy = JSON.parse(JSON.stringify(model));
     copy[sliceNum] = swapped;
     return copy;
-    //setModel(copy);
   };
 
   const dispatchRotateEvent = (targetSlice, rotationDirection) => {
-    console.log(`targetSlice: ${targetSlice}`);
-    // console.log(rotationDirection);
     switch (targetSlice) {
       case "bottom":
         switch (rotationDirection) {
           case "c":
             setBottomClassName("protoShiftBottomC");
-            console.log("DRE: C");
             break;
           case "cc":
             setBottomClassName("protoShiftBottomCC");
-            console.log("DRE: CC");
             break;
         }
         break;
@@ -226,24 +151,19 @@ const ProtoRotation = () => {
         switch (rotationDirection) {
           case "c":
             setMiddleClassName("protoShiftMiddleC");
-            console.log("DRE: C");
             break;
           case "cc":
             setMiddleClassName("protoShiftMiddleCC");
-            console.log("DRE: CC");
             break;
         }
         break;
       case "top":
-        console.log(rotationDirection);
         switch (rotationDirection) {
           case "c":
             setTopClassName("protoShiftTopC");
-            console.log("DRE: C");
             break;
           case "cc":
             setTopClassName("protoShiftTopCC");
-            console.log("DRE: CC");
             break;
         }
         break;
@@ -272,7 +192,7 @@ const ProtoRotation = () => {
 
       setModel(copy);
       //  console.log("rotate and recolor");
-    }, 5000);
+    }, 1000);
   };
 
   function planeToNum(targetSlice) {
@@ -289,13 +209,20 @@ const ProtoRotation = () => {
   /*Based on the current animation that was called, remaps colors and sets to null.
 Otherwise, we changed the rotation axis, then it's responsible for triggering an animation.
 */
+  const dragstart = (e) => {
+    e.preventDefault();
+  };
+
+  const drop = (e) => {
+    e.preventDefault();
+  };
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
       return;
     } else {
+      console.log("useEffect called");
       if (topClassName) {
-        console.log(`Rotation to be: ${rotationToBe}`);
         switch (rotationToBe) {
           case "initialFloor":
             colorUtils.remapSliceColors(0, model, el);
@@ -344,13 +271,8 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
         setBottomClassName(null);
       } else {
         //   console.log(`rotation to be: ${rotationToBe}`);
-        console.log("Use effect else called.");
         switch (rotationToBe) {
           case "initialFloor":
-            // console.log(model);
-            // colorUtils.remapSliceColors(2, model, el);
-            // colorUtils.remapAllColorsX(model, el, "left");
-            //    setRotation(rotationToBe);
             dispatchRotateEvent(targetSlice, rotationDirection);
             break;
           case "rotatedFloor90Y":
@@ -359,7 +281,6 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
             dispatchRotateEvent(targetSlice, rotationDirection);
             break;
           case "rotatedFloor90X":
-            //    console.log("First useEffect call");
             setRotation(rotationToBe);
             colorUtils.remapAllColorsX(model, el, "right");
             dispatchRotateEvent(targetSlice, rotationDirection);
@@ -371,9 +292,13 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
   /*Sets up mousemove event listener.--------------------------------------------------*/
   useEffect(() => {
     window.addEventListener("mousemove", mousemoving);
+    window.addEventListener("dragstart", dragstart);
+    window.addEventListener("drop", drop);
 
     return () => {
       window.removeEventListener("mousemove", mousemoving);
+      window.removeEventListener("dragstart", dragstart);
+      window.removeEventListener("drop", drop);
     };
   });
   /*----------------------------------------------------------------------------------*/
@@ -382,14 +307,8 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
   function rotateModel90Y() {
     let copy = JSON.parse(JSON.stringify(model));
     let coords = cubeModel.modelToCoordinateArray();
-    //console.log(coords);
-
-    //"left" here controls direction I think
     let shiftedUniverse = cubeModel.rotateUniverse(coords, "left");
-    // console.log(shiftedUniverse);
-    //Produces a matrix, each "point" has the co-ordinates of where it should go
     let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-
     setRotationToBe("rotatedFloor90Y");
     setModel(newModel);
   }
@@ -397,115 +316,127 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
   function rotateModelNeg90Y(matrix) {
     let copy = JSON.parse(JSON.stringify(matrix));
     let coords = cubeModel.modelToCoordinateArray();
-    //"left" here controls direction I think
-    //  console.log(coords);
     let shiftedUniverse = cubeModel.rotateUniverse(coords, "right");
-    // console.log(shiftedUniverse);
     let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-    // console.log(model);
-    // console.log(newModel);
-    //setRotationToBe("initialFloor");
-    //setModel(newModel);
     return newModel;
   }
 
   function rotateModel90X() {
     let copy = JSON.parse(JSON.stringify(model));
     let coords = cubeModel.modelToCoordinateArray();
-    //"left" here controls direction I think
-    // console.log(coords);
     let shiftedUniverse = cubeModel.rotateUniverseX(coords, "right");
-    //Left pushes it away from the user
-    //  console.log(shiftedUniverse);
     let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-    // console.log(model);
-    // console.log(newModel);
     setRotationToBe("rotatedFloor90X");
     setModel(newModel);
-    // console.log("RotateModel90X called");
   }
 
   function rotateModelNeg90X(matrix) {
     let copy = JSON.parse(JSON.stringify(matrix));
     let coords = cubeModel.modelToCoordinateArray();
-    //"left" here controls direction I think
-    // console.log(coords);
     let shiftedUniverse = cubeModel.rotateUniverseX(coords, "left");
-    // console.log(shiftedUniverse);
     let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-    // console.log(model);
-    // console.log(newModel);
-    //setRotationToBe("initialFloor");
     return newModel;
-    //setModel(newModel);
   }
 
   /*---------------------------------------------------------------------------.*/
   /*Initializes mousedown state.*/
   const initial = (e) => {
+    console.log("initial");
     setMouseDown(true);
+    e.stopPropagation();
+  };
+
+  /*Initializes mousedown state. Fires animation if not already animating.*/
+  const shiftRelease = (e) => {
+    console.log("shift release");
+    if (!animating) {
+      setMouseDown(false);
+      if (xRef.current && yRef.current) {
+        protoDirectionDetection(e.pageX, e.pageY);
+      }
+    }
+    e.stopPropagation();
   };
 
   /*Initializes user rotation state.*/
   const initialRotation = (e) => {
-    if (e.currentTarget === e.target) {
-      setMouseDownRotation(true);
-      setInitialMouseYPos(e.pageX);
-      setInitialMouseXPos(e.pageY);
-    }
+    console.log("intialRotation rotation called");
+    setMouseDownRotation(true);
+    setInitialMouseYPos(e.pageX);
+    setInitialMouseXPos(e.pageY);
   };
 
   /*Initializes user rotation state.*/
   const releaseRotation = (e) => {
-    if (e.currentTarget === e.target) {
-      if (setMouseDownRotation) {
-        setMouseDownRotation(false);
+    if (setMouseDownRotation) {
+      console.log("release rotation called");
+      setMouseDownRotation(false);
+      setXRotation(xRotation + initialMouseXPos - e.pageY);
+      setYRotation(yRotation + e.pageX - initialMouseYPos);
+    }
+  };
 
-        setXRotation(xRotation + initialMouseXPos - e.pageY);
-        setYRotation(yRotation + e.pageX - initialMouseYPos);
-        console.log(`isUpsideDown: ${isXUpsideDown()}`);
-
-        //  console.log(yRotation % 360);
-        //  getPerspectiveDirection();
+  const protoDirectionDetection = (x, y) => {
+    setAnimating(true);
+    console.log(`x: ${x}`);
+    console.log(`y: ${y}`);
+    console.log(`xRef: ${xRef.current}`);
+    console.log(`yRef: ${yRef.current}`);
+    let xChange = x - xRef.current;
+    let yChange = y - yRef.current;
+    console.log(`xChange: ${xChange}`);
+    console.log(`yChange: ${yChange}`);
+    let axis;
+    Math.abs(xChange) >= Math.abs(yChange) ? (axis = "x") : (axis = "y");
+    if (x == xRef.current && y == yRef.current) {
+      return;
+    } else {
+      if (axis == "x") {
+        if (xChange > 0) {
+          animationDelegator(targetRef.current, "east");
+        } else {
+          animationDelegator(targetRef.current, "west");
+        }
+      } else {
+        if (yChange > 0) {
+          animationDelegator(targetRef.current, "south");
+        } else {
+          animationDelegator(targetRef.current, "north");
+        }
       }
+
+      // setCalculatingDirection(false);
+      setTimeout(() => {
+        calculatingRef.current = false;
+        // setMouseDown(false);
+        xRef.current = null;
+        yRef.current = null;
+        setAnimating(false);
+      }, 1025);
+      // }, 150);
     }
   };
 
   const mousemoving = (e) => {
     e.preventDefault();
     if (mouseDown) {
-      if (e.pageX > oldX && e.pageY == oldY) {
-        console.log("Mousemove: East");
-        setDirection("East");
-        animationDelegator(e.target.id, "east");
-        setMouseDown(false);
-      } else if (e.pageX == oldX && e.pageY > oldY) {
-        setDirection("Mousemove: South");
-        console.log("South");
-        animationDelegator(e.target.id, "south");
-        setMouseDown(false);
-      } else if (e.pageX == oldX && e.pageY < oldY) {
-        console.log("Mousemove: North");
-        setDirection("North");
-        animationDelegator(e.target.id, "north");
-        setMouseDown(false);
-      } else if (e.pageX < oldX && e.pageY == oldY) {
-        console.log("Mousemove: West");
-        setDirection("West");
-        animationDelegator(e.target.id, "west");
-        setMouseDown(false);
+      if (!calculatingRef.current) {
+        targetRef.current = e.target.id;
+        // protoDirectionDetection(e.pageX, e.pageY);
+        // setCalculatingDirection(true);
+        xRef.current = e.pageX;
+        yRef.current = e.pageY;
+        calculatingRef.current = true;
       }
-    }
-
-    if (mouseDownRotation) {
+    } else if (mouseDownRotation) {
       let changeY = e.pageX - initialMouseYPos;
       let changeX = initialMouseXPos - e.pageY;
       plane.current.style.setProperty(`--x-rotation`, xRotation + changeX);
       plane.current.style.setProperty(`--y-rotation`, yRotation + changeY);
     }
 
-    setOldX(e.pageX);
-    setOldY(e.pageY);
+    // xRef.current = e.pageX;
+    // yRef.current = e.pageY;
   };
 
   const testHelper = (rotationDirection) => {
@@ -553,15 +484,18 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
   };
 
   const animate = (direction, sliceTuple, colorData, reverse, xReverse) => {
-    console.log(`degree: ${yRotation}`);
+    //  console.log(`degree: ${yRotation}`);
     let remappedDirection;
     if (xReverse) {
-      remappedDirection = xPerspectiveRemap(direction);
+      remappedDirection = perspectiveUtils.xPerspectiveRemap(
+        direction,
+        xRotation
+      );
     } else {
       remappedDirection = getPerspectiveDirection(direction, reverse);
     }
 
-    console.log(`RemappedDirection: ${remappedDirection}`);
+    //  console.log(`RemappedDirection: ${remappedDirection}`);
 
     switch (remappedDirection) {
       case "west":
@@ -610,7 +544,7 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
 
   const animationDelegator = (id, direction) => {
     /*Logic here to determine direction as a function of viewer perspective.*/
-    let remappedDirection = 0;
+    //let remappedDirection = 0;
     let sliceTuple;
     switch (id) {
       case "redSideOneOne":
@@ -833,326 +767,311 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
   };
 
   return (
-    <div
-      className="seen"
-      ref={el}
-      onMouseUp={releaseRotation}
-      onMouseDown={initialRotation}
-    >
-      <div className={rotation} ref={plane}>
-        <div
-          onClick={() => {
-            setLastSelected(1);
-          }}
-          className={`topHorizontalPlane ${topClassName}`}
-        >
-          <div>1t</div>
-          <div id="whiteSideOneOne" onMouseDown={initial}>
-            2t
+    <div>
+      <div
+        className="seen"
+        ref={el}
+        onMouseUp={
+          mouseDown ? shiftRelease : mouseDownRotation ? releaseRotation : null
+        }
+        onMouseDown={initialRotation}
+      >
+        <div className={rotation} ref={plane}>
+          <div className={`topHorizontalPlane ${topClassName}`}>
+            <div></div>
+            <div id="whiteSideOneOne" onMouseDown={initial}>
+              <p>a</p>
+            </div>
+            <div></div>
+            <div id="greenSideOneOne" onMouseDown={initial}>
+              <p>green</p>
+            </div>
+            <div id="redSideOneOne" onMouseDown={initial}>
+              <p>red</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div id="whiteSideOneTwo" onMouseDown={initial}>
+              <p>b</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div id="redSideOneTwo" onMouseDown={initial}>
+              <p>red</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div id="whiteSideOneThree" onMouseDown={initial}>
+              <p>c</p>
+            </div>
+            <div id="blueSideOneOne" onMouseDown={initial}>
+              <p>blue</p>
+            </div>
+            <div>
+              {" "}
+              <p>blue</p>
+            </div>
+            <div id="redSideOneThree" onMouseDown={initial}>
+              <p>red</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="greenSideOneTwo" onMouseDown={initial}>
+              <p>green</p>
+            </div>
+            <div id="redSideTwoOne" onMouseDown={initial}>
+              <p>red</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="anomalousYellowOneOne">
+              <p>yellow?</p>
+            </div>
+            <div></div>
+            <div id="redSideTwoTwo" onMouseDown={initial}>
+              <p>red</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="blueSideOneTwo" onMouseDown={initial}>
+              <p>blue</p>
+            </div>
+            <div></div>
+            <div id="redSideTwoThree" onMouseDown={initial}>
+              <p>red</p>
+            </div>
+            <div></div>
+            <div id="yellowSideOneOne" onMouseDown={initial}>
+              <p>yellow</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div id="greenSideOneThree" onMouseDown={initial}>
+              <p>green</p>
+            </div>
+            <div id="redSideThreeOne" onMouseDown={initial}>
+              <p>red</p>
+            </div>
+            <div></div>
+            <div id="yellowSideOneTwo" onMouseDown={initial}>
+              <p>yellow?</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="redSideThreeTwo" onMouseDown={initial}>
+              <p>red</p>
+            </div>
+            <div></div>
+            <div onMouseDown={initial} id="yellowSideOneThree"></div>
+            <div></div>
+            <div id="blueSideOneThree" onMouseDown={initial}>
+              <p>blue</p>
+            </div>
+            <div></div>
+            <div id="redSideThreeThree" onMouseDown={initial}>
+              <p>red</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
-          <div>3t</div>
-          <div id="greenSideOneOne" onMouseDown={initial}>
-            4t
+          <div className={`middleHorizontalPlane ${middleClassName}`}>
+            <div></div>
+            <div id="whiteSideTwoOne" onMouseDown={initial}>
+              <p>d</p>
+            </div>
+            <div></div>
+            <div id="greenSideTwoOne" onMouseDown={initial}>
+              <p>green</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="whiteSideTwoTwo" onMouseDown={initial}>
+              <p>e</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="whiteSideTwoThree" onMouseDown={initial}>
+              <p>f</p>
+            </div>
+            <div id="blueSideTwoOne" onMouseDown={initial}>
+              <p>blue</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="greenSideTwoTwo" onMouseDown={initial}>
+              <p>green</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="blueSideTwoTwo" onMouseDown={initial}>
+              <p>blue</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="yellowSideTwoOne" onMouseDown={initial}>
+              <p>yellow</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div id="greenSideTwoThree" onMouseDown={initial}>
+              <p>green</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div id="yellowSideTwoTwo" onMouseDown={initial}>
+              <p>yellow</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="yellowSideTwoThree" onMouseDown={initial}>
+              <p>yellow</p>
+            </div>
+            <div></div>
+            <div id="blueSideTwoThree" onMouseDown={initial}>
+              <p>blue</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
-          <div id="redSideOneOne" onMouseDown={initial}>
-            {" "}
-            5t
+          <div className={`bottomHorizontalPlane ${bottomClassName}`}>
+            <div></div>
+            <div id="whiteSideThreeOne" onMouseDown={initial}>
+              <p>g</p>
+            </div>
+            <div></div>
+            <div id="greenSideThreeOne" onMouseDown={initial}>
+              <p>green</p>
+            </div>
+            <div></div>
+            <div id="orangeSideOneOne" onMouseDown={initial}>
+              <p>orange</p>
+            </div>
+            <div></div>
+            <div id="whiteSideThreeTwo" onMouseDown={initial}>
+              <p>h</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="orangeSideOneTwo" onMouseDown={initial}>
+              <p>orange</p>
+            </div>
+            <div></div>
+            <div id="whiteSideThreeThree" onMouseDown={initial}>
+              <p>i</p>
+            </div>
+            <div id="blueSideThreeOne" onMouseDown={initial}>
+              <p>blue</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div id="orangeSideOneThree" onMouseDown={initial}>
+              <p>orange</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="greenSideThreeTwo" onMouseDown={initial}>
+              <p>green</p>
+            </div>
+            <div></div>
+            <div id="orangeSideTwoOne" onMouseDown={initial}>
+              <p>orange</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="orangeSideTwoTwo" onMouseDown={initial}>
+              <p>orange</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div id="blueSideThreeTwo" onMouseDown={initial}>
+              <p>blue</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div id="orangeSideTwoThree" onMouseDown={initial}>
+              <p>orange</p>
+            </div>
+            <div id="yellowSideThreeOne" onMouseDown={initial}>
+              <p>yellow</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div id="greenSideThreeThree" onMouseDown={initial}>
+              <p>green</p>
+            </div>
+            <div></div>
+            <div id="orangeSideThreeOne" onMouseDown={initial}></div>
+            <div id="yellowSideThreeTwo" onMouseDown={initial}>
+              <p>yellow</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div id="orangeSideThreeTwo" onMouseDown={initial}>
+              <p>orange</p>
+            </div>
+            <div id="yellowSideThreeThree" onMouseDown={initial}>
+              <p>yellow</p>
+            </div>
+            <div></div>
+            <div id="blueSideThreeThree" onMouseDown={initial}>
+              <p>blue</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div id="orangeSideThreeThree" onMouseDown={initial}>
+              <p>orange</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
-          <div>6t</div>
-          <div>7t</div>
-          <div id="whiteSideOneTwo" onMouseDown={initial}>
-            8t
-          </div>
-          <div>9t</div>
-          <div>10t</div>
-          <div id="redSideOneTwo" onMouseDown={initial}>
-            11t{" "}
-          </div>
-          <div>12t</div>
-          <div>13t</div>
-          <div id="whiteSideOneThree" onMouseDown={initial}>
-            14t
-          </div>
-          <div id="blueSideOneOne" onMouseDown={initial}>
-            15t
-          </div>
-          <div>16t</div>
-          <div id="redSideOneThree" onMouseDown={initial}>
-            17t
-          </div>
-          <div>18t</div>
-          <div>19t</div>
-          <div>20t</div>
-          <div>21t</div>
-          <div id="greenSideOneTwo" onMouseDown={initial}>
-            22t
-          </div>
-          <div id="redSideTwoOne" onMouseDown={initial}>
-            23t
-          </div>
-          <div>24t</div>
-          <div>25t</div>
-          <div>26t</div>
-          <div id="yellowSideOneOne" onMouseDown={initial}>
-            27t
-          </div>
-          <div>28t</div>
-          <div id="redSideTwoTwo" onMouseDown={initial}>
-            29t
-          </div>
-          <div>30t</div>
-          <div>31t</div>
-          <div>32t</div>
-          <div id="blueSideOneTwo" onMouseDown={initial}>
-            33t{" "}
-          </div>
-          <div>34t</div>
-          <div id="redSideTwoThree" onMouseDown={initial}>
-            35t
-          </div>
-          <div>36t</div>
-          <div id="yellowSideOneOne" onMouseDown={initial}>
-            37t
-          </div>
-          <div>38t</div>
-          <div>39t</div>
-          <div id="greenSideOneThree" onMouseDown={initial}>
-            40t
-          </div>
-          <div id="redSideThreeOne" onMouseDown={initial}>
-            41t
-          </div>
-          <div>42t</div>
-          <div id="yellowSideOneTwo" onMouseDown={initial}>
-            43t
-          </div>
-          <div>44t</div>
-          <div>45t</div>
-          <div>46t</div>
-          <div id="redSideThreeTwo" onMouseDown={initial}>
-            47t
-          </div>
-          <div>48t</div>
-          <div onMouseDown={initial} id="yellowSideOneThree">
-            49t
-          </div>
-          <div>50t</div>
-          <div id="blueSideOneThree" onMouseDown={initial}>
-            51t
-          </div>
-          <div>52t</div>
-          <div id="redSideThreeThree" onMouseDown={initial}>
-            53t
-          </div>
-          <div>54t</div>
-          <div>55t</div>
-          <div>56t</div>
-          <div>57t</div>
-          <div>58t</div>
-          <div>59t</div>
-          <div>60t</div>
-        </div>
-        <div
-          className={`middleHorizontalPlane ${middleClassName}`}
-          onClick={() => {
-            // rotateEvent("protoShiftMiddle");
-            setLastSelected(2);
-          }}
-        >
-          <div>1</div>
-          <div id="whiteSideTwoOne" onMouseDown={initial}>
-            2
-          </div>
-          <div>3</div>
-          <div id="greenSideTwoOne" onMouseDown={initial}>
-            4
-          </div>
-          <div>5</div>
-          <div>6</div>
-          <div>7</div>
-          <div id="whiteSideTwoTwo" onMouseDown={initial}>
-            8
-          </div>
-          <div>9</div>
-          <div>10</div>
-          <div>11</div>
-          <div>12</div>
-          <div>13</div>
-          <div id="whiteSideTwoThree" onMouseDown={initial}>
-            14
-          </div>
-          <div id="blueSideTwoOne" onMouseDown={initial}>
-            15
-          </div>
-          <div>16</div>
-          <div>17</div>
-          <div>18</div>
-          <div>19</div>
-          <div>20</div>
-          <div>21</div>
-          <div id="greenSideTwoTwo" onMouseDown={initial}>
-            22
-          </div>
-          <div>23</div>
-          <div>24</div>
-          <div>25</div>
-          <div>26</div>
-          <div>27</div>
-          <div>28</div>
-          <div>29</div>
-          <div>30</div>
-          <div>31</div>
-          <div>32</div>
-          <div id="blueSideTwoTwo" onMouseDown={initial}>
-            33
-          </div>
-          <div>34</div>
-          <div>35</div>
-          <div>36</div>
-          <div id="yellowSideTwoOne" onMouseDown={initial}>
-            37
-          </div>
-          <div>38</div>
-          <div>39</div>
-          <div id="greenSideTwoThree" onMouseDown={initial}>
-            40
-          </div>
-          <div>41</div>
-          <div>42</div>
-          <div id="yellowSideTwoTwo" onMouseDown={initial}>
-            43
-          </div>
-          <div>44</div>
-          <div>45</div>
-          <div>46</div>
-          <div>47</div>
-          <div>48</div>
-          <div id="yellowSideTwoThree" onMouseDown={initial}>
-            49
-          </div>
-          <div>50</div>
-          <div id="blueSideTwoThree" onMouseDown={initial}>
-            51
-          </div>
-          <div>52</div>
-          <div>53</div>
-          <div>54</div>
-          <div>55</div>
-          <div>56</div>
-          <div>57</div>
-          <div>58</div>
-          <div>59</div>
-          <div>60</div>
-        </div>
-        <div
-          className={`bottomHorizontalPlane ${bottomClassName}`}
-          onClick={() => {
-            //    rotateEvent("protoShiftBottom");
-            setLastSelected(3);
-          }}
-        >
-          <div>1a</div>
-          <div id="whiteSideThreeOne" onMouseDown={initial}>
-            2a
-          </div>
-          <div>3a</div>
-          <div id="greenSideThreeOne" onMouseDown={initial}>
-            4a
-          </div>
-          <div>5a</div>
-          <div id="orangeSideOneOne" onMouseDown={initial}>
-            6a
-          </div>
-          <div>7a</div>
-          <div id="whiteSideThreeTwo" onMouseDown={initial}>
-            8a
-          </div>
-          <div>9a</div>
-          <div>10a</div>
-          <div>11a</div>
-          <div id="orangeSideOneTwo" onMouseDown={initial}>
-            12a
-          </div>
-          <div>13a</div>
-          <div id="whiteSideThreeThree" onMouseDown={initial}>
-            14a
-          </div>
-          <div id="blueSideThreeOne" onMouseDown={initial}>
-            15a
-          </div>
-          <div>16a</div>
-          <div>17a</div>
-          <div id="orangeSideOneThree" onMouseDown={initial}>
-            18a
-          </div>
-          <div>19a</div>
-          <div>20a</div>
-          <div>21a</div>
-          <div id="greenSideThreeTwo" onMouseDown={initial}>
-            22a
-          </div>
-          <div>23a</div>
-          <div id="orangeSideTwoOne" onMouseDown={initial}>
-            24a
-          </div>
-          <div>25a</div>
-          <div>26a</div>
-          <div>27a</div>
-          <div>28a</div>
-          <div>29a</div>
-          <div id="orangeSideTwoTwo" onMouseDown={initial}>
-            30a
-          </div>
-          <div>31a</div>
-          <div>32a</div>
-          <div id="blueSideThreeTwo" onMouseDown={initial}>
-            33a
-          </div>
-          <div>34a</div>
-          <div>35a</div>
-          <div id="orangeSideTwoThree" onMouseDown={initial}>
-            36a
-          </div>
-          <div id="yellowSideThreeOne" onMouseDown={initial}>
-            37a
-          </div>
-          <div>38a</div>
-          <div>39a</div>
-          <div id="greenSideThreeThree" onMouseDown={initial}>
-            40a
-          </div>
-          <div>41a</div>
-          <div id="orangeSideThreeOne" onMouseDown={initial}>
-            42a
-          </div>
-          <div id="yellowSideThreeTwo" onMouseDown={initial}>
-            43a
-          </div>
-          <div>44a</div>
-          <div>45a</div>
-          <div>46a</div>
-          <div>47a</div>
-          <div id="orangeSideThreeTwo" onMouseDown={initial}>
-            48a
-          </div>
-          <div id="yellowSideThreeThree" onMouseDown={initial}>
-            49a
-          </div>
-          <div>50a</div>
-          <div id="blueSideThreeThree" onMouseDown={initial}>
-            51a
-          </div>
-          <div>52a</div>
-          <div>53a</div>
-          <div id="orangeSideThreeThree" onMouseDown={initial}>
-            54a
-          </div>
-          <div>55a</div>
-          <div>56a</div>
-          <div>57a</div>
-          <div>58a</div>
-          <div>59a</div>
-          <div>60a</div>
         </div>
       </div>
     </div>

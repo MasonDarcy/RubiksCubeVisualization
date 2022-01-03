@@ -408,3 +408,40 @@
 //     break;
 // }
 //break;
+
+//Old direction code segment
+// if (e.pageX > oldX && e.pageY == oldY) {
+//     // console.log("Mousemove: East");
+//     // setDirection("East");
+//     // animationDelegator(e.target.id, "east");
+//     // setMouseDown(false);
+//   } else if (e.pageX == oldX && e.pageY > oldY) {
+//     // setDirection("Mousemove: South");
+//     // console.log("South");
+//     // animationDelegator(e.target.id, "south");
+//     // setMouseDown(false);
+//   } else if (e.pageX == oldX && e.pageY < oldY) {
+//     // console.log("Mousemove: North");
+//     // setDirection("North");
+//     // animationDelegator(e.target.id, "north");
+//     // setMouseDown(false);
+//   } else if (e.pageX < oldX && e.pageY == oldY) {
+//     // console.log("Mousemove: West");
+//     // setDirection("West");
+//     // animationDelegator(e.target.id, "west");
+//     // setMouseDown(false);
+//   }
+
+// const isXUpsideDown = () => {
+//     let degree = xRotation % 360;
+//     console.log(degree);
+//     if (
+//       (degree >= -90 && degree <= 90) ||
+//       (degree >= 270 && degree <= 360) ||
+//       (degree > -360 && degree < -270)
+//     ) {
+//       return "up";
+//     } else {
+//       return "down";
+//     }
+//   };
