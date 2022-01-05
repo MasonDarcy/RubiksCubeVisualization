@@ -1,4 +1,7 @@
-.seen {
+:root {
+  background: #4c6352;
+}
+.scene {
   perspective: calc(var(--perspective, 1000) * 1px);
   transform-style: preserve-3d;
   height: 100vh;
@@ -18,222 +21,217 @@
   --z-rotation: 0;
   --horizontalCentroid: 36;
   --verticalCentroid: 36;
-
   /*Cube 1---------------------------*/
-  --color1: grey;
-  --color2: white;
-  --color3: grey;
-  --color4: green;
-  --color5: red;
-  --color6: grey;
+  --color1: #261c1b;
+  --color2: #f7c1bb;
+  --color3: #261c1b;
+  --color4: hsl(117, 23%, 60%);
+  --color5: #dc136c;
+  --color6: #261c1b;
   /*Cube 2---------------------------*/
-  --color7: grey;
-  --color8: white;
-  --color9: grey;
-  --color10: grey;
-  --color11: red;
-  --color12: grey;
+  --color7: #261c1b;
+  --color8: #f7c1bb;
+  --color9: #261c1b;
+  --color10: #261c1b;
+  --color11: #dc136c;
+  --color12: #261c1b;
   /*Cube 3---------------------------*/
-  --color13: grey;
-  --color14: white;
-  --color15: blue;
-  --color16: grey;
-  --color17: red;
-  --color18: grey;
+  --color13: #261c1b;
+  --color14: #f7c1bb;
+  --color15: #885a5a;
+  --color16: #261c1b;
+  --color17: #dc136c;
+  --color18: #261c1b;
   /*Cube 4---------------------------*/
-  --color19: grey;
-  --color20: grey;
-  --color21: grey;
-  --color22: green;
-  --color23: red;
-  --color24: grey;
+  --color19: #261c1b;
+  --color20: #261c1b;
+  --color21: #261c1b;
+  --color22: #84b082;
+  --color23: #dc136c;
+  --color24: #261c1b;
   /*Cube 5---------------------------*/
-  --color25: grey;
-  --color26: grey;
-  --color27: grey;
-  --color28: grey;
-  --color29: red;
-  --color30: grey;
+  --color25: #261c1b;
+  --color26: #261c1b;
+  --color27: #261c1b;
+  --color28: #261c1b;
+  --color29: #dc136c;
+  --color30: #261c1b;
   /*Cube 6---------------------------*/
-  --color31: grey;
-  --color32: grey;
-  --color33: blue;
-  --color34: grey;
-  --color35: red;
-  --color36: grey;
+  --color31: #261c1b;
+  --color32: #261c1b;
+  --color33: #885a5a;
+  --color34: #261c1b;
+  --color35: #dc136c;
+  --color36: #261c1b;
   /*Cube 7---------------------------*/
-  --color37: yellow;
-  --color38: grey;
-  --color39: grey;
-  --color40: green;
-  --color41: red;
-  --color42: grey;
+  --color37: #353a47;
+  --color38: #261c1b;
+  --color39: #261c1b;
+  --color40: #84b082;
+  --color41: #dc136c;
+  --color42: #261c1b;
   /*Cube 8---------------------------*/
-  --color43: yellow;
-  --color44: grey;
-  --color45: grey;
-  --color46: grey;
-  --color47: red;
-  --color48: grey;
+  --color43: #353a47;
+  --color44: #261c1b;
+  --color45: #261c1b;
+  --color46: #261c1b;
+  --color47: #dc136c;
+  --color48: #261c1b;
   /*Cube 9---------------------------*/
-  --color49: yellow;
-  --color50: grey;
-  --color51: blue;
-  --color52: grey;
-  --color53: red;
-  --color54: grey;
+  --color49: #353a47;
+  --color50: #261c1b;
+  --color51: #885a5a;
+  --color52: #261c1b;
+  --color53: #dc136c;
+  --color54: #261c1b;
   /*2nd row ------------------------------------------------------------*/
   /*Cube 10---------------------------*/
-  --color55: grey;
-  --color56: white;
-  --color57: grey;
-  --color58: green;
-  --color59: grey;
-  --color60: grey;
+  --color55: #261c1b;
+  --color56: #f7c1bb;
+  --color57: #261c1b;
+  --color58: #84b082;
+  --color59: #261c1b;
+  --color60: #261c1b;
   /*Cube 11---------------------------*/
-  --color61: grey;
-  --color62: white;
-  --color63: grey;
-  --color64: grey;
-  --color65: grey;
-  --color66: grey;
+  --color61: #261c1b;
+  --color62: #f7c1bb;
+  --color63: #261c1b;
+  --color64: #261c1b;
+  --color65: #261c1b;
+  --color66: #261c1b;
   /*Cube 12---------------------------*/
-  --color67: grey;
-  --color68: white;
-  --color69: blue;
-  --color70: grey;
-  --color71: grey;
-  --color72: grey;
+  --color67: #261c1b;
+  --color68: #f7c1bb;
+  --color69: #885a5a;
+  --color70: #261c1b;
+  --color71: #261c1b;
+  --color72: #261c1b;
   /*Cube 13---------------------------*/
-  --color73: grey;
-  --color74: grey;
-  --color75: grey;
-  --color76: green;
-  --color77: grey;
-  --color78: grey;
+  --color73: #261c1b;
+  --color74: #261c1b;
+  --color75: #261c1b;
+  --color76: #84b082;
+  --color77: #261c1b;
+  --color78: #261c1b;
   /*Cube 14---------------------------*/
-  --color79: grey;
-  --color80: grey;
-  --color81: grey;
-  --color82: grey;
-  --color83: grey;
-  --color84: grey;
+  --color79: #261c1b;
+  --color80: #261c1b;
+  --color81: #261c1b;
+  --color82: #261c1b;
+  --color83: #261c1b;
+  --color84: #261c1b;
   /*Cube 15---------------------------*/
-  --color85: grey;
-  --color86: grey;
-  --color87: blue;
-  --color88: grey;
-  --color89: grey;
-  --color90: grey;
+  --color85: #261c1b;
+  --color86: #261c1b;
+  --color87: #885a5a;
+  --color88: #261c1b;
+  --color89: #261c1b;
+  --color90: #261c1b;
   /*Cube 16---------------------------*/
-  --color91: yellow;
-  --color92: grey;
-  --color93: grey;
-  --color94: green;
-  --color95: grey;
-  --color96: grey;
+  --color91: #353a47;
+  --color92: #261c1b;
+  --color93: #261c1b;
+  --color94: #84b082;
+  --color95: #261c1b;
+  --color96: #261c1b;
   /*Cube 17---------------------------*/
-  --color97: yellow;
-  --color98: grey;
-  --color99: grey;
-  --color100: grey;
-  --color101: grey;
-  --color102: grey;
+  --color97: #353a47;
+  --color98: #261c1b;
+  --color99: #261c1b;
+  --color100: #261c1b;
+  --color101: #261c1b;
+  --color102: #261c1b;
   /*Cube 18---------------------------*/
-  --color103: yellow;
-  --color104: grey;
-  --color105: blue;
-  --color106: grey;
-  --color107: grey;
-  --color108: grey;
+  --color103: #353a47;
+  --color104: #261c1b;
+  --color105: #885a5a;
+  --color106: #261c1b;
+  --color107: #261c1b;
+  --color108: #261c1b;
   /*Bottom row ----------------------*/
   /*Cube 19---------------------------*/
-  --color109: grey;
-  --color110: white;
-  --color111: grey;
-  --color112: green;
-  --color113: grey;
+  --color109: #261c1b;
+  --color110: #f7c1bb;
+  --color111: #261c1b;
+  --color112: #84b082;
+  --color113: #261c1b;
   --color114: orange;
   /*Cube 20---------------------------*/
-  --color115: grey;
-  --color116: white;
-  --color117: grey;
-  --color118: grey;
-  --color119: grey;
+  --color115: #261c1b;
+  --color116: #f7c1bb;
+  --color117: #261c1b;
+  --color118: #261c1b;
+  --color119: #261c1b;
   --color120: orange;
   /*Cube 21---------------------------*/
-  --color121: grey;
-  --color122: white;
-  --color123: blue;
-  --color124: grey;
-  --color125: grey;
+  --color121: #261c1b;
+  --color122: #f7c1bb;
+  --color123: #885a5a;
+  --color124: #261c1b;
+  --color125: #261c1b;
   --color126: orange;
   /*Cube 22---------------------------*/
-  --color127: grey;
-  --color128: grey;
-  --color129: grey;
-  --color130: green;
-  --color131: grey;
+  --color127: #261c1b;
+  --color128: #261c1b;
+  --color129: #261c1b;
+  --color130: #84b082;
+  --color131: #261c1b;
   --color132: orange;
   /*Cube 23---------------------------*/
-  --color133: grey;
-  --color134: grey;
-  --color135: grey;
-  --color136: grey;
-  --color137: grey;
+  --color133: #261c1b;
+  --color134: #261c1b;
+  --color135: #261c1b;
+  --color136: #261c1b;
+  --color137: #261c1b;
   --color138: orange;
   /*Cube 24---------------------------*/
-  --color139: grey;
-  --color140: grey;
-  --color141: blue;
-  --color142: grey;
-  --color143: grey;
+  --color139: #261c1b;
+  --color140: #261c1b;
+  --color141: #885a5a;
+  --color142: #261c1b;
+  --color143: #261c1b;
   --color144: orange;
   /*Cube 25---------------------------*/
-  --color145: yellow;
-  --color146: grey;
-  --color147: grey;
-  --color148: green;
-  --color149: grey;
+  --color145: #353a47;
+  --color146: #261c1b;
+  --color147: #261c1b;
+  --color148: #84b082;
+  --color149: #261c1b;
   --color150: orange;
   /*Cube 26---------------------------*/
-  --color151: yellow;
-  --color152: grey;
-  --color153: grey;
-  --color154: grey;
-  --color155: grey;
+  --color151: #353a47;
+  --color152: #261c1b;
+  --color153: #261c1b;
+  --color154: #261c1b;
+  --color155: #261c1b;
   --color156: orange;
   /*Cube 27---------------------------*/
-  --color157: yellow;
-  --color158: grey;
-  --color159: blue;
-  --color160: grey;
-  --color161: grey;
+  --color157: #353a47;
+  --color158: #261c1b;
+  --color159: #885a5a;
+  --color160: #261c1b;
+  --color161: #261c1b;
   --color162: orange;
 }
+/* background: rgba(57, 224, 66, 0.966); */
 
 .initialFloor {
-  background: rgba(57, 224, 66, 0.966);
   height: calc(var(--plain-height, 25) * 1vmin);
   width: calc(var(--plain-width, 25) * 1vmin);
   transform-style: preserve-3d;
   transform: rotateX(calc(var(--x-rotation, -25) * 1deg))
     rotateY(calc(var(--y-rotation, -25) * 1deg)) rotateX(90deg);
 }
-
+/* background: rgba(162, 25, 230, 0.25); */
 .rotatedFloor90Y {
-  background: rgba(162, 25, 230, 0.25);
-
   height: calc(var(--plain-height, 25) * 1vmin);
   width: calc(var(--plain-width, 25) * 1vmin);
   transform-style: preserve-3d;
   transform: rotateX(calc(var(--x-rotation, -25) * 1deg))
     rotateY(calc(var(--y-rotation, -25) * 1deg)) rotateX(90deg) rotateY(90deg);
 }
-
+/* background: rgba(162, 25, 230, 0.25); */
 .rotatedFloor90X {
-  background: rgba(162, 25, 230, 0.25);
-
   height: calc(var(--plain-height, 25) * 1vmin);
   width: calc(var(--plain-width, 25) * 1vmin);
   transform-style: preserve-3d;
@@ -256,8 +254,8 @@
   position: absolute;
   transform: translate(-50%, -50%)
     translateZ(calc(var(--horizontalCentroid) * 1 / 3 * 1vmin));
-  background: rgba(236, 205, 205, 0.3);
 }
+/* background: rgba(236, 205, 205, 0.3); */
 /* translateZ(calc(var(--horizontalCentroid) * 1vmin)); */
 .middleHorizontalPlane {
   --width: 36;
@@ -275,9 +273,8 @@
 
   transform: translate(-50%, -50%);
   /* translateZ(calc(var(--horizontalCentroid) * 0 / 3 * 1vmin)); */
-  background: rgba(236, 205, 205, 0.3);
 }
-
+/* background: rgba(236, 205, 205, 0.3); */
 .bottomHorizontalPlane {
   --width: 36;
   --height: calc(var(--horizontalCentroid) * -1 / 3 * 1vmin);
@@ -293,9 +290,8 @@
   position: absolute;
   transform: translate(-50%, -50%)
     translateZ(calc(var(--horizontalCentroid) * -1 / 3 * 1vmin));
-  background: rgba(236, 205, 205, 0.3);
 }
-
+/* background: rgba(236, 205, 205, 0.3); */
 .topHorizontalPlane > div {
   /* display: none; */
 

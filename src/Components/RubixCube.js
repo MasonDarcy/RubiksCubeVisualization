@@ -1,19 +1,19 @@
-import "../styles/protorotation.css";
+import "../styles/style.css";
 import { useState, useRef, useEffect } from "react";
-import tools from "./helpers/util";
 import colorUtils from "./helpers/colorHelper";
 import perspectiveUtils from "./helpers/perspectiveTools";
-
 import cubeModel from "./helpers/cubeModel";
 
-const ProtoRotation = () => {
+const RubixCube = () => {
   const [topClassName, setTopClassName] = useState(null);
   const [middleClassName, setMiddleClassName] = useState(null);
   const [bottomClassName, setBottomClassName] = useState(null);
-  const [model, setModel] = useState(cubeModel.createTopSlice());
-  const [animating, setAnimating] = useState(false);
+  // const [model, setModel] = useState(cubeModel.createTopSlice());
+  const [model, setModel] = useState(null);
+  const animatingRef = useRef(false);
   const [rotation, setRotation] = useState("initialFloor");
   const [mouseDown, setMouseDown] = useState(false);
+  const mouseUpTimeout = useRef(false);
   const [mouseDownRotation, setMouseDownRotation] = useState(false);
   const [rotationDirection, setRotationDirection] = useState(null);
   const [targetSlice, setTargetSlice] = useState(null);
@@ -30,111 +30,7 @@ const ProtoRotation = () => {
   const [yRotation, setYRotation] = useState(-24);
   const [rotationToBe, setRotationToBe] = useState(null);
 
-  const xPerspectiveRemap = (direction) => {
-    let degree = xRotation % 360;
-
-    if (
-      (degree >= -90 && degree <= 90) ||
-      (degree >= 270 && degree <= 360) ||
-      (degree > -360 && degree < -270)
-    ) {
-      console.log("Not upside down");
-      return direction;
-    } else {
-      console.log("Is upside down");
-
-      if (direction == "south") {
-        return "north";
-      }
-      if (direction == "north") {
-        return "south";
-      }
-      if (direction == "east") {
-        return "west";
-      }
-      if (direction == "west") {
-        return "east";
-      }
-    }
-  };
-
-  const getPerspectiveDirection = (direction, reverse) => {
-    let degree = yRotation % 360;
-    if (degree < 0) {
-      degree = 360 + degree;
-    }
-
-    let directionIndex = 0;
-
-    switch (direction) {
-      case "north":
-        directionIndex = 0;
-        break;
-      case "west":
-        directionIndex = 1;
-        break;
-      case "south":
-        directionIndex = 2;
-        break;
-      case "east":
-        directionIndex = 3;
-        break;
-    }
-
-    if (degree < 45 || degree > 315) {
-      console.log("P1");
-    }
-
-    if (degree < 315 && degree >= 225) {
-      console.log("P2");
-      reverse
-        ? (directionIndex = (directionIndex + 7) % 4)
-        : (directionIndex = (directionIndex + 1) % 4);
-    }
-
-    if (degree < 225 && degree > 135) {
-      console.log("P3");
-      reverse
-        ? (directionIndex = (directionIndex + 6) % 4)
-        : (directionIndex = (directionIndex + 2) % 4);
-    }
-
-    if (degree > 45 && degree <= 135) {
-      console.log("P4");
-      reverse
-        ? (directionIndex = (directionIndex + 5) % 4)
-        : (directionIndex = (directionIndex + 3) % 4);
-    }
-
-    let p1 = ["north", "west", "south", "east"];
-
-    return p1[Math.abs(directionIndex)];
-  };
-
-  const rotateModelAndRecolor = (sliceNum, rotationDirection) => {
-    let rotationFunction;
-    let swapped;
-
-    if (rotationDirection == "c") {
-      rotationFunction = tools.rotateColors90C;
-
-      swapped = tools.rotate90(model[sliceNum]);
-    } else {
-      rotationFunction = tools.rotateColors90CC;
-      swapped = tools.rotate90CC(model[sliceNum]);
-    }
-
-    for (let i = 0; i < 3; i++) {
-      swapped[i].forEach((cube) => {
-        rotationFunction(cube);
-      });
-    }
-
-    let copy = JSON.parse(JSON.stringify(model));
-    copy[sliceNum] = swapped;
-    return copy;
-  };
-
+  /*Triggers an animation, updates the model after the animation finishes.*/
   const dispatchRotateEvent = (targetSlice, rotationDirection) => {
     switch (targetSlice) {
       case "bottom":
@@ -170,58 +66,44 @@ const ProtoRotation = () => {
     }
 
     setTimeout(() => {
-      //need slice num
-      let copy = rotateModelAndRecolor(
-        planeToNum(targetSlice),
-        rotationDirection
+      let copy = cubeModel.rotateModelAndRecolor(
+        cubeModel.planeToNum(targetSlice),
+        rotationDirection,
+        model
       );
-      //This rotation needs to be conditionally performed.
-      //
-      // console.log(`rotationToBe: ${rotationToBe}`);
-
       switch (rotationToBe) {
         case "initialFloor":
           break;
         case "rotatedFloor90Y":
-          copy = rotateModelNeg90Y(copy);
+          copy = cubeModel.rotateModelNeg90(copy, "y", "right");
           break;
         case "rotatedFloor90X":
-          copy = rotateModelNeg90X(copy);
+          copy = cubeModel.rotateModelNeg90(copy, "x", "left");
           break;
       }
-
+      animatingRef.current = false;
+      calculatingRef.current = false;
+      console.log("Set Timeout called");
+      xRef.current = null;
+      yRef.current = null;
       setModel(copy);
-      //  console.log("rotate and recolor");
     }, 1000);
   };
 
-  function planeToNum(targetSlice) {
-    switch (targetSlice) {
-      case "top":
-        return 0;
-      case "middle":
-        return 1;
-      case "bottom":
-        return 2;
-    }
-  }
-
-  /*Based on the current animation that was called, remaps colors and sets to null.
-Otherwise, we changed the rotation axis, then it's responsible for triggering an animation.
-*/
-  const dragstart = (e) => {
-    e.preventDefault();
-  };
-
-  const drop = (e) => {
-    e.preventDefault();
-  };
+  /*When the model changes, repaints the cubes so its consistent with the new state.*/
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
+      //Color it here
+      colorUtils.initializeCubeColors(el);
+      let mod = cubeModel.paintModel();
+      setModel(mod);
+      //BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR
+      console.log(mod);
+
       return;
     } else {
-      console.log("useEffect called");
+      console.log(`topClassName: ${topClassName}`);
       if (topClassName) {
         switch (rotationToBe) {
           case "initialFloor":
@@ -253,7 +135,6 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
         setRotation("initialFloor");
         setMiddleClassName(null);
       } else if (bottomClassName) {
-        //  console.log(rotationToBe);
         switch (rotationToBe) {
           case "initialFloor":
             colorUtils.remapSliceColors(2, model, el);
@@ -270,7 +151,6 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
         setRotation("initialFloor");
         setBottomClassName(null);
       } else {
-        //   console.log(`rotation to be: ${rotationToBe}`);
         switch (rotationToBe) {
           case "initialFloor":
             dispatchRotateEvent(targetSlice, rotationDirection);
@@ -289,7 +169,7 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
       }
     }
   }, [model]);
-  /*Sets up mousemove event listener.--------------------------------------------------*/
+  /*Sets up mousemove event listeners.--------------------------------------------------*/
   useEffect(() => {
     window.addEventListener("mousemove", mousemoving);
     window.addEventListener("dragstart", dragstart);
@@ -302,90 +182,38 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
     };
   });
   /*----------------------------------------------------------------------------------*/
-  /*Model rotations------------------------------------------------------------.*/
-  /*Shifts 90 degrees around the y-axis.*/
+  /*
+  Two functions that rotate the model, and update the state
+  These are assigned to a specific face of the rubik's cube to determine the animation.
+   */
   function rotateModel90Y() {
     let copy = JSON.parse(JSON.stringify(model));
     let coords = cubeModel.modelToCoordinateArray();
-    let shiftedUniverse = cubeModel.rotateUniverse(coords, "left");
+    let shiftedUniverse = cubeModel.rotateUniverse(coords, "left", "y");
     let newModel = cubeModel.updateModel(shiftedUniverse, copy);
     setRotationToBe("rotatedFloor90Y");
     setModel(newModel);
   }
 
-  function rotateModelNeg90Y(matrix) {
-    let copy = JSON.parse(JSON.stringify(matrix));
-    let coords = cubeModel.modelToCoordinateArray();
-    let shiftedUniverse = cubeModel.rotateUniverse(coords, "right");
-    let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-    return newModel;
-  }
-
   function rotateModel90X() {
     let copy = JSON.parse(JSON.stringify(model));
     let coords = cubeModel.modelToCoordinateArray();
-    let shiftedUniverse = cubeModel.rotateUniverseX(coords, "right");
+    let shiftedUniverse = cubeModel.rotateUniverse(coords, "right", "x");
     let newModel = cubeModel.updateModel(shiftedUniverse, copy);
     setRotationToBe("rotatedFloor90X");
     setModel(newModel);
   }
 
-  function rotateModelNeg90X(matrix) {
-    let copy = JSON.parse(JSON.stringify(matrix));
-    let coords = cubeModel.modelToCoordinateArray();
-    let shiftedUniverse = cubeModel.rotateUniverseX(coords, "left");
-    let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-    return newModel;
-  }
-
   /*---------------------------------------------------------------------------.*/
-  /*Initializes mousedown state.*/
-  const initial = (e) => {
-    console.log("initial");
-    setMouseDown(true);
-    e.stopPropagation();
-  };
-
-  /*Initializes mousedown state. Fires animation if not already animating.*/
-  const shiftRelease = (e) => {
-    console.log("shift release");
-    if (!animating) {
-      setMouseDown(false);
-      if (xRef.current && yRef.current) {
-        protoDirectionDetection(e.pageX, e.pageY);
-      }
-    }
-    e.stopPropagation();
-  };
-
-  /*Initializes user rotation state.*/
-  const initialRotation = (e) => {
-    console.log("intialRotation rotation called");
-    setMouseDownRotation(true);
-    setInitialMouseYPos(e.pageX);
-    setInitialMouseXPos(e.pageY);
-  };
-
-  /*Initializes user rotation state.*/
-  const releaseRotation = (e) => {
-    if (setMouseDownRotation) {
-      console.log("release rotation called");
-      setMouseDownRotation(false);
-      setXRotation(xRotation + initialMouseXPos - e.pageY);
-      setYRotation(yRotation + e.pageX - initialMouseYPos);
-    }
-  };
-
-  const protoDirectionDetection = (x, y) => {
-    setAnimating(true);
-    console.log(`x: ${x}`);
-    console.log(`y: ${y}`);
-    console.log(`xRef: ${xRef.current}`);
-    console.log(`yRef: ${yRef.current}`);
+  /*Determines which direction the user is trying to rotate the cube.*/
+  const computeDirection = (x, y) => {
+    // setAnimating(true);
+    animatingRef.current = true;
+    console.log(`animating inside compute: ${animatingRef.current}`);
+    console.log("computeDirection called");
     let xChange = x - xRef.current;
     let yChange = y - yRef.current;
-    console.log(`xChange: ${xChange}`);
-    console.log(`yChange: ${yChange}`);
+
     let axis;
     Math.abs(xChange) >= Math.abs(yChange) ? (axis = "x") : (axis = "y");
     if (x == xRef.current && y == yRef.current) {
@@ -405,41 +233,96 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
         }
       }
 
-      // setCalculatingDirection(false);
-      setTimeout(() => {
-        calculatingRef.current = false;
-        // setMouseDown(false);
-        xRef.current = null;
-        yRef.current = null;
-        setAnimating(false);
-      }, 1025);
-      // }, 150);
+      // setTimeout(() => {
+      //   calculatingRef.current = false;
+      //   console.log("Set Timeout called");
+      //   xRef.current = null;
+      //   yRef.current = null;
+      //   animatingRef.current = false;
+      // }, 1025);
     }
   };
 
+  /*Event handlers----------------------------------------------------------*/
   const mousemoving = (e) => {
     e.preventDefault();
     if (mouseDown) {
+      // console.log("Inside mousedown mousemoving");
+
       if (!calculatingRef.current) {
         targetRef.current = e.target.id;
-        // protoDirectionDetection(e.pageX, e.pageY);
-        // setCalculatingDirection(true);
         xRef.current = e.pageX;
         yRef.current = e.pageY;
         calculatingRef.current = true;
       }
     } else if (mouseDownRotation) {
+      console.log("Inside mouseDownRotation");
       let changeY = e.pageX - initialMouseYPos;
       let changeX = initialMouseXPos - e.pageY;
       plane.current.style.setProperty(`--x-rotation`, xRotation + changeX);
       plane.current.style.setProperty(`--y-rotation`, yRotation + changeY);
     }
-
-    // xRef.current = e.pageX;
-    // yRef.current = e.pageY;
   };
 
-  const testHelper = (rotationDirection) => {
+  /*Initializes the state where a user is rotating the entire cube around to look at it.*/
+  const initialRotation = (e) => {
+    //  console.log("intialRotation rotation called");
+    setMouseDownRotation(true);
+    setInitialMouseYPos(e.pageX);
+    setInitialMouseXPos(e.pageY);
+  };
+
+  /*Ends the user rotation state.*/
+  const releaseRotation = (e) => {
+    if (setMouseDownRotation) {
+      // console.log("release rotation called");
+      setMouseDownRotation(false);
+      setXRotation(xRotation + initialMouseXPos - e.pageY);
+      setYRotation(yRotation + e.pageX - initialMouseYPos);
+    }
+  };
+
+  /*Initializes a state where the user is dragging and trying to rotate a slice .*/
+  const initial = (e) => {
+    if (!animatingRef.current) {
+      setMouseDown(true);
+    }
+    e.stopPropagation();
+  };
+
+  /*Fires an animation on mouse-up.*/
+  const shiftRelease = (e) => {
+    if (!mouseUpTimeout.current) {
+      console.log("shift release called");
+      console.log(`animating: ${animatingRef.current}`);
+      if (!animatingRef.current) {
+        setMouseDown(false);
+        if (xRef.current && yRef.current) {
+          computeDirection(e.pageX, e.pageY);
+        }
+      }
+      if (xRef.current) {
+        mouseUpTimeout.current = true;
+        setTimeout(() => {
+          mouseUpTimeout.current = false;
+          animatingRef.current = false;
+          console.log("Release Mouse UP");
+        }, 1000);
+      }
+    }
+    //   }
+    e.stopPropagation();
+  };
+
+  /*Basic default drag prevent callbacks.*/
+  const dragstart = (e) => {
+    e.preventDefault();
+  };
+  const drop = (e) => {
+    e.preventDefault();
+  };
+  /*-------------------------------------------------------------------------*/
+  const reverseDirection = (rotationDirection) => {
     if (rotationDirection == "c") {
       return "cc";
     } else {
@@ -484,7 +367,6 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
   };
 
   const animate = (direction, sliceTuple, colorData, reverse, xReverse) => {
-    //  console.log(`degree: ${yRotation}`);
     let remappedDirection;
     if (xReverse) {
       remappedDirection = perspectiveUtils.xPerspectiveRemap(
@@ -492,10 +374,12 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
         xRotation
       );
     } else {
-      remappedDirection = getPerspectiveDirection(direction, reverse);
+      remappedDirection = perspectiveUtils.getPerspectiveDirection(
+        direction,
+        yRotation,
+        reverse
+      );
     }
-
-    //  console.log(`RemappedDirection: ${remappedDirection}`);
 
     switch (remappedDirection) {
       case "west":
@@ -509,7 +393,7 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
         }
         break;
       case "east":
-        setRotationDirection(testHelper(colorData.rotationOrder[0]));
+        setRotationDirection(reverseDirection(colorData.rotationOrder[0]));
         setTargetSlice(sliceTuple[0]);
         if (colorData.westFunc) {
           colorData.westFunc();
@@ -517,7 +401,7 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
           setRotationToBe("initialFloor");
           dispatchRotateEvent(
             sliceTuple[0],
-            testHelper(colorData.rotationOrder[0])
+            reverseDirection(colorData.rotationOrder[0])
           );
         }
         break;
@@ -531,7 +415,7 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
         }
         break;
       case "south":
-        setRotationDirection(testHelper(colorData.rotationOrder[1]));
+        setRotationDirection(reverseDirection(colorData.rotationOrder[1]));
         setTargetSlice(sliceTuple[1]);
         if (colorData.northFunc) {
           colorData.northFunc();
@@ -543,8 +427,6 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
   };
 
   const animationDelegator = (id, direction) => {
-    /*Logic here to determine direction as a function of viewer perspective.*/
-    //let remappedDirection = 0;
     let sliceTuple;
     switch (id) {
       case "redSideOneOne":
@@ -769,7 +651,7 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
   return (
     <div>
       <div
-        className="seen"
+        className="scene"
         ref={el}
         onMouseUp={
           mouseDown ? shiftRelease : mouseDownRotation ? releaseRotation : null
@@ -1078,4 +960,4 @@ Otherwise, we changed the rotation axis, then it's responsible for triggering an
   );
 };
 
-export default ProtoRotation;
+export default RubixCube;

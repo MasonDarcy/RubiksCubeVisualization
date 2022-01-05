@@ -1,13 +1,7 @@
-const createTopSlice = () => {
-  /* 
-  front
-  back
-  right
-  left
-  top
-  bottom
-  */
+import { slice } from "lodash";
+import tools from "./util";
 
+const createTopSlice = () => {
   let model = [];
   let topSlice = [];
   let middleSlice = [];
@@ -290,23 +284,128 @@ const createTopSlice = () => {
   return model;
 };
 
-// 1 black,
-/*
-1, front - black
-2, back - green
-3, left side - blue
-4, right side - black
-5, top - red
-6, bottom - black
+const letterToColorNum = (faceChar) => {
+  switch (faceChar) {
+    case "F":
+      return 1;
+    case "B":
+      return 2;
+    case "R":
+      return 3;
+    case "L":
+      return 4;
+    case "U":
+      return 5;
+    case "D":
+      return 6;
+  }
+};
 
-1, front - black
-2, back - green
-3, left side - black
-4, right side - yellow
-5, top - red
-6, bottom - black
+//F B R L U D N(black)
+// cubeString = "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR";
 
-*/
+const buildNakedModel = () => {
+  let model = [
+    [[], [], []],
+    [[], [], []],
+    [[], [], []],
+  ];
+  /*Top slice--------------------------------------------------- */
+  for (let sliceIndex = 0; sliceIndex < 3; sliceIndex++) {
+    //Slices
+    for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
+      for (let cubeIndex = 0; cubeIndex < 3; cubeIndex++) {
+        model[sliceIndex][rowIndex][cubeIndex] = [
+          { currentColor: 0 },
+          { currentColor: 0 },
+          { currentColor: 0 },
+          { currentColor: 0 },
+          { currentColor: 0 },
+          { currentColor: 0 },
+        ];
+      }
+    }
+  }
+  return model;
+};
+
+const paintModel = () => {
+  let model = buildNakedModel();
+  let cubeEncoding = "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR";
+
+  let topFace = cubeEncoding.substring(0, 9); //BLRRULBUL
+  let rightFace = cubeEncoding.substring(9, 18); //UFBURULLF
+  let frontFace = cubeEncoding.substring(18, 27); //DFFRFBRDB
+  let downFace = cubeEncoding.substring(27, 36); //DFDBDBURL
+  let leftFace = cubeEncoding.substring(36, 45); // UBRFLUFDF
+  let backFace = cubeEncoding.substring(45, 54); //UDLLBRDDR
+
+  let faceColors = [
+    frontFace,
+    backFace,
+    rightFace,
+    leftFace,
+    topFace,
+    downFace,
+  ];
+
+  let topFaceIndices = [5, 11, 17, 23, 29, 35, 41, 47, 53];
+  let rightFaceIndices = [15, 33, 51, 69, 87, 105, 123, 141, 159];
+  let frontFaceIndices = [37, 43, 49, 91, 97, 103, 145, 151, 157];
+  let downFaceIndices = [114, 120, 126, 132, 138, 144, 150, 156, 162];
+  let leftFaceIndices = [4, 22, 40, 58, 76, 94, 112, 130, 148];
+  let backFaceIndices = [2, 8, 14, 56, 62, 68, 110, 116, 122];
+
+  let faces = [
+    frontFaceIndices,
+    backFaceIndices,
+    rightFaceIndices,
+    leftFaceIndices,
+    topFaceIndices,
+    downFaceIndices,
+  ];
+
+  for (let i = 0; i < faces.length; i++) {
+    for (let cubeFace = 0; cubeFace < 9; cubeFace++) {
+      let x, y, z, s;
+      let num = faces[i][cubeFace];
+      num -= 1;
+      //slice
+      z = Math.floor((num / 162) * 3);
+      if (z == 3) {
+        z = 2;
+      }
+      //row
+      y = Math.floor(((num - z * 54) / 54) * 3);
+      if (y == 3) {
+        y = 2;
+      }
+      //cube
+      x = Math.floor(((num - z * 54 - y * 18) / 18) * 3);
+      if (x == 3) {
+        x = 2;
+      }
+
+      //side
+      //?
+      s = num - z * 54 - y * 18 - x * 6;
+      if (s == 6) {
+        s = 5;
+      }
+      // console.log(`num: ${num}`);
+      // console.log(`Char: ${faceColors[i][cubeFace]}`);
+      // console.log(`z: ${z}`);
+      // console.log(`y: ${y}`);
+      // console.log(`x: ${x}`);
+      // console.log(`s: ${s}`);
+      model[z][y][x][s].currentColor = letterToColorNum(
+        faceColors[i][cubeFace]
+      );
+    }
+  }
+
+  return model;
+};
 
 const modelToCoordinateArray = () => {
   let coordArray = [];
@@ -351,11 +450,6 @@ const translateCoord = (coord) => {
   //[0, 2, 0]
 };
 
-//Need a function that rotates
-
-//I'll be iterating through here
-//[1, -1, -1]
-
 const rotationLeftMatrix = [
   [0, 0, -1],
   [0, 1, 0],
@@ -380,19 +474,37 @@ const rotationRightMatrixX = [
   [0, -1, 0],
 ];
 
-const rotateUniverseX = (universe, direction) => {
+const determineMatrix = (direction, axis) => {
+  switch (axis) {
+    case "x":
+      switch (direction) {
+        case "left":
+          return rotationLeftMatrixX;
+        case "right":
+          return rotationRightMatrixX;
+      }
+      break;
+    case "y":
+      switch (direction) {
+        case "left":
+          return rotationLeftMatrix;
+        case "right":
+          return rotationRightMatrix;
+      }
+      break;
+  }
+};
+
+const rotateUniverse = (universe, direction, axis) => {
   const rotatedSystem = [];
+  let matrix = determineMatrix(direction, axis);
 
   for (let i = 0; i < universe.length; i++) {
     let newCoord = [];
     let val = 0;
     for (let q = 0; q <= 2; q++) {
       for (let c = 0; c <= 2; c++) {
-        val +=
-          universe[i][c] *
-          (direction == "right"
-            ? rotationRightMatrixX[q][c]
-            : rotationLeftMatrixX[q][c]);
+        val += universe[i][c] * matrix[q][c];
       }
       newCoord.push(val);
       val = 0;
@@ -402,36 +514,6 @@ const rotateUniverseX = (universe, direction) => {
   }
   return rotatedSystem;
 };
-
-const rotateUniverse = (universe, direction) => {
-  const rotatedSystem = [];
-
-  for (let i = 0; i < universe.length; i++) {
-    let newCoord = [];
-    let val = 0;
-    for (let q = 0; q <= 2; q++) {
-      for (let c = 0; c <= 2; c++) {
-        val +=
-          universe[i][c] *
-          (direction == "right"
-            ? rotationRightMatrix[q][c]
-            : rotationLeftMatrix[q][c]);
-      }
-      newCoord.push(val);
-      val = 0;
-    }
-
-    rotatedSystem.push(newCoord);
-  }
-  return rotatedSystem;
-};
-
-//Now, we are rotating it -90 degrees visually
-//but we want to preserve the colors so we rotate it back 90 degrees
-//Use rotate univers to get the coords
-//Create a new empty cube model
-//Iterate through all the co-ordinates
-//At each coordinate, map it back to array co-ords, and then put those in place
 
 const updateModel = (coords, model) => {
   let copy = [
@@ -450,17 +532,63 @@ const updateModel = (coords, model) => {
       }
     }
   }
-  // console.log(copy);
+
   return copy;
 };
-//so then.. the New thing, at new[0][2][0] becomes what the model is at model[0][0][0]
+
+const planeToNum = (targetSlice) => {
+  switch (targetSlice) {
+    case "top":
+      return 0;
+    case "middle":
+      return 1;
+    case "bottom":
+      return 2;
+  }
+};
+
+const rotateModelAndRecolor = (sliceNum, rotationDirection, model) => {
+  let rotationFunction;
+  let swapped;
+
+  if (rotationDirection == "c") {
+    rotationFunction = tools.rotateColors90C;
+
+    swapped = tools.rotate90(model[sliceNum]);
+  } else {
+    rotationFunction = tools.rotateColors90CC;
+    swapped = tools.rotate90CC(model[sliceNum]);
+  }
+
+  for (let i = 0; i < 3; i++) {
+    swapped[i].forEach((cube) => {
+      rotationFunction(cube);
+    });
+  }
+
+  let copy = JSON.parse(JSON.stringify(model));
+  copy[sliceNum] = swapped;
+  return copy;
+};
+
+function rotateModelNeg90(matrix, axis, direction) {
+  let copy = JSON.parse(JSON.stringify(matrix));
+  let coords = modelToCoordinateArray();
+  let shiftedUniverse = rotateUniverse(coords, direction, axis);
+  let newModel = updateModel(shiftedUniverse, copy);
+  return newModel;
+}
+
 const cubeModel = {
   createTopSlice,
   modelToCoordinateArray,
   translateCoord,
-  rotateUniverse,
-  rotateUniverseX,
   updateModel,
+  planeToNum,
+  rotateModelAndRecolor,
+  rotateUniverse,
+  rotateModelNeg90,
+  paintModel,
 };
 
 export default cubeModel;

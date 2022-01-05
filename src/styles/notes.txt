@@ -130,3 +130,13 @@ b. Mousedown goes down
 c. Now, mouseover initializes some original co-ordinates
 
 d. On mouserelease, fire the direction calculator and animation.
+
+1. Randomize the cube color faces logically.
+
+Spam click bug
+
+1. I click down on the cube
+
+a. mousedown becomes true
+b. Now, in mousemoving, if the "calcutingRef" is false, it sets the original co-ordinates
+c. On release

@@ -445,3 +445,49 @@
 //       return "down";
 //     }
 //   };
+
+// const rotateUniverseX = (universe, direction) => {
+//     const rotatedSystem = [];
+
+//     for (let i = 0; i < universe.length; i++) {
+//       let newCoord = [];
+//       let val = 0;
+//       for (let q = 0; q <= 2; q++) {
+//         for (let c = 0; c <= 2; c++) {
+//           val +=
+//             universe[i][c] *
+//             (direction == "right"
+//               ? rotationRightMatrixX[q][c]
+//               : rotationLeftMatrixX[q][c]);
+//         }
+//         newCoord.push(val);
+//         val = 0;
+//       }
+
+//       rotatedSystem.push(newCoord);
+//     }
+//     return rotatedSystem;
+//   };
+
+//   const rotateUniverse = (universe, direction) => {
+//     const rotatedSystem = [];
+
+//     for (let i = 0; i < universe.length; i++) {
+//       let newCoord = [];
+//       let val = 0;
+//       for (let q = 0; q <= 2; q++) {
+//         for (let c = 0; c <= 2; c++) {
+//           val +=
+//             universe[i][c] *
+//             (direction == "right"
+//               ? rotationRightMatrix[q][c]
+//               : rotationLeftMatrix[q][c]);
+//         }
+//         newCoord.push(val);
+//         val = 0;
+//       }
+
+//       rotatedSystem.push(newCoord);
+//     }
+//     return rotatedSystem;
+//   };
