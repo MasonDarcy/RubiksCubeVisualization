@@ -12,15 +12,58 @@ let faces = [
   leftFaceIndices,
   backFaceIndices,
 ];
-const initializeCubeColors = (el) => {
-  let cubeEncoding = "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR";
 
-  let topFace = cubeEncoding.substring(0, 9); //BLRRULBUL
-  let rightFace = cubeEncoding.substring(9, 18); //UFBURULLF
-  let frontFace = cubeEncoding.substring(18, 27); //DFFRFBRDB
+const transmuteString = (cubeEncoding) => {
+  let rightFace = cubeEncoding.substring(9, 18); //UFBURULLF // --> bfu, uru, fll
+  let reverseSegment1 = rightFace.substring(0, 3).split("").reverse().join("");
+  let reverseSegment2 = rightFace.substring(3, 6).split("").reverse().join("");
+  let reverseSegment3 = rightFace.substring(6, 9).split("").reverse().join("");
+  let rightAmalgam = reverseSegment1 + reverseSegment2 + reverseSegment3;
+  cubeEncoding = replaceRange(cubeEncoding, 9, 18, rightAmalgam);
+
+  let backFace = cubeEncoding.substring(45, 54); //UDLLBRDDR // -->LDU, RBL, RDD
+
+  let reverseSegment4 = backFace.substring(0, 3).split("").reverse().join("");
+  let reverseSegment5 = backFace.substring(3, 6).split("").reverse().join("");
+  let reverseSegment6 = backFace.substring(6, 9).split("").reverse().join("");
+
+  let backAmalgam = reverseSegment4 + reverseSegment5 + reverseSegment6;
+  cubeEncoding = replaceRange(cubeEncoding, 45, 54, backAmalgam);
+
   let downFace = cubeEncoding.substring(27, 36); //DFDBDBURL
+
+  let reverseSegment7 = downFace.substring(0, 3);
+  let reverseSegment8 = downFace.substring(3, 6);
+  let reverseSegment9 = downFace.substring(6, 9);
+
+  let downAmalgam = reverseSegment9 + reverseSegment8 + reverseSegment7;
+
+  let result = replaceRange(cubeEncoding, 27, 36, downAmalgam);
+
+  return result;
+};
+
+function replaceRange(s, start, end, substitute) {
+  return s.substring(0, start) + substitute + s.substring(end);
+}
+
+const initializeCubeColors = (el) => {
+  let cubeEncoding = transmuteString(
+    "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR"
+  );
+
+  console.log("In initialize cube colors");
+  console.log(
+    `Original: BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR`
+  );
+  console.log(`Transmuted: ${cubeEncoding}`);
+
+  let topFace = cubeEncoding.substring(0, 9); //BLRRULBU
+  let rightFace = cubeEncoding.substring(9, 18); //BFUURUFLL
+  let frontFace = cubeEncoding.substring(18, 27); //DFFRFBRDB
+  let downFace = cubeEncoding.substring(27, 36); //LRUBDBDFD
   let leftFace = cubeEncoding.substring(36, 45); // UBRFLUFDF
-  let backFace = cubeEncoding.substring(45, 54); //UDLLBRDDR
+  let backFace = cubeEncoding.substring(45, 54); //LDURBLRDD
 
   let colorStrings = [
     topFace,
@@ -40,12 +83,6 @@ const initializeCubeColors = (el) => {
         `--color${faces[faceIndex][faceletIndex]}`,
         color
       );
-      if (faceIndex == 3) {
-        console.log(`letter: ${letter}`);
-
-        console.log(`color: ${color}`);
-        console.log(`--color${faces[faceIndex][faceletIndex]}`);
-      }
     }
   }
 };
@@ -218,6 +255,7 @@ const colorUtils = {
   remapAllColors,
   remapAllColorsX,
   initializeCubeColors,
+  transmuteString,
 };
 
 export default colorUtils;

@@ -99,7 +99,7 @@ const RubixCube = () => {
       let mod = cubeModel.paintModel();
       setModel(mod);
       //BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR
-      console.log(mod);
+      // console.log(mod);
 
       return;
     } else {

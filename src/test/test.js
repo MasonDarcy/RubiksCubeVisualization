@@ -55,16 +55,64 @@ let backFaceIndices = [2, 8, 14, 56, 62, 68, 110, 116, 122];
 // };
 //initializeRandomCube();
 
-const test = Cube.fromString(
-  "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR"
-);
-Cube.initSolver();
-console.log(test.solve());
+// const test = Cube.fromString(
+//   "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR"
+// );
+// Cube.initSolver();
+// console.log(test.solve());
 //This is inline with my own encoding
 
-let topFace = cubeEncoding.substring(0, 9); //BLRRULBUL
-let rightFace = cubeEncoding.substring(9, 18); //UFBURULLF
-let frontFace = cubeEncoding.substring(18, 27); //DFFRFBRDB
-let downFace = cubeEncoding.substring(27, 36); //DFDBDBURL
-let leftFace = cubeEncoding.substring(36, 45); // UBRFLUFDF
-let backFace = cubeEncoding.substring(45, 54); //UDLLBRDDR
+// let topFace = cubeEncoding.substring(0, 9); //BLRRULBUL
+// let rightFace = cubeEncoding.substring(9, 18); //UFBURULLF
+// let frontFace = cubeEncoding.substring(18, 27); //DFFRFBRDB
+// let downFace = cubeEncoding.substring(27, 36); //DFDBDBURL
+// let leftFace = cubeEncoding.substring(36, 45); // UBRFLUFDF
+// let backFace = cubeEncoding.substring(45, 54); //UDLLBRDDR
+
+const transmuteString = () => {
+  //Right face needs to undergo this transform
+  //UFBURULLF // --> bfu, uru, fll Check
+  //back face
+  //UDLLBRDDR --> LDU, RBL, RDD
+  //bottom face
+  // DFDBDBURL --> (try just reversing the whole thing)
+  //123456789
+  //  LRUBDBDFD
+  let cubeEncoding = "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR";
+  console.log(cubeEncoding.length);
+
+  let rightFace = cubeEncoding.substring(9, 18); //UFBURULLF // --> bfu, uru, fll
+  let reverseSegment1 = rightFace.substring(0, 3).split("").reverse().join("");
+  let reverseSegment2 = rightFace.substring(3, 6).split("").reverse().join("");
+  let reverseSegment3 = rightFace.substring(6, 9).split("").reverse().join("");
+  let rightAmalgam = reverseSegment1 + reverseSegment2 + reverseSegment3;
+  cubeEncoding = replaceRange(cubeEncoding, 9, 18, rightAmalgam);
+  console.log(cubeEncoding.length);
+
+  let backFace = cubeEncoding.substring(45, 54); //UDLLBRDDR // -->LDU, RBL, RDD
+  console.log(backFace);
+  let reverseSegment4 = backFace.substring(0, 3).split("").reverse().join("");
+  console.log(reverseSegment4);
+  let reverseSegment5 = backFace.substring(3, 6).split("").reverse().join("");
+  let reverseSegment6 = backFace.substring(6, 9).split("").reverse().join("");
+
+  let leftAmalgam = reverseSegment4 + reverseSegment5 + reverseSegment6;
+  cubeEncoding = replaceRange(cubeEncoding, 45, 54, leftAmalgam);
+  console.log(leftAmalgam);
+  console.log(cubeEncoding.length);
+
+  //DFDBDBURL --> (try just reversing the whole thing)
+  let downFace = cubeEncoding.substring(27, 36); //DFDBDBURL
+  let strArr = downFace.split("");
+  strArr.reverse();
+  let reversed = strArr.join("");
+  cubeEncoding = replaceRange(cubeEncoding, 27, 36, reversed);
+
+  console.log(cubeEncoding);
+};
+
+function replaceRange(s, start, end, substitute) {
+  return s.substring(0, start) + substitute + s.substring(end);
+}
+
+transmuteString();

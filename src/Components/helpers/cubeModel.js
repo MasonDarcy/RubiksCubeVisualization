@@ -1,5 +1,6 @@
-import { slice } from "lodash";
 import tools from "./util";
+import colorUtils from "./colorHelper";
+import faceData from "./faceData";
 
 const createTopSlice = () => {
   let model = [];
@@ -331,14 +332,21 @@ const buildNakedModel = () => {
 
 const paintModel = () => {
   let model = buildNakedModel();
-  let cubeEncoding = "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR";
+  let initial = "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR";
+  let cubeEncoding = colorUtils.transmuteString(initial);
+  console.log("In paintModel");
+  console.log(
+    `Original: BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR`
+  );
+  console.log(`Transmuted: ${cubeEncoding}`);
 
-  let topFace = cubeEncoding.substring(0, 9); //BLRRULBUL
-  let rightFace = cubeEncoding.substring(9, 18); //UFBURULLF
+  let topFace = cubeEncoding.substring(0, 9); //BLRRULBUL //good
+  let rightFace = cubeEncoding.substring(9, 18); //UFBURULLF // --> bfu, uru, fll
+
   let frontFace = cubeEncoding.substring(18, 27); //DFFRFBRDB
   let downFace = cubeEncoding.substring(27, 36); //DFDBDBURL
-  let leftFace = cubeEncoding.substring(36, 45); // UBRFLUFDF
-  let backFace = cubeEncoding.substring(45, 54); //UDLLBRDDR
+  let leftFace = cubeEncoding.substring(36, 45); // UBRFLUFDF //good
+  let backFace = cubeEncoding.substring(45, 54); //UDLLBRDDR // reverse
 
   let faceColors = [
     frontFace,
@@ -349,26 +357,10 @@ const paintModel = () => {
     downFace,
   ];
 
-  let topFaceIndices = [5, 11, 17, 23, 29, 35, 41, 47, 53];
-  let rightFaceIndices = [15, 33, 51, 69, 87, 105, 123, 141, 159];
-  let frontFaceIndices = [37, 43, 49, 91, 97, 103, 145, 151, 157];
-  let downFaceIndices = [114, 120, 126, 132, 138, 144, 150, 156, 162];
-  let leftFaceIndices = [4, 22, 40, 58, 76, 94, 112, 130, 148];
-  let backFaceIndices = [2, 8, 14, 56, 62, 68, 110, 116, 122];
-
-  let faces = [
-    frontFaceIndices,
-    backFaceIndices,
-    rightFaceIndices,
-    leftFaceIndices,
-    topFaceIndices,
-    downFaceIndices,
-  ];
-
-  for (let i = 0; i < faces.length; i++) {
+  for (let i = 0; i < faceData.length; i++) {
     for (let cubeFace = 0; cubeFace < 9; cubeFace++) {
       let x, y, z, s;
-      let num = faces[i][cubeFace];
+      let num = faceData[i][cubeFace];
       num -= 1;
       //slice
       z = Math.floor((num / 162) * 3);
@@ -385,25 +377,16 @@ const paintModel = () => {
       if (x == 3) {
         x = 2;
       }
-
-      //side
-      //?
       s = num - z * 54 - y * 18 - x * 6;
       if (s == 6) {
         s = 5;
       }
-      // console.log(`num: ${num}`);
-      // console.log(`Char: ${faceColors[i][cubeFace]}`);
-      // console.log(`z: ${z}`);
-      // console.log(`y: ${y}`);
-      // console.log(`x: ${x}`);
-      // console.log(`s: ${s}`);
       model[z][y][x][s].currentColor = letterToColorNum(
         faceColors[i][cubeFace]
       );
     }
   }
-
+  console.log(model);
   return model;
 };
 
