@@ -2,309 +2,6 @@ import tools from "./util";
 import colorUtils from "./colorHelper";
 import faceData from "./faceData";
 
-const createTopSlice = () => {
-  let model = [];
-  let topSlice = [];
-  let middleSlice = [];
-  let bottomSlice = [];
-  let topBack = [];
-  let topMiddle = [];
-  let topFront = [];
-  let middleBack = [];
-  let middleMiddle = [];
-  let middleFront = [];
-  let bottomBack = [];
-  let bottomMiddle = [];
-  let bottomFront = [];
-  /*Top slice--------------------------------------------------- */
-  let cube1 = [
-    { currentColor: 0 },
-    { currentColor: 2 },
-    { currentColor: 0 },
-    { currentColor: 4 },
-    { currentColor: 5 },
-    { currentColor: 0 },
-  ];
-  let cube2 = [
-    { currentColor: 0 },
-    { currentColor: 2 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 5 },
-    { currentColor: 0 },
-  ];
-  let cube3 = [
-    { currentColor: 0 },
-    { currentColor: 2 },
-    { currentColor: 3 },
-    { currentColor: 0 },
-    { currentColor: 5 },
-    { currentColor: 0 },
-  ];
-  topBack.push(cube1);
-  topBack.push(cube2);
-  topBack.push(cube3);
-  let cube4 = [
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 4 },
-    { currentColor: 5 },
-    { currentColor: 0 },
-  ];
-  let cube5 = [
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 5 },
-    { currentColor: 0 },
-  ];
-
-  let cube6 = [
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 3 },
-    { currentColor: 0 },
-    { currentColor: 5 },
-    { currentColor: 0 },
-  ];
-  topMiddle.push(cube4);
-  topMiddle.push(cube5);
-  topMiddle.push(cube6);
-  let cube7 = [
-    { currentColor: 1 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 4 },
-    { currentColor: 5 },
-    { currentColor: 0 },
-  ];
-  let cube8 = [
-    { currentColor: 1 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 5 },
-    { currentColor: 0 },
-  ];
-  let cube9 = [
-    { currentColor: 1 },
-    { currentColor: 0 },
-    { currentColor: 3 },
-    { currentColor: 0 },
-    { currentColor: 5 },
-    { currentColor: 0 },
-  ];
-  topFront.push(cube7);
-  topFront.push(cube8);
-  topFront.push(cube9);
-  topSlice.push(topBack);
-  topSlice.push(topMiddle);
-  topSlice.push(topFront);
-
-  /*Middle slice--------------------------------------------------- */
-  let cube10 = [
-    { currentColor: 0 },
-    { currentColor: 2 },
-    { currentColor: 0 },
-    { currentColor: 4 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-  ];
-  let cube11 = [
-    { currentColor: 0 },
-    { currentColor: 2 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-  ];
-  let cube12 = [
-    { currentColor: 0 },
-    { currentColor: 2 },
-    { currentColor: 3 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-  ];
-  middleBack.push(cube10);
-  middleBack.push(cube11);
-  middleBack.push(cube12);
-
-  let cube13 = [
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 4 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-  ];
-  let cube14 = [
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-  ];
-  let cube15 = [
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 3 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-  ];
-  middleMiddle.push(cube13);
-  middleMiddle.push(cube14);
-  middleMiddle.push(cube15);
-
-  let cube16 = [
-    { currentColor: 1 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 4 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-  ];
-  let cube17 = [
-    { currentColor: 1 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-  ];
-  let cube18 = [
-    { currentColor: 1 },
-    { currentColor: 0 },
-    { currentColor: 3 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-  ];
-  middleFront.push(cube16);
-  middleFront.push(cube17);
-  middleFront.push(cube18);
-  middleSlice.push(middleBack);
-  middleSlice.push(middleMiddle);
-  middleSlice.push(middleFront);
-
-  /*Bottom slice--------------------------------------------------- */
-  let cube19 = [
-    { currentColor: 0 },
-    { currentColor: 2 },
-    { currentColor: 0 },
-    { currentColor: 4 },
-    { currentColor: 0 },
-    { currentColor: 6 },
-  ];
-  let cube20 = [
-    { currentColor: 0 },
-    { currentColor: 2 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 6 },
-  ];
-  let cube21 = [
-    { currentColor: 0 },
-    { currentColor: 2 },
-    { currentColor: 3 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 6 },
-  ];
-  bottomBack.push(cube19);
-  bottomBack.push(cube20);
-  bottomBack.push(cube21);
-
-  let cube22 = [
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 4 },
-    { currentColor: 0 },
-    { currentColor: 6 },
-  ];
-  let cube23 = [
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 6 },
-  ];
-  let cube24 = [
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 3 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 6 },
-  ];
-  bottomMiddle.push(cube22);
-  bottomMiddle.push(cube23);
-  bottomMiddle.push(cube24);
-
-  let cube25 = [
-    { currentColor: 1 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 4 },
-    { currentColor: 0 },
-    { currentColor: 6 },
-  ];
-  let cube26 = [
-    { currentColor: 1 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 6 },
-  ];
-  let cube27 = [
-    { currentColor: 1 },
-    { currentColor: 0 },
-    { currentColor: 3 },
-    { currentColor: 0 },
-    { currentColor: 0 },
-    { currentColor: 6 },
-  ];
-  bottomFront.push(cube25);
-  bottomFront.push(cube26);
-  bottomFront.push(cube27);
-  bottomSlice.push(bottomBack);
-  bottomSlice.push(bottomMiddle);
-  bottomSlice.push(bottomFront);
-  /*--------------------------------------------------------------- */
-  model.push(topSlice);
-  model.push(middleSlice);
-  model.push(bottomSlice);
-  return model;
-};
-
-const letterToColorNum = (faceChar) => {
-  switch (faceChar) {
-    case "F":
-      return 1;
-    case "B":
-      return 2;
-    case "R":
-      return 3;
-    case "L":
-      return 4;
-    case "U":
-      return 5;
-    case "D":
-      return 6;
-  }
-};
-
-//F B R L U D N(black)
-// cubeString = "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR";
-
 const buildNakedModel = () => {
   let model = [
     [[], [], []],
@@ -330,15 +27,13 @@ const buildNakedModel = () => {
   return model;
 };
 
-const paintModel = () => {
+const paintModel = (colorString) => {
   let model = buildNakedModel();
-  let initial = "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR";
-  let cubeEncoding = colorUtils.transmuteString(initial);
-  console.log("In paintModel");
-  console.log(
-    `Original: BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR`
-  );
-  console.log(`Transmuted: ${cubeEncoding}`);
+  // let initial = "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR";
+  // let cubeEncoding = colorUtils.transmuteString(
+  //   "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR"
+  // );
+  let cubeEncoding = colorUtils.transmuteString(colorString);
 
   let topFace = cubeEncoding.substring(0, 9); //BLRRULBUL //good
   let rightFace = cubeEncoding.substring(9, 18); //UFBURULLF // --> bfu, uru, fll
@@ -357,10 +52,10 @@ const paintModel = () => {
     downFace,
   ];
 
-  for (let i = 0; i < faceData.length; i++) {
+  for (let i = 0; i < faceData.modelFaces.length; i++) {
     for (let cubeFace = 0; cubeFace < 9; cubeFace++) {
       let x, y, z, s;
-      let num = faceData[i][cubeFace];
+      let num = faceData.modelFaces[i][cubeFace];
       num -= 1;
       //slice
       z = Math.floor((num / 162) * 3);
@@ -381,12 +76,11 @@ const paintModel = () => {
       if (s == 6) {
         s = 5;
       }
-      model[z][y][x][s].currentColor = letterToColorNum(
+      model[z][y][x][s].currentColor = colorUtils.letterToColorNum(
         faceColors[i][cubeFace]
       );
     }
   }
-  console.log(model);
   return model;
 };
 
@@ -563,7 +257,6 @@ function rotateModelNeg90(matrix, axis, direction) {
 }
 
 const cubeModel = {
-  createTopSlice,
   modelToCoordinateArray,
   translateCoord,
   updateModel,

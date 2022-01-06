@@ -1,17 +1,4 @@
-let topFaceIndices = [5, 11, 17, 23, 29, 35, 41, 47, 53];
-let rightFaceIndices = [15, 33, 51, 69, 87, 105, 123, 141, 159];
-let frontFaceIndices = [37, 43, 49, 91, 97, 103, 145, 151, 157];
-let downFaceIndices = [114, 120, 126, 132, 138, 144, 150, 156, 162];
-let leftFaceIndices = [4, 22, 40, 58, 76, 94, 112, 130, 148];
-let backFaceIndices = [2, 8, 14, 56, 62, 68, 110, 116, 122];
-let faces = [
-  topFaceIndices,
-  rightFaceIndices,
-  frontFaceIndices,
-  downFaceIndices,
-  leftFaceIndices,
-  backFaceIndices,
-];
+import faceData from "./faceData";
 
 const transmuteString = (cubeEncoding) => {
   let rightFace = cubeEncoding.substring(9, 18); //UFBURULLF // --> bfu, uru, fll
@@ -47,17 +34,8 @@ function replaceRange(s, start, end, substitute) {
   return s.substring(0, start) + substitute + s.substring(end);
 }
 
-const initializeCubeColors = (el) => {
-  let cubeEncoding = transmuteString(
-    "BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR"
-  );
-
-  console.log("In initialize cube colors");
-  console.log(
-    `Original: BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR`
-  );
-  console.log(`Transmuted: ${cubeEncoding}`);
-
+const initializeCubeColors = (el, colorString) => {
+  let cubeEncoding = transmuteString(colorString);
   let topFace = cubeEncoding.substring(0, 9); //BLRRULBU
   let rightFace = cubeEncoding.substring(9, 18); //BFUURUFLL
   let frontFace = cubeEncoding.substring(18, 27); //DFFRFBRDB
@@ -74,13 +52,13 @@ const initializeCubeColors = (el) => {
     backFace,
   ];
 
-  for (let faceIndex = 0; faceIndex < faces.length; faceIndex++) {
+  for (let faceIndex = 0; faceIndex < faceData.colorFaces.length; faceIndex++) {
     for (let faceletIndex = 0; faceletIndex < 9; faceletIndex++) {
       let letter = colorStrings[faceIndex].charAt(faceletIndex);
       // console.log(letter);
       let color = colorMapper(letterToColorNum(letter));
       el.current.style.setProperty(
-        `--color${faces[faceIndex][faceletIndex]}`,
+        `--color${faceData.colorFaces[faceIndex][faceletIndex]}`,
         color
       );
     }
@@ -256,6 +234,7 @@ const colorUtils = {
   remapAllColorsX,
   initializeCubeColors,
   transmuteString,
+  letterToColorNum,
 };
 
 export default colorUtils;

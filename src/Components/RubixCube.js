@@ -3,13 +3,15 @@ import { useState, useRef, useEffect } from "react";
 import colorUtils from "./helpers/colorHelper";
 import perspectiveUtils from "./helpers/perspectiveTools";
 import cubeModel from "./helpers/cubeModel";
+const Cube = require("cubejs");
 
 const RubixCube = () => {
   const [topClassName, setTopClassName] = useState(null);
   const [middleClassName, setMiddleClassName] = useState(null);
   const [bottomClassName, setBottomClassName] = useState(null);
-  // const [model, setModel] = useState(cubeModel.createTopSlice());
   const [model, setModel] = useState(null);
+  const modelRef = useRef(null);
+  const [cube, setCube] = useState(Cube.random());
   const animatingRef = useRef(false);
   const [rotation, setRotation] = useState("initialFloor");
   const [mouseDown, setMouseDown] = useState(false);
@@ -32,6 +34,8 @@ const RubixCube = () => {
 
   /*Triggers an animation, updates the model after the animation finishes.*/
   const dispatchRotateEvent = (targetSlice, rotationDirection) => {
+    console.log("dispatchRotateEvent");
+    console.log(model);
     switch (targetSlice) {
       case "bottom":
         switch (rotationDirection) {
@@ -83,7 +87,7 @@ const RubixCube = () => {
       }
       animatingRef.current = false;
       calculatingRef.current = false;
-      console.log("Set Timeout called");
+      console.log("Timeout called in dispatchEvent");
       xRef.current = null;
       yRef.current = null;
       setModel(copy);
@@ -94,16 +98,15 @@ const RubixCube = () => {
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
-      //Color it here
-      colorUtils.initializeCubeColors(el);
-      let mod = cubeModel.paintModel();
+      let cubeStringEncoding = cube.asString();
+      colorUtils.initializeCubeColors(el, cubeStringEncoding);
+      let mod = cubeModel.paintModel(cubeStringEncoding);
       setModel(mod);
-      //BLRRULBULUFBURULLFDFFRFBRDBDFDBDBURLUBRFLUFDFUDLLBRDDR
-      // console.log(mod);
-
       return;
     } else {
-      console.log(`topClassName: ${topClassName}`);
+      // console.log("useEffect called");
+      // console.log(model);
+      //  console.log(`topClassName: ${topClassName}`);
       if (topClassName) {
         switch (rotationToBe) {
           case "initialFloor":
@@ -169,16 +172,22 @@ const RubixCube = () => {
       }
     }
   }, [model]);
+
+  const kd = (e) => {
+    scheduleSolveAnimation("U U");
+    // autoAnimate("B");
+  };
   /*Sets up mousemove event listeners.--------------------------------------------------*/
   useEffect(() => {
     window.addEventListener("mousemove", mousemoving);
     window.addEventListener("dragstart", dragstart);
     window.addEventListener("drop", drop);
-
+    window.addEventListener("keydown", kd);
     return () => {
       window.removeEventListener("mousemove", mousemoving);
       window.removeEventListener("dragstart", dragstart);
       window.removeEventListener("drop", drop);
+      window.removeEventListener("keydown", kd);
     };
   });
   /*----------------------------------------------------------------------------------*/
@@ -209,8 +218,8 @@ const RubixCube = () => {
   const computeDirection = (x, y) => {
     // setAnimating(true);
     animatingRef.current = true;
-    console.log(`animating inside compute: ${animatingRef.current}`);
-    console.log("computeDirection called");
+    // console.log(`animating inside compute: ${animatingRef.current}`);
+    // console.log("computeDirection called");
     let xChange = x - xRef.current;
     let yChange = y - yRef.current;
 
@@ -256,7 +265,7 @@ const RubixCube = () => {
         calculatingRef.current = true;
       }
     } else if (mouseDownRotation) {
-      console.log("Inside mouseDownRotation");
+      //  console.log("Inside mouseDownRotation");
       let changeY = e.pageX - initialMouseYPos;
       let changeX = initialMouseXPos - e.pageY;
       plane.current.style.setProperty(`--x-rotation`, xRotation + changeX);
@@ -293,8 +302,8 @@ const RubixCube = () => {
   /*Fires an animation on mouse-up.*/
   const shiftRelease = (e) => {
     if (!mouseUpTimeout.current) {
-      console.log("shift release called");
-      console.log(`animating: ${animatingRef.current}`);
+      // console.log("shift release called");
+      // console.log(`animating: ${animatingRef.current}`);
       if (!animatingRef.current) {
         setMouseDown(false);
         if (xRef.current && yRef.current) {
@@ -306,7 +315,7 @@ const RubixCube = () => {
         setTimeout(() => {
           mouseUpTimeout.current = false;
           animatingRef.current = false;
-          console.log("Release Mouse UP");
+          //   console.log("Release Mouse UP");
         }, 1000);
       }
     }
@@ -648,6 +657,129 @@ const RubixCube = () => {
     }
   };
 
+  const autoAnimate = (code) => {
+    switch (code) {
+      case "R":
+        setRotationDirection("c");
+        setTargetSlice("top");
+        rotateModel90Y();
+        break;
+      case "R'":
+        setRotationDirection("cc");
+        setTargetSlice("top");
+        rotateModel90Y();
+        break;
+      case "L":
+        setRotationDirection("cc");
+        setTargetSlice("bottom");
+        rotateModel90Y();
+        break;
+      case "L'":
+        setRotationDirection("c");
+        setTargetSlice("bottom");
+        rotateModel90Y();
+        break;
+      case "U":
+        setRotationDirection("c");
+        setTargetSlice("top");
+        setRotationToBe("initialFloor");
+        dispatchRotateEvent("top", "c");
+        break;
+      case "U'":
+        setRotationDirection("cc");
+        setTargetSlice("top");
+        setRotationToBe("initialFloor");
+        dispatchRotateEvent("top", "cc");
+        break;
+      case "D":
+        setRotationDirection("c");
+        setTargetSlice("bottom");
+        setRotationToBe("initialFloor");
+        dispatchRotateEvent("bottom", "c");
+        break;
+      case "D'":
+        setRotationDirection("cc");
+        setTargetSlice("bottom");
+        setRotationToBe("initialFloor");
+        dispatchRotateEvent("bottom", "cc");
+        break;
+      case "F":
+        setRotationDirection("c");
+        setTargetSlice("top");
+        rotateModel90X();
+        break;
+      case "F'":
+        setRotationDirection("cc");
+        setTargetSlice("top");
+        rotateModel90X();
+        break;
+      case "B":
+        setRotationDirection("cc");
+        setTargetSlice("bottom");
+        rotateModel90X();
+        break;
+      case "B'":
+        setRotationDirection("c");
+        setTargetSlice("bottom");
+        rotateModel90X();
+        break;
+    }
+  };
+
+  const parseMoveString = (moveString) => {
+    let replacementArr = [
+      ["U2", "U U"],
+      ["D2", "D D"],
+      ["F2", "F F"],
+      ["B2", "B B"],
+      ["R2", "R R"],
+      ["L2", "L L"],
+    ];
+
+    let result = moveString;
+    for (let i = 0; i < replacementArr.length; i++) {
+      result = result.replaceAll(replacementArr[i][0], replacementArr[i][1]);
+    }
+    return result;
+  };
+
+  const scheduleSolveAnimation = async (moveString) => {
+    const moveArray = moveString.split(" ");
+    const funcArray = [];
+
+    setTimeout(() => {
+      autoAnimate("U");
+      // console.log(`Model in first timeout`);
+      // console.log(model);
+    }, 1000);
+
+    setTimeout(() => {
+      autoAnimate("U");
+      //  console.log(`Model in second timeout`);
+      //   console.log(model);
+    }, 5000);
+
+    // moveArray.forEach((item, i) => {
+    //   const f = (code) => {
+    //     return new Promise((resolve) => {
+    //       setTimeout(() => {
+    //         autoAnimate("B");
+    //         console.log("Promise callback");
+    //         resolve();
+    //       }, 2000);
+    //     });
+    //   };
+    //   funcArray.push(f);
+    // });
+    // // console.log(funcArray.length);
+    // for (let i = 0; i < funcArray.length; i++) {
+    //   //  console.log("Calling another function");
+    //   await funcArray[i]();
+    // }
+  };
+  //  const sleep = (ms) => {
+  //   return new Promise((resolve) => setTimeout(resolve, ms));
+  // };
   return (
     <div>
       <div
