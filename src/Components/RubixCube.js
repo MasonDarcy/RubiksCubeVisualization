@@ -3,6 +3,9 @@ import { useState, useRef, useEffect } from "react";
 import colorUtils from "./helpers/colorHelper";
 import perspectiveUtils from "./helpers/perspectiveTools";
 import cubeModel from "./helpers/cubeModel";
+import ButtonProto from "./ButtonProto";
+import ButtonRandom from "./ButtonRandom";
+
 const Cube = require("cubejs");
 
 const RubixCube = () => {
@@ -10,9 +13,13 @@ const RubixCube = () => {
   const [middleClassName, setMiddleClassName] = useState(null);
   const [bottomClassName, setBottomClassName] = useState(null);
   const [model, setModel] = useState(null);
-  const modelRef = useRef(null);
-  const [cube, setCube] = useState(Cube.random());
+  const modelRef = useRef(model);
+  //const [cube, setCube] = useState(Cube.random());
+  let cubeRef = useRef(Cube.random());
   const animatingRef = useRef(false);
+  const solvingRef = useRef(false);
+  const buttonRef = useRef(null);
+
   const [rotation, setRotation] = useState("initialFloor");
   const [mouseDown, setMouseDown] = useState(false);
   const mouseUpTimeout = useRef(false);
@@ -26,16 +33,20 @@ const RubixCube = () => {
   const yRef = useRef(null);
   const targetRef = useRef(null);
   const calculatingRef = useRef(false);
+  const randomizedRef = useRef(false);
   const [initialMouseYPos, setInitialMouseYPos] = useState(null);
   const [initialMouseXPos, setInitialMouseXPos] = useState(null);
   const [xRotation, setXRotation] = useState(-24);
   const [yRotation, setYRotation] = useState(-24);
   const [rotationToBe, setRotationToBe] = useState(null);
+  const check = useRef(false);
+  const disable = useRef(false);
 
   /*Triggers an animation, updates the model after the animation finishes.*/
-  const dispatchRotateEvent = (targetSlice, rotationDirection) => {
-    console.log("dispatchRotateEvent");
-    console.log(model);
+  const dispatchRotateEvent = (targetSlice, rotationDirection, model) => {
+    // console.log("dispatchRotateEvent");
+    // console.log(model);
+    //console.log(modelRef);
     switch (targetSlice) {
       case "bottom":
         switch (rotationDirection) {
@@ -75,11 +86,13 @@ const RubixCube = () => {
         rotationDirection,
         model
       );
+
       switch (rotationToBe) {
         case "initialFloor":
           break;
         case "rotatedFloor90Y":
           copy = cubeModel.rotateModelNeg90(copy, "y", "right");
+
           break;
         case "rotatedFloor90X":
           copy = cubeModel.rotateModelNeg90(copy, "x", "left");
@@ -87,30 +100,44 @@ const RubixCube = () => {
       }
       animatingRef.current = false;
       calculatingRef.current = false;
-      console.log("Timeout called in dispatchEvent");
+      //console.log("Timeout called in dispatchEvent");
       xRef.current = null;
       yRef.current = null;
       setModel(copy);
+      modelRef.current = copy;
+
+      //  Update the cube somehow?
+      // if (!check.current) {
+      //   console.log("got here?");
+      //   let test = Cube.fromString(cubeModel.getFaceletString(copy));
+      //   console.log(test.asString());
+      //   console.log(test);
+
+      //   cubeRef.current = test;
+      // }
+      // setCube(test);
     }, 1000);
   };
 
   /*When the model changes, repaints the cubes so its consistent with the new state.*/
   useEffect(() => {
+    console.log("Run");
     if (firstRender.current) {
       firstRender.current = false;
-      let cubeStringEncoding = cube.asString();
+      //let cubeStringEncoding = cube.asString();
+      let cubeStringEncoding = cubeRef.current.asString();
+
       colorUtils.initializeCubeColors(el, cubeStringEncoding);
       let mod = cubeModel.paintModel(cubeStringEncoding);
       setModel(mod);
+      modelRef.current = mod;
       return;
     } else {
-      // console.log("useEffect called");
-      // console.log(model);
-      //  console.log(`topClassName: ${topClassName}`);
       if (topClassName) {
         switch (rotationToBe) {
           case "initialFloor":
             colorUtils.remapSliceColors(0, model, el);
+
             break;
           case "rotatedFloor90Y":
             colorUtils.remapAllColors(model, el, "left");
@@ -156,38 +183,75 @@ const RubixCube = () => {
       } else {
         switch (rotationToBe) {
           case "initialFloor":
-            dispatchRotateEvent(targetSlice, rotationDirection);
+            if (!randomizedRef.current) {
+              dispatchRotateEvent(
+                targetSlice,
+                rotationDirection,
+                modelRef.current
+              );
+              randomizedRef.current = false;
+            }
             break;
           case "rotatedFloor90Y":
             setRotation(rotationToBe);
             colorUtils.remapAllColors(model, el, "right");
-            dispatchRotateEvent(targetSlice, rotationDirection);
+            dispatchRotateEvent(
+              targetSlice,
+              rotationDirection,
+              modelRef.current
+            );
             break;
           case "rotatedFloor90X":
             setRotation(rotationToBe);
             colorUtils.remapAllColorsX(model, el, "right");
-            dispatchRotateEvent(targetSlice, rotationDirection);
+            dispatchRotateEvent(
+              targetSlice,
+              rotationDirection,
+              modelRef.current
+            );
             break;
         }
       }
     }
   }, [model]);
 
-  const kd = (e) => {
-    scheduleSolveAnimation("U U");
-    // autoAnimate("B");
+  const solve = (e) => {
+    if (!solvingRef.current && !animatingRef.current) {
+      console.log("Got here somehow");
+      solvingRef.current = true;
+      check.current = true;
+
+      Cube.initSolver();
+      /*------------------*/
+      let test = Cube.fromString(cubeModel.getFaceletString(modelRef.current));
+      let solveString = test.solve();
+      /*------------------- */
+
+      let parsed = parseMoveString(solveString);
+      scheduleSolveAnimation(parsed);
+    }
   };
+
+  const randomize = (e) => {
+    cubeRef.current = Cube.random();
+    let cubeStringEncoding = cubeRef.current.asString();
+    randomizedRef.current = true;
+    colorUtils.initializeCubeColors(el, cubeStringEncoding);
+    let mod = cubeModel.paintModel(cubeStringEncoding);
+    setModel(mod);
+    modelRef.current = mod;
+  };
+
   /*Sets up mousemove event listeners.--------------------------------------------------*/
   useEffect(() => {
     window.addEventListener("mousemove", mousemoving);
     window.addEventListener("dragstart", dragstart);
     window.addEventListener("drop", drop);
-    window.addEventListener("keydown", kd);
+
     return () => {
       window.removeEventListener("mousemove", mousemoving);
       window.removeEventListener("dragstart", dragstart);
       window.removeEventListener("drop", drop);
-      window.removeEventListener("keydown", kd);
     };
   });
   /*----------------------------------------------------------------------------------*/
@@ -195,22 +259,44 @@ const RubixCube = () => {
   Two functions that rotate the model, and update the state
   These are assigned to a specific face of the rubik's cube to determine the animation.
    */
-  function rotateModel90Y() {
-    let copy = JSON.parse(JSON.stringify(model));
-    let coords = cubeModel.modelToCoordinateArray();
-    let shiftedUniverse = cubeModel.rotateUniverse(coords, "left", "y");
-    let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-    setRotationToBe("rotatedFloor90Y");
-    setModel(newModel);
+  function rotateModel90Y(m) {
+    if (m) {
+      let copy = JSON.parse(JSON.stringify(m));
+      let coords = cubeModel.modelToCoordinateArray();
+      let shiftedUniverse = cubeModel.rotateUniverse(coords, "left", "y");
+      let newModel = cubeModel.updateModel(shiftedUniverse, copy);
+      setRotationToBe("rotatedFloor90Y");
+      setModel(newModel);
+      modelRef.current = newModel;
+    } else {
+      let copy = JSON.parse(JSON.stringify(model));
+      let coords = cubeModel.modelToCoordinateArray();
+      let shiftedUniverse = cubeModel.rotateUniverse(coords, "left", "y");
+      let newModel = cubeModel.updateModel(shiftedUniverse, copy);
+      setRotationToBe("rotatedFloor90Y");
+      setModel(newModel);
+      modelRef.current = newModel;
+    }
   }
 
-  function rotateModel90X() {
-    let copy = JSON.parse(JSON.stringify(model));
-    let coords = cubeModel.modelToCoordinateArray();
-    let shiftedUniverse = cubeModel.rotateUniverse(coords, "right", "x");
-    let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-    setRotationToBe("rotatedFloor90X");
-    setModel(newModel);
+  function rotateModel90X(m) {
+    if (m) {
+      let copy = JSON.parse(JSON.stringify(m));
+      let coords = cubeModel.modelToCoordinateArray();
+      let shiftedUniverse = cubeModel.rotateUniverse(coords, "right", "x");
+      let newModel = cubeModel.updateModel(shiftedUniverse, copy);
+      setRotationToBe("rotatedFloor90X");
+      setModel(newModel);
+      modelRef.current = newModel;
+    } else {
+      let copy = JSON.parse(JSON.stringify(model));
+      let coords = cubeModel.modelToCoordinateArray();
+      let shiftedUniverse = cubeModel.rotateUniverse(coords, "right", "x");
+      let newModel = cubeModel.updateModel(shiftedUniverse, copy);
+      setRotationToBe("rotatedFloor90X");
+      setModel(newModel);
+      modelRef.current = newModel;
+    }
   }
 
   /*---------------------------------------------------------------------------.*/
@@ -293,7 +379,7 @@ const RubixCube = () => {
 
   /*Initializes a state where the user is dragging and trying to rotate a slice .*/
   const initial = (e) => {
-    if (!animatingRef.current) {
+    if (!animatingRef.current && !solvingRef.current) {
       setMouseDown(true);
     }
     e.stopPropagation();
@@ -301,7 +387,7 @@ const RubixCube = () => {
 
   /*Fires an animation on mouse-up.*/
   const shiftRelease = (e) => {
-    if (!mouseUpTimeout.current) {
+    if (!mouseUpTimeout.current && !solvingRef.current) {
       // console.log("shift release called");
       // console.log(`animating: ${animatingRef.current}`);
       if (!animatingRef.current) {
@@ -315,7 +401,7 @@ const RubixCube = () => {
         setTimeout(() => {
           mouseUpTimeout.current = false;
           animatingRef.current = false;
-          //   console.log("Release Mouse UP");
+          console.log("Release Mouse UP");
         }, 1000);
       }
     }
@@ -398,7 +484,7 @@ const RubixCube = () => {
           colorData.westFunc();
         } else {
           setRotationToBe("initialFloor");
-          dispatchRotateEvent(sliceTuple[0], colorData.rotationOrder[0]);
+          dispatchRotateEvent(sliceTuple[0], colorData.rotationOrder[0], model);
         }
         break;
       case "east":
@@ -410,7 +496,8 @@ const RubixCube = () => {
           setRotationToBe("initialFloor");
           dispatchRotateEvent(
             sliceTuple[0],
-            reverseDirection(colorData.rotationOrder[0])
+            reverseDirection(colorData.rotationOrder[0]),
+            model
           );
         }
         break;
@@ -657,71 +744,71 @@ const RubixCube = () => {
     }
   };
 
-  const autoAnimate = (code) => {
+  const autoAnimate = (code, model) => {
     switch (code) {
       case "R":
         setRotationDirection("c");
         setTargetSlice("top");
-        rotateModel90Y();
+        rotateModel90Y(model);
         break;
       case "R'":
         setRotationDirection("cc");
         setTargetSlice("top");
-        rotateModel90Y();
+        rotateModel90Y(model);
         break;
       case "L":
         setRotationDirection("cc");
         setTargetSlice("bottom");
-        rotateModel90Y();
+        rotateModel90Y(model);
         break;
       case "L'":
         setRotationDirection("c");
         setTargetSlice("bottom");
-        rotateModel90Y();
+        rotateModel90Y(model);
         break;
       case "U":
         setRotationDirection("c");
         setTargetSlice("top");
         setRotationToBe("initialFloor");
-        dispatchRotateEvent("top", "c");
+        dispatchRotateEvent("top", "c", model);
         break;
       case "U'":
         setRotationDirection("cc");
         setTargetSlice("top");
         setRotationToBe("initialFloor");
-        dispatchRotateEvent("top", "cc");
+        dispatchRotateEvent("top", "cc", model);
         break;
       case "D":
         setRotationDirection("c");
         setTargetSlice("bottom");
         setRotationToBe("initialFloor");
-        dispatchRotateEvent("bottom", "c");
+        dispatchRotateEvent("bottom", "cc", model);
         break;
       case "D'":
         setRotationDirection("cc");
         setTargetSlice("bottom");
         setRotationToBe("initialFloor");
-        dispatchRotateEvent("bottom", "cc");
+        dispatchRotateEvent("bottom", "c", model);
         break;
       case "F":
         setRotationDirection("c");
         setTargetSlice("top");
-        rotateModel90X();
+        rotateModel90X(model);
         break;
       case "F'":
         setRotationDirection("cc");
         setTargetSlice("top");
-        rotateModel90X();
+        rotateModel90X(model);
         break;
       case "B":
         setRotationDirection("cc");
         setTargetSlice("bottom");
-        rotateModel90X();
+        rotateModel90X(model);
         break;
       case "B'":
         setRotationDirection("c");
         setTargetSlice("bottom");
-        rotateModel90X();
+        rotateModel90X(model);
         break;
     }
   };
@@ -747,39 +834,29 @@ const RubixCube = () => {
     const moveArray = moveString.split(" ");
     const funcArray = [];
 
+    moveArray.forEach((item, i) => {
+      const f = (code) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            autoAnimate(item, modelRef.current);
+            console.log("Promise callback");
+            resolve();
+          }, 1050);
+        });
+      };
+      funcArray.push(f);
+    });
+    // console.log(funcArray.length);
+    for (let i = 0; i < funcArray.length; i++) {
+      await funcArray[i]();
+    }
+    solvingRef.current = false;
     setTimeout(() => {
-      autoAnimate("U");
-      // console.log(`Model in first timeout`);
-      // console.log(model);
-    }, 1000);
-
-    setTimeout(() => {
-      autoAnimate("U");
-      //  console.log(`Model in second timeout`);
-      //   console.log(model);
-    }, 5000);
-
-    // moveArray.forEach((item, i) => {
-    //   const f = (code) => {
-    //     return new Promise((resolve) => {
-    //       setTimeout(() => {
-    //         autoAnimate("B");
-    //         console.log("Promise callback");
-    //         resolve();
-    //       }, 2000);
-    //     });
-    //   };
-    //   funcArray.push(f);
-    // });
-    // // console.log(funcArray.length);
-    // for (let i = 0; i < funcArray.length; i++) {
-    //   //  console.log("Calling another function");
-    //   await funcArray[i]();
-    // }
+      disable.current = false;
+      console.log(disable.current);
+    }, 1050);
   };
-  //  const sleep = (ms) => {
-  //   return new Promise((resolve) => setTimeout(resolve, ms));
-  // };
+
   return (
     <div>
       <div
@@ -1088,6 +1165,9 @@ const RubixCube = () => {
           </div>
         </div>
       </div>
+
+      <ButtonProto handler={solve} status={disable} />
+      <ButtonRandom handler={randomize} status={disable} />
     </div>
   );
 };

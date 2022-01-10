@@ -84,6 +84,43 @@ const paintModel = (colorString) => {
   return model;
 };
 
+const getFaceletString = (model) => {
+  const output = [];
+
+  for (let i = 0; i < faceData.colorFaces.length; i++) {
+    for (let cubeFace = 0; cubeFace < 9; cubeFace++) {
+      let x, y, z, s;
+      let num = faceData.colorFaces[i][cubeFace];
+      num -= 1;
+      //slice
+      z = Math.floor((num / 162) * 3);
+      if (z == 3) {
+        z = 2;
+      }
+      //row
+      y = Math.floor(((num - z * 54) / 54) * 3);
+      if (y == 3) {
+        y = 2;
+      }
+      //cube
+      x = Math.floor(((num - z * 54 - y * 18) / 18) * 3);
+      if (x == 3) {
+        x = 2;
+      }
+      s = num - z * 54 - y * 18 - x * 6;
+      if (s == 6) {
+        s = 5;
+      }
+
+      output.push(colorUtils.colorNumToLetter(model[z][y][x][s].currentColor));
+    }
+  }
+
+  let result = output.join("");
+  result = colorUtils.transmuteString(result);
+  return result;
+};
+
 const modelToCoordinateArray = () => {
   let coordArray = [];
 
@@ -265,6 +302,7 @@ const cubeModel = {
   rotateUniverse,
   rotateModelNeg90,
   paintModel,
+  getFaceletString,
 };
 
 export default cubeModel;

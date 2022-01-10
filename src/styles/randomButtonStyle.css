@@ -1,0 +1,240 @@
+:root {
+  --speed2: 800ms;
+  --cubeSize: 3.5vmin;
+}
+
+.randomizerButton2 {
+  position: relative;
+  height: 5vmin;
+  width: 5vmin;
+  background-color: #68504e;
+  color: white;
+  font-size: 2vmin;
+  transform: translateY(-40vh) translateX(10vw);
+}
+
+.disableBox2 {
+  position: absolute;
+  height: calc(3.05 * var(--cubeSize));
+  width: calc(3.05 * var(--cubeSize));
+  background-color: #291c1b;
+  color: rgba(255, 255, 255, 0.308);
+  font-size: 2vmin;
+  transform: translateY(-40vh) translateX(10vw);
+  opacity: 0.8;
+  z-index: 5;
+}
+
+.randomizerButton2:hover .childr1 {
+  animation-name: colorCycleQ;
+  animation-duration: var(--speed2);
+  animation-timing-function: steps(1, start);
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in;
+  animation-direction: alternate;
+}
+
+.randomizerButton2:hover .childr2 {
+  animation-name: colorCycle;
+  animation-duration: var(--speed2);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+}
+
+.randomizerButton2:hover .childr3 {
+  animation-name: colorCycle3;
+  animation-duration: var(--speed2);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.randomizerButton2:hover .childr4 {
+  animation-name: colorCycleQ;
+  animation-duration: var(--speed2);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+  animation-direction: alternate-reverse;
+}
+
+.randomizerButton2:hover .childr5 {
+  animation-name: colorCycle2;
+
+  animation-duration: var(--speed2);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+}
+
+.randomizerButton2:hover .childr6 {
+  animation-name: colorCycle;
+  animation-duration: var(--speed2);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+  animation-direction: alternate-reverse;
+}
+
+.randomizerButton2:hover .childr7 {
+  animation-name: colorCycle2;
+  animation-duration: var(--speed2);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.randomizerButton2:hover .childr8 {
+  animation-name: colorCycleQ;
+  animation-duration: var(--speed2);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+  animation-direction: alternate-reverse;
+}
+
+.randomizerButton2:hover .childr9 {
+  animation-name: colorCycleH;
+  animation-duration: var(--speed2);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+  animation-direction: alternate;
+}
+
+.childr1 {
+  position: absolute;
+  background-color: #dc136c;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+}
+
+.childr2 {
+  background-color: #353a47;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateX(var(--cubeSize));
+}
+
+.childr3 {
+  background-color: #8b1d11;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateX(calc(2 * var(--cubeSize)));
+}
+
+.childr4 {
+  background-color: #885a5a;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateY(var(--cubeSize));
+}
+
+.childr5 {
+  background-color: #84b082;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateY(var(--cubeSize)) translateX(var(--cubeSize));
+}
+
+.childr6 {
+  background-color: #dc136c;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateY(var(--cubeSize)) translateX(calc(var(--cubeSize) * 2));
+}
+
+.childr7 {
+  background-color: orange;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateY(calc(var(--cubeSize) * 2));
+}
+
+.childr8 {
+  background-color: #dc136c;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateY(calc(var(--cubeSize) * 2)) translateX(var(--cubeSize));
+}
+
+.childr9 {
+  background-color: #bb1c0b;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateY(calc(var(--cubeSize) * 2))
+    translateX(calc(var(--cubeSize) * 2));
+}
+
+@keyframes colorCycleZ {
+  0% {
+    background-color: #1db19d;
+  }
+  25% {
+    background-color: orange;
+  }
+  50% {
+    background-color: #885a5a;
+  }
+  75% {
+    background-color: #dc136c;
+  }
+  100% {
+    background-color: #84b082;
+  }
+}
+
+@keyframes colorCycleQ {
+  0% {
+    background-color: #dc136c;
+  }
+  25% {
+    background-color: #84b082;
+  }
+  50% {
+    background-color: #885a5a;
+  }
+  75% {
+    background-color: #055c95;
+  }
+  100% {
+    background-color: orange;
+  }
+}
+
+@keyframes colorCycleH {
+  0% {
+    background-color: #885a5a;
+  }
+  25% {
+    background-color: #84b082;
+  }
+  50% {
+    background-color: orange;
+  }
+  75% {
+    background-color: #5517b8;
+  }
+  100% {
+    background-color: #dc136c;
+  }
+}

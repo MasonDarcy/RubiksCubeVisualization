@@ -1,6 +1,17 @@
 :root {
   background: #4c6352;
 }
+
+.solving {
+  transform: translateY(-73vh) translateX(18vw);
+  color: white;
+  font-size: 3vmin;
+}
+
+.notSolving {
+  display: none;
+}
+
 .scene {
   perspective: calc(var(--perspective, 1000) * 1px);
   transform-style: preserve-3d;
@@ -295,16 +306,19 @@
 /* background: rgba(236, 205, 205, 0.3); */
 .topHorizontalPlane > div {
   /* display: none; */
-
+  height: calc(var(--cubeHeight) / 3 * 1vmin);
+  width: calc(var(--width) / 3 * 1vmin);
   justify-content: center;
   align-items: center;
   position: absolute;
+
   /* border: 1px solid lightcyan; */
   background: rgba(18, 195, 240, 0.1);
 }
 
 .middleHorizontalPlane > div {
   justify-content: center;
+
   align-items: center;
   position: absolute;
   /* border: 1px solid lightcyan; */
@@ -313,6 +327,7 @@
 
 .bottomHorizontalPlane > div {
   justify-content: center;
+
   align-items: center;
   position: absolute;
   /* border: 1px solid lightcyan; */

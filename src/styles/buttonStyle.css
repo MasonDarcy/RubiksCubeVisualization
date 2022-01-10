@@ -1,0 +1,359 @@
+:root {
+  --speed: 400ms;
+  --cubeSize: 3.5vmin;
+}
+
+.randomizerButton {
+  position: relative;
+  height: 5vmin;
+  width: 5vmin;
+  background-color: #68504e;
+  color: white;
+  font-size: 2vmin;
+
+  transform: translateY(-80vh) translateX(10vw);
+}
+
+.disableBox {
+  position: absolute;
+  height: calc(3.05 * var(--cubeSize));
+  width: calc(3.05 * var(--cubeSize));
+  background-color: #291c1b;
+  color: rgba(255, 255, 255, 0.308);
+  font-size: 2vmin;
+  transform: translateY(-80vh) translateX(10vw);
+  opacity: 0.8;
+  z-index: 5;
+}
+/* animation-timing-function: steps(1, start); */
+
+.randomizerButton:hover .child1 {
+  animation-name: colorCycle;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-timing-function: steps(1, end);
+}
+
+.randomizerButton:hover .child2 {
+  animation-name: colorCycle2;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.randomizerButton:hover .child3 {
+  animation-name: colorCycle3;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.randomizerButton:hover .child4 {
+  animation-name: colorCycle3;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.randomizerButton:hover .child5 {
+  animation-name: colorCycle2;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.randomizerButton:hover .child6 {
+  animation-name: colorCycle;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.randomizerButton:hover .child7 {
+  animation-name: colorCycle4;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.randomizerButton:hover .child8 {
+  animation-name: colorCycle;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.randomizerButton:hover .child9 {
+  animation-name: colorCycle;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.child1 {
+  position: absolute;
+  background-color: #dc136c;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+}
+
+.child2 {
+  background-color: #353a47;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateX(var(--cubeSize));
+}
+
+.child3 {
+  background-color: #f7c1bb;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateX(calc(2 * var(--cubeSize)));
+}
+
+.child4 {
+  background-color: #885a5a;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateY(var(--cubeSize));
+}
+
+.child5 {
+  background-color: #84b082;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateY(var(--cubeSize)) translateX(var(--cubeSize));
+}
+
+.child6 {
+  background-color: #dc136c;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateY(var(--cubeSize)) translateX(calc(var(--cubeSize) * 2));
+}
+
+.child7 {
+  background-color: orange;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateY(calc(var(--cubeSize) * 2));
+}
+
+.child8 {
+  background-color: #dc136c;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateY(calc(var(--cubeSize) * 2)) translateX(var(--cubeSize));
+}
+
+.child9 {
+  background-color: #f7c1bb;
+  position: absolute;
+  height: var(--cubeSize);
+  width: var(--cubeSize);
+  transform: translateY(calc(var(--cubeSize) * 2))
+    translateX(calc(var(--cubeSize) * 2));
+}
+
+.reverse {
+  animation-name: colorCycleReverse;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-fill-mode: backwards;
+}
+
+.reverse2 {
+  animation-name: colorCycleReverse2;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+}
+
+.reverse3 {
+  animation-name: colorCycleReverse3;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+}
+
+.reverse4 {
+  animation-name: colorCycleReverse4;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+}
+
+@keyframes colorCycle {
+  0% {
+    background-color: #261c1b;
+  }
+  25% {
+    background-color: orange;
+  }
+  50% {
+    background-color: #885a5a;
+  }
+  75% {
+    background-color: #dc136c;
+  }
+  100% {
+    background-color: #84b082;
+  }
+}
+
+@keyframes colorCycleReverse {
+  0% {
+    background-color: #84b082;
+  }
+  25% {
+    background-color: #dc136c;
+  }
+  50% {
+    background-color: #885a5a;
+  }
+  75% {
+    background-color: #261c1b;
+  }
+  100% {
+    background-color: #261c1b;
+  }
+}
+
+@keyframes colorCycleReverse2 {
+  0% {
+    background-color: #84b082;
+  }
+  25% {
+    background-color: #84b082;
+  }
+  50% {
+    background-color: #353a47;
+  }
+  75% {
+    background-color: orange;
+  }
+  100% {
+    background-color: #885a5a;
+  }
+}
+
+@keyframes colorCycle2 {
+  0% {
+    background-color: #885a5a;
+  }
+  25% {
+    background-color: #f7c1bb;
+  }
+  50% {
+    background-color: #84b082;
+  }
+  75% {
+    background-color: #84b082;
+  }
+  100% {
+    background-color: #84b082;
+  }
+}
+
+@keyframes colorCycle3 {
+  0% {
+    background-color: #885a5a;
+  }
+  25% {
+    background-color: #f7c1bb;
+  }
+  50% {
+    background-color: #353a47;
+  }
+  75% {
+    background-color: #84b082;
+  }
+  100% {
+    background-color: #84b082;
+  }
+}
+
+@keyframes colorCycleReverse3 {
+  0% {
+    background-color: #84b082;
+  }
+  25% {
+    background-color: #84b082;
+  }
+  50% {
+    background-color: #84b082;
+  }
+  75% {
+    background-color: #f7c1bb;
+  }
+  100% {
+    background-color: #885a5a;
+  }
+}
+
+@keyframes colorCycle4 {
+  0% {
+    background-color: orange;
+  }
+  25% {
+    background-color: orange;
+  }
+  50% {
+    background-color: #353a47;
+  }
+  75% {
+    background-color: orange;
+  }
+  100% {
+    background-color: #84b082;
+  }
+}
+
+@keyframes colorCycleReverse4 {
+  0% {
+    background-color: #84b082;
+  }
+  25% {
+    background-color: #84b082;
+  }
+  50% {
+    background-color: #84b082;
+  }
+  75% {
+    background-color: #f7c1bb;
+  }
+  100% {
+    background-color: orange;
+  }
+}

@@ -17,7 +17,7 @@ const transmuteString = (cubeEncoding) => {
   let backAmalgam = reverseSegment4 + reverseSegment5 + reverseSegment6;
   cubeEncoding = replaceRange(cubeEncoding, 45, 54, backAmalgam);
 
-  let downFace = cubeEncoding.substring(27, 36); //DFDBDBURL
+  let downFace = cubeEncoding.substring(27, 36);
 
   let reverseSegment7 = downFace.substring(0, 3);
   let reverseSegment8 = downFace.substring(3, 6);
@@ -93,6 +93,23 @@ const letterToColorNum = (faceChar) => {
       return 5;
     case "D":
       return 6;
+  }
+};
+
+const colorNumToLetter = (num) => {
+  switch (num) {
+    case 1:
+      return "F";
+    case 2:
+      return "B";
+    case 3:
+      return "R";
+    case 4:
+      return "L";
+    case 5:
+      return "U";
+    case 6:
+      return "D";
   }
 };
 
@@ -235,6 +252,7 @@ const colorUtils = {
   initializeCubeColors,
   transmuteString,
   letterToColorNum,
+  colorNumToLetter,
 };
 
 export default colorUtils;
