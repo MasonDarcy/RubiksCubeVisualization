@@ -5,7 +5,7 @@ import perspectiveUtils from "./helpers/perspectiveTools";
 import cubeModel from "./helpers/cubeModel";
 import ButtonProto from "./ButtonProto";
 import ButtonRandom from "./ButtonRandom";
-
+import SingleCube from "./SingleCube";
 const Cube = require("cubejs");
 
 const RubixCube = () => {
