@@ -1,11 +1,9 @@
-import RubixCube from "./Components/RubixCube";
-import SpamComponent from "./Components/SpamComponent";
-import ButtonProto from "./Components/ButtonProto";
+import RubiksCube from "./Components/RubiksCube";
 
 const App = () => {
   return (
     <>
-      <RubixCube />
+      <RubiksCube />
     </>
   );
 };

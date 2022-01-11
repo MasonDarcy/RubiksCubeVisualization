@@ -1,25 +1,28 @@
 import "../styles/style.css";
 import { useState, useRef, useEffect } from "react";
+/*Helpers---------------------------------------*/
 import colorUtils from "./helpers/colorHelper";
+import faceData from "./helpers/faceData";
 import perspectiveUtils from "./helpers/perspectiveTools";
+import tools from "./helpers/util";
+/*Components----------------------------------*/
 import cubeModel from "./helpers/cubeModel";
-import ButtonProto from "./ButtonProto";
-import ButtonRandom from "./ButtonRandom";
+import SolveButton from "./SolveButton";
+import RandomizeButton from "./RandomizeButton";
 import SingleCube from "./SingleCube";
+/*--------------------------------------------*/
+
 const Cube = require("cubejs");
 
-const RubixCube = () => {
+const RubiksCube = () => {
   const [topClassName, setTopClassName] = useState(null);
   const [middleClassName, setMiddleClassName] = useState(null);
   const [bottomClassName, setBottomClassName] = useState(null);
   const [model, setModel] = useState(null);
   const modelRef = useRef(model);
-  //const [cube, setCube] = useState(Cube.random());
   let cubeRef = useRef(Cube.random());
   const animatingRef = useRef(false);
   const solvingRef = useRef(false);
-  const buttonRef = useRef(null);
-
   const [rotation, setRotation] = useState("initialFloor");
   const [mouseDown, setMouseDown] = useState(false);
   const mouseUpTimeout = useRef(false);
@@ -41,12 +44,11 @@ const RubixCube = () => {
   const [rotationToBe, setRotationToBe] = useState(null);
   const check = useRef(false);
   const disable = useRef(false);
-
+  const [loaded, setLoaded] = useState(false);
+  const animationSpeed = 800;
+  const time = useRef(null);
   /*Triggers an animation, updates the model after the animation finishes.*/
   const dispatchRotateEvent = (targetSlice, rotationDirection, model) => {
-    // console.log("dispatchRotateEvent");
-    // console.log(model);
-    //console.log(modelRef);
     switch (targetSlice) {
       case "bottom":
         switch (rotationDirection) {
@@ -100,44 +102,32 @@ const RubixCube = () => {
       }
       animatingRef.current = false;
       calculatingRef.current = false;
-      //console.log("Timeout called in dispatchEvent");
       xRef.current = null;
       yRef.current = null;
       setModel(copy);
       modelRef.current = copy;
-
-      //  Update the cube somehow?
-      // if (!check.current) {
-      //   console.log("got here?");
-      //   let test = Cube.fromString(cubeModel.getFaceletString(copy));
-      //   console.log(test.asString());
-      //   console.log(test);
-
-      //   cubeRef.current = test;
-      // }
-      // setCube(test);
-    }, 1000);
+    }, animationSpeed);
   };
 
   /*When the model changes, repaints the cubes so its consistent with the new state.*/
   useEffect(() => {
-    console.log("Run");
     if (firstRender.current) {
       firstRender.current = false;
-      //let cubeStringEncoding = cube.asString();
       let cubeStringEncoding = cubeRef.current.asString();
-
       colorUtils.initializeCubeColors(el, cubeStringEncoding);
       let mod = cubeModel.paintModel(cubeStringEncoding);
       setModel(mod);
       modelRef.current = mod;
+      setTimeout(() => {
+        Cube.initSolver();
+        setLoaded(true);
+      }, 200);
       return;
     } else {
       if (topClassName) {
         switch (rotationToBe) {
           case "initialFloor":
             colorUtils.remapSliceColors(0, model, el);
-
             break;
           case "rotatedFloor90Y":
             colorUtils.remapAllColors(model, el, "left");
@@ -215,33 +205,6 @@ const RubixCube = () => {
     }
   }, [model]);
 
-  const solve = (e) => {
-    if (!solvingRef.current && !animatingRef.current) {
-      console.log("Got here somehow");
-      solvingRef.current = true;
-      check.current = true;
-
-      Cube.initSolver();
-      /*------------------*/
-      let test = Cube.fromString(cubeModel.getFaceletString(modelRef.current));
-      let solveString = test.solve();
-      /*------------------- */
-
-      let parsed = parseMoveString(solveString);
-      scheduleSolveAnimation(parsed);
-    }
-  };
-
-  const randomize = (e) => {
-    cubeRef.current = Cube.random();
-    let cubeStringEncoding = cubeRef.current.asString();
-    randomizedRef.current = true;
-    colorUtils.initializeCubeColors(el, cubeStringEncoding);
-    let mod = cubeModel.paintModel(cubeStringEncoding);
-    setModel(mod);
-    modelRef.current = mod;
-  };
-
   /*Sets up mousemove event listeners.--------------------------------------------------*/
   useEffect(() => {
     window.addEventListener("mousemove", mousemoving);
@@ -260,52 +223,34 @@ const RubixCube = () => {
   These are assigned to a specific face of the rubik's cube to determine the animation.
    */
   function rotateModel90Y(m) {
-    if (m) {
-      let copy = JSON.parse(JSON.stringify(m));
-      let coords = cubeModel.modelToCoordinateArray();
-      let shiftedUniverse = cubeModel.rotateUniverse(coords, "left", "y");
-      let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-      setRotationToBe("rotatedFloor90Y");
-      setModel(newModel);
-      modelRef.current = newModel;
-    } else {
-      let copy = JSON.parse(JSON.stringify(model));
-      let coords = cubeModel.modelToCoordinateArray();
-      let shiftedUniverse = cubeModel.rotateUniverse(coords, "left", "y");
-      let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-      setRotationToBe("rotatedFloor90Y");
-      setModel(newModel);
-      modelRef.current = newModel;
-    }
+    let source;
+    m ? (source = m) : (source = model);
+    let copy = JSON.parse(JSON.stringify(source));
+    let coords = cubeModel.modelToCoordinateArray();
+    let shiftedUniverse = cubeModel.rotateUniverse(coords, "left", "y");
+    let newModel = cubeModel.updateModel(shiftedUniverse, copy);
+    setRotationToBe("rotatedFloor90Y");
+    setModel(newModel);
+    modelRef.current = newModel;
   }
 
   function rotateModel90X(m) {
-    if (m) {
-      let copy = JSON.parse(JSON.stringify(m));
-      let coords = cubeModel.modelToCoordinateArray();
-      let shiftedUniverse = cubeModel.rotateUniverse(coords, "right", "x");
-      let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-      setRotationToBe("rotatedFloor90X");
-      setModel(newModel);
-      modelRef.current = newModel;
-    } else {
-      let copy = JSON.parse(JSON.stringify(model));
-      let coords = cubeModel.modelToCoordinateArray();
-      let shiftedUniverse = cubeModel.rotateUniverse(coords, "right", "x");
-      let newModel = cubeModel.updateModel(shiftedUniverse, copy);
-      setRotationToBe("rotatedFloor90X");
-      setModel(newModel);
-      modelRef.current = newModel;
-    }
+    let source;
+    m ? (source = m) : (source = model);
+    let copy = JSON.parse(JSON.stringify(source));
+    let coords = cubeModel.modelToCoordinateArray();
+    let shiftedUniverse = cubeModel.rotateUniverse(coords, "right", "x");
+    let newModel = cubeModel.updateModel(shiftedUniverse, copy);
+    setRotationToBe("rotatedFloor90X");
+    setModel(newModel);
+    modelRef.current = newModel;
   }
 
   /*---------------------------------------------------------------------------.*/
   /*Determines which direction the user is trying to rotate the cube.*/
   const computeDirection = (x, y) => {
-    // setAnimating(true);
     animatingRef.current = true;
-    // console.log(`animating inside compute: ${animatingRef.current}`);
-    // console.log("computeDirection called");
+
     let xChange = x - xRef.current;
     let yChange = y - yRef.current;
 
@@ -327,23 +272,42 @@ const RubixCube = () => {
           animationDelegator(targetRef.current, "north");
         }
       }
-
-      // setTimeout(() => {
-      //   calculatingRef.current = false;
-      //   console.log("Set Timeout called");
-      //   xRef.current = null;
-      //   yRef.current = null;
-      //   animatingRef.current = false;
-      // }, 1025);
     }
   };
 
   /*Event handlers----------------------------------------------------------*/
+
+  /*callback to solve the cube*/
+  const solve = (e) => {
+    if (!solvingRef.current && !animatingRef.current) {
+      solvingRef.current = true;
+      check.current = true;
+
+      let test = Cube.fromString(cubeModel.getFaceletString(modelRef.current));
+      let solveString = test.solve();
+      /*------------------- */
+
+      let parsed = tools.parseMoveString(solveString);
+      scheduleSolveAnimation(parsed);
+    }
+  };
+
+  /*callback to randomize the cube*/
+  const randomize = (e) => {
+    if (!solvingRef.current && !animatingRef.current) {
+      cubeRef.current = Cube.random();
+      let cubeStringEncoding = cubeRef.current.asString();
+      randomizedRef.current = true;
+      colorUtils.initializeCubeColors(el, cubeStringEncoding);
+      let mod = cubeModel.paintModel(cubeStringEncoding);
+      setModel(mod);
+      modelRef.current = mod;
+    }
+  };
+
   const mousemoving = (e) => {
     e.preventDefault();
     if (mouseDown) {
-      // console.log("Inside mousedown mousemoving");
-
       if (!calculatingRef.current) {
         targetRef.current = e.target.id;
         xRef.current = e.pageX;
@@ -351,7 +315,6 @@ const RubixCube = () => {
         calculatingRef.current = true;
       }
     } else if (mouseDownRotation) {
-      //  console.log("Inside mouseDownRotation");
       let changeY = e.pageX - initialMouseYPos;
       let changeX = initialMouseXPos - e.pageY;
       plane.current.style.setProperty(`--x-rotation`, xRotation + changeX);
@@ -359,18 +322,18 @@ const RubixCube = () => {
     }
   };
 
-  /*Initializes the state where a user is rotating the entire cube around to look at it.*/
+  /*initializes the state where a user is rotating the entire cube around to look at it.*/
   const initialRotation = (e) => {
-    //  console.log("intialRotation rotation called");
-    setMouseDownRotation(true);
-    setInitialMouseYPos(e.pageX);
-    setInitialMouseXPos(e.pageY);
+    if (!e.target.id) {
+      setMouseDownRotation(true);
+      setInitialMouseYPos(e.pageX);
+      setInitialMouseXPos(e.pageY);
+    }
   };
 
-  /*Ends the user rotation state.*/
+  /*ends the user rotation state.*/
   const releaseRotation = (e) => {
     if (setMouseDownRotation) {
-      // console.log("release rotation called");
       setMouseDownRotation(false);
       setXRotation(xRotation + initialMouseXPos - e.pageY);
       setYRotation(yRotation + e.pageX - initialMouseYPos);
@@ -388,8 +351,6 @@ const RubixCube = () => {
   /*Fires an animation on mouse-up.*/
   const shiftRelease = (e) => {
     if (!mouseUpTimeout.current && !solvingRef.current) {
-      // console.log("shift release called");
-      // console.log(`animating: ${animatingRef.current}`);
       if (!animatingRef.current) {
         setMouseDown(false);
         if (xRef.current && yRef.current) {
@@ -401,15 +362,13 @@ const RubixCube = () => {
         setTimeout(() => {
           mouseUpTimeout.current = false;
           animatingRef.current = false;
-          console.log("Release Mouse UP");
-        }, 1000);
+        }, animationSpeed);
       }
     }
-    //   }
     e.stopPropagation();
   };
 
-  /*Basic default drag prevent callbacks.*/
+  /*prevent drag default behaviour*/
   const dragstart = (e) => {
     e.preventDefault();
   };
@@ -417,14 +376,6 @@ const RubixCube = () => {
     e.preventDefault();
   };
   /*-------------------------------------------------------------------------*/
-  const reverseDirection = (rotationDirection) => {
-    if (rotationDirection == "c") {
-      return "cc";
-    } else {
-      return "c";
-    }
-  };
-
   const redData = {
     northFunc: rotateModel90Y,
     westFunc: rotateModel90X,
@@ -488,7 +439,9 @@ const RubixCube = () => {
         }
         break;
       case "east":
-        setRotationDirection(reverseDirection(colorData.rotationOrder[0]));
+        setRotationDirection(
+          tools.reverseDirection(colorData.rotationOrder[0])
+        );
         setTargetSlice(sliceTuple[0]);
         if (colorData.westFunc) {
           colorData.westFunc();
@@ -496,7 +449,7 @@ const RubixCube = () => {
           setRotationToBe("initialFloor");
           dispatchRotateEvent(
             sliceTuple[0],
-            reverseDirection(colorData.rotationOrder[0]),
+            tools.reverseDirection(colorData.rotationOrder[0]),
             model
           );
         }
@@ -511,7 +464,9 @@ const RubixCube = () => {
         }
         break;
       case "south":
-        setRotationDirection(reverseDirection(colorData.rotationOrder[1]));
+        setRotationDirection(
+          tools.reverseDirection(colorData.rotationOrder[1])
+        );
         setTargetSlice(sliceTuple[1]);
         if (colorData.northFunc) {
           colorData.northFunc();
@@ -813,52 +768,44 @@ const RubixCube = () => {
     }
   };
 
-  const parseMoveString = (moveString) => {
-    let replacementArr = [
-      ["U2", "U U"],
-      ["D2", "D D"],
-      ["F2", "F F"],
-      ["B2", "B B"],
-      ["R2", "R R"],
-      ["L2", "L L"],
-    ];
-
-    let result = moveString;
-    for (let i = 0; i < replacementArr.length; i++) {
-      result = result.replaceAll(replacementArr[i][0], replacementArr[i][1]);
-    }
-    return result;
-  };
-
   const scheduleSolveAnimation = async (moveString) => {
     const moveArray = moveString.split(" ");
     const funcArray = [];
-
+    setLoaded(true);
     moveArray.forEach((item, i) => {
-      const f = (code) => {
+      const f = () => {
         return new Promise((resolve) => {
           setTimeout(() => {
             autoAnimate(item, modelRef.current);
-            console.log("Promise callback");
+
+            console.log(Date.now() - time.current);
+            time.current = Date.now();
             resolve();
-          }, 1050);
+          }, 1300);
         });
       };
       funcArray.push(f);
     });
-    // console.log(funcArray.length);
     for (let i = 0; i < funcArray.length; i++) {
       await funcArray[i]();
     }
     solvingRef.current = false;
     setTimeout(() => {
       disable.current = false;
-      console.log(disable.current);
-    }, 1050);
+    }, 850);
   };
 
+  /* 
+  
+  */
   return (
     <div>
+      <img
+        className="loadingSpinner"
+        src={require("../resources/gifs/loading-buffering.gif")}
+        alt="loading..."
+        style={{ visibility: !loaded ? "visible" : "hidden" }}
+      />
       <div
         className="scene"
         ref={el}
@@ -869,307 +816,44 @@ const RubixCube = () => {
       >
         <div className={rotation} ref={plane}>
           <div className={`topHorizontalPlane ${topClassName}`}>
-            <div></div>
-            <div id="whiteSideOneOne" onMouseDown={initial}>
-              <p>a</p>
-            </div>
-            <div></div>
-            <div id="greenSideOneOne" onMouseDown={initial}>
-              <p>green</p>
-            </div>
-            <div id="redSideOneOne" onMouseDown={initial}>
-              <p>red</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div id="whiteSideOneTwo" onMouseDown={initial}>
-              <p>b</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div id="redSideOneTwo" onMouseDown={initial}>
-              <p>red</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div id="whiteSideOneThree" onMouseDown={initial}>
-              <p>c</p>
-            </div>
-            <div id="blueSideOneOne" onMouseDown={initial}>
-              <p>blue</p>
-            </div>
-            <div>
-              {" "}
-              <p>blue</p>
-            </div>
-            <div id="redSideOneThree" onMouseDown={initial}>
-              <p>red</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="greenSideOneTwo" onMouseDown={initial}>
-              <p>green</p>
-            </div>
-            <div id="redSideTwoOne" onMouseDown={initial}>
-              <p>red</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="anomalousYellowOneOne">
-              <p>yellow?</p>
-            </div>
-            <div></div>
-            <div id="redSideTwoTwo" onMouseDown={initial}>
-              <p>red</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="blueSideOneTwo" onMouseDown={initial}>
-              <p>blue</p>
-            </div>
-            <div></div>
-            <div id="redSideTwoThree" onMouseDown={initial}>
-              <p>red</p>
-            </div>
-            <div></div>
-            <div id="yellowSideOneOne" onMouseDown={initial}>
-              <p>yellow</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div id="greenSideOneThree" onMouseDown={initial}>
-              <p>green</p>
-            </div>
-            <div id="redSideThreeOne" onMouseDown={initial}>
-              <p>red</p>
-            </div>
-            <div></div>
-            <div id="yellowSideOneTwo" onMouseDown={initial}>
-              <p>yellow?</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="redSideThreeTwo" onMouseDown={initial}>
-              <p>red</p>
-            </div>
-            <div></div>
-            <div onMouseDown={initial} id="yellowSideOneThree"></div>
-            <div></div>
-            <div id="blueSideOneThree" onMouseDown={initial}>
-              <p>blue</p>
-            </div>
-            <div></div>
-            <div id="redSideThreeThree" onMouseDown={initial}>
-              <p>red</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+            <SingleCube info={faceData.jsxCubeData[0]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[1]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[2]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[3]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[4]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[5]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[6]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[7]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[8]} handler={initial} />
           </div>
           <div className={`middleHorizontalPlane ${middleClassName}`}>
-            <div></div>
-            <div id="whiteSideTwoOne" onMouseDown={initial}>
-              <p>d</p>
-            </div>
-            <div></div>
-            <div id="greenSideTwoOne" onMouseDown={initial}>
-              <p>green</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="whiteSideTwoTwo" onMouseDown={initial}>
-              <p>e</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="whiteSideTwoThree" onMouseDown={initial}>
-              <p>f</p>
-            </div>
-            <div id="blueSideTwoOne" onMouseDown={initial}>
-              <p>blue</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="greenSideTwoTwo" onMouseDown={initial}>
-              <p>green</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="blueSideTwoTwo" onMouseDown={initial}>
-              <p>blue</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="yellowSideTwoOne" onMouseDown={initial}>
-              <p>yellow</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div id="greenSideTwoThree" onMouseDown={initial}>
-              <p>green</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div id="yellowSideTwoTwo" onMouseDown={initial}>
-              <p>yellow</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="yellowSideTwoThree" onMouseDown={initial}>
-              <p>yellow</p>
-            </div>
-            <div></div>
-            <div id="blueSideTwoThree" onMouseDown={initial}>
-              <p>blue</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+            <SingleCube info={faceData.jsxCubeData[9]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[10]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[11]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[12]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[13]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[14]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[15]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[16]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[17]} handler={initial} />
           </div>
           <div className={`bottomHorizontalPlane ${bottomClassName}`}>
-            <div></div>
-            <div id="whiteSideThreeOne" onMouseDown={initial}>
-              <p>g</p>
-            </div>
-            <div></div>
-            <div id="greenSideThreeOne" onMouseDown={initial}>
-              <p>green</p>
-            </div>
-            <div></div>
-            <div id="orangeSideOneOne" onMouseDown={initial}>
-              <p>orange</p>
-            </div>
-            <div></div>
-            <div id="whiteSideThreeTwo" onMouseDown={initial}>
-              <p>h</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="orangeSideOneTwo" onMouseDown={initial}>
-              <p>orange</p>
-            </div>
-            <div></div>
-            <div id="whiteSideThreeThree" onMouseDown={initial}>
-              <p>i</p>
-            </div>
-            <div id="blueSideThreeOne" onMouseDown={initial}>
-              <p>blue</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div id="orangeSideOneThree" onMouseDown={initial}>
-              <p>orange</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="greenSideThreeTwo" onMouseDown={initial}>
-              <p>green</p>
-            </div>
-            <div></div>
-            <div id="orangeSideTwoOne" onMouseDown={initial}>
-              <p>orange</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="orangeSideTwoTwo" onMouseDown={initial}>
-              <p>orange</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div id="blueSideThreeTwo" onMouseDown={initial}>
-              <p>blue</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div id="orangeSideTwoThree" onMouseDown={initial}>
-              <p>orange</p>
-            </div>
-            <div id="yellowSideThreeOne" onMouseDown={initial}>
-              <p>yellow</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div id="greenSideThreeThree" onMouseDown={initial}>
-              <p>green</p>
-            </div>
-            <div></div>
-            <div id="orangeSideThreeOne" onMouseDown={initial}></div>
-            <div id="yellowSideThreeTwo" onMouseDown={initial}>
-              <p>yellow</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div id="orangeSideThreeTwo" onMouseDown={initial}>
-              <p>orange</p>
-            </div>
-            <div id="yellowSideThreeThree" onMouseDown={initial}>
-              <p>yellow</p>
-            </div>
-            <div></div>
-            <div id="blueSideThreeThree" onMouseDown={initial}>
-              <p>blue</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div id="orangeSideThreeThree" onMouseDown={initial}>
-              <p>orange</p>
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+            <SingleCube info={faceData.jsxCubeData[18]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[19]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[20]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[21]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[22]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[23]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[24]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[25]} handler={initial} />
+            <SingleCube info={faceData.jsxCubeData[26]} handler={initial} />
           </div>
         </div>
       </div>
-
-      <ButtonProto handler={solve} status={disable} />
-      <ButtonRandom handler={randomize} status={disable} />
+      <SolveButton handler={solve} status={disable} />
+      <RandomizeButton handler={randomize} status={disable} />
     </div>
   );
 };
 
-export default RubixCube;
+export default RubiksCube;

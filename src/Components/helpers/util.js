@@ -54,12 +54,39 @@ function rotateColors90Y(cube) {
   cube[5].currentColor = copy[3].currentColor;
 }
 
+const parseMoveString = (moveString) => {
+  let replacementArr = [
+    ["U2", "U U"],
+    ["D2", "D D"],
+    ["F2", "F F"],
+    ["B2", "B B"],
+    ["R2", "R R"],
+    ["L2", "L L"],
+  ];
+
+  let result = moveString;
+  for (let i = 0; i < replacementArr.length; i++) {
+    result = result.replaceAll(replacementArr[i][0], replacementArr[i][1]);
+  }
+  return result;
+};
+
+const reverseDirection = (rotationDirection) => {
+  if (rotationDirection == "c") {
+    return "cc";
+  } else {
+    return "c";
+  }
+};
+
 const tools = {
   rotate90,
   rotate90CC,
   rotateColors90C,
   rotateColors90CC,
   rotateColors90Y,
+  parseMoveString,
+  reverseDirection,
 };
 
 export default tools;

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
-import "../styles/buttonStyle.css";
+import "../styles/solveButtonStyle.css";
 
-function ButtonProto({ handler, status }) {
+function SolveButton({ handler }) {
   const universeRef = useRef(null);
 
   const buttonRef = useRef(null);
@@ -42,7 +42,6 @@ function ButtonProto({ handler, status }) {
   const gamut = useRef(0);
 
   const mentor = (e) => {
-    console.log("mentor");
     if (gamut.current == 0) {
       refArray.forEach((ref) => {
         ref.current.style.setProperty("animation-delay", `${0}ms`);
@@ -61,8 +60,6 @@ function ButtonProto({ handler, status }) {
   };
 
   const mleave = (e) => {
-    console.log("mouseleave called");
-
     let animationDifferential = Math.floor(performance.now() - timer.current);
     gamut.current += animationDifferential;
 
@@ -89,14 +86,10 @@ function ButtonProto({ handler, status }) {
   };
 
   useEffect(() => {
-    // window.addEventListener("animationstart", animstart, false);
-    // window.addEventListener("animationend", animend, false);
     universeRef.current.addEventListener("mouseleave", mleave, false);
     universeRef.current.addEventListener("mouseenter", mentor, false);
 
     return () => {
-      // window.removeEventListener("animationstart", animstart);
-      // window.removeEventListener("animationend", animend);
       universeRef.current.removeEventListener("mouseleave", mleave);
       universeRef.current.removeEventListener("mouseenter", mentor);
     };
@@ -104,18 +97,11 @@ function ButtonProto({ handler, status }) {
 
   return (
     <>
-      <div className={status.current ? "disableBox" : ""}></div>
       <div
         className="randomizerButton"
         ref={universeRef}
         onClick={(e) => {
-          if (!status.current) {
-            console.log(handler);
-            //Visually disable the button somehow for the duration.
-            status.current = true;
-            handler(e);
-            console.log("done");
-          }
+          handler(e);
         }}
       >
         <div className={`child1 ${reverse}`} ref={buttonRef}></div>
@@ -132,4 +118,4 @@ function ButtonProto({ handler, status }) {
   );
 }
 
-export default ButtonProto;
+export default SolveButton;

@@ -1,15 +1,15 @@
 :root {
   background: #4c6352;
+  --animation-speed: 800ms;
 }
 
-.solving {
-  transform: translateY(-73vh) translateX(18vw);
-  color: white;
-  font-size: 3vmin;
-}
+.loadingSpinner {
+  position: absolute;
+  z-index: 10;
+  transform: translateY(42vh) translateX(10.04vw);
 
-.notSolving {
-  display: none;
+  height: 10vmin;
+  width: 10vmin;
 }
 
 .scene {
@@ -1499,7 +1499,7 @@
 
 .protoShiftTopC {
   animation-name: protoMoveTopC;
-  animation-duration: 1s;
+  animation-duration: var(--animation-speed);
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
@@ -1519,7 +1519,7 @@
 
 .protoShiftTopCC {
   animation-name: protoMoveTopCC;
-  animation-duration: 1s;
+  animation-duration: var(--animation-speed);
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
@@ -1539,7 +1539,7 @@
 
 .protoShiftMiddleC {
   animation-name: protoMoveMiddleC;
-  animation-duration: 1s;
+  animation-duration: var(--animation-speed);
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
@@ -1559,7 +1559,7 @@
 
 .protoShiftMiddleCC {
   animation-name: protoMoveMiddleCC;
-  animation-duration: 1s;
+  animation-duration: var(--animation-speed);
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
@@ -1579,7 +1579,7 @@
 
 .protoShiftBottomC {
   animation-name: protoMoveBottomC;
-  animation-duration: 1s;
+  animation-duration: var(--animation-speed);
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
@@ -1599,7 +1599,7 @@
 
 .protoShiftBottomCC {
   animation-name: protoMoveBottomCC;
-  animation-duration: 1s;
+  animation-duration: var(--animation-speed);
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }

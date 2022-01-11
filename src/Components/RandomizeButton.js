@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import "../styles/randomButtonStyle.css";
+import "../styles/randomizeButtonStyle.css";
 
-function ButtonRandom({ handler, status }) {
+function RandomizeButton({ handler, status }) {
   const universeRef = useRef(null);
 
   return (
@@ -28,4 +28,4 @@ function ButtonRandom({ handler, status }) {
   );
 }
 
-export default ButtonRandom;
+export default RandomizeButton;
