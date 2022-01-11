@@ -17,5 +17,5 @@ This visualization is implemented in pure CSS and React.js.
 
 # Dependencies 
 
-The algorithm used to solve the cube is Kociemba's two-phase algorithm, implemented by the cubejs package linked below.
+The algorithm used to solve the cube is Kociemba's two-phase algorithm, implemented by the cubejs package.
 https://github.com/ldez/cubejs
