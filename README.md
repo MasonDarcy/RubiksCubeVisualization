@@ -10,3 +10,12 @@ This is an interactive simulation of a 3x3x3 Rubik's cube, with the following fe
 
 GIF example (fps faster in browser)
 ![alt text](https://github.com/MasonDarcy/RubiksCubeVisualization/blob/main/example.gif "Rubiks Cube Solving")
+
+# Implementation
+
+This visualization is implemented in pure CSS and React.js. 
+
+# Dependencies 
+
+The algorithm used to solve the cube is Kociemba's two-phase algorithm, implemented by the cubejs package linked below.
+https://github.com/ldez/cubejs
