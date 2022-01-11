@@ -10,19 +10,7 @@
   background-color: #68504e;
   color: white;
   font-size: 2vmin;
-  transform: translateY(-40vh) translateX(10vw);
-}
-
-.disableBox2 {
-  position: absolute;
-  height: calc(3.05 * var(--cubeSize));
-  width: calc(3.05 * var(--cubeSize));
-  background-color: #291c1b;
-  color: rgba(255, 255, 255, 0.308);
-  font-size: 2vmin;
-  transform: translateY(-40vh) translateX(10vw);
-  opacity: 0.8;
-  z-index: 5;
+  transform: translateY(-37vh) translateX(10vw);
 }
 
 .randomizerButton2:hover .childr1 {

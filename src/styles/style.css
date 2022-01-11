@@ -24,7 +24,7 @@
 
   -webkit-backface-visibility: hidden;
 
-  /* will-change: transform; */
+  will-change: transform;
   --plain-height: 10;
   --plain-width: 10;
   --x-rotation: -24;

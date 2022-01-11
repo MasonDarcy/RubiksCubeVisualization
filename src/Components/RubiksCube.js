@@ -47,6 +47,7 @@ const RubiksCube = () => {
   const [loaded, setLoaded] = useState(false);
   const animationSpeed = 800;
   const time = useRef(null);
+  const topSlice = useRef(null);
   /*Triggers an animation, updates the model after the animation finishes.*/
   const dispatchRotateEvent = (targetSlice, rotationDirection, model) => {
     switch (targetSlice) {
@@ -138,6 +139,8 @@ const RubiksCube = () => {
         }
         setRotationToBe("initialFloor");
         setRotation("initialFloor");
+        /*EDITED HERE WEE WOO WEE WOO WEE WOO*/
+
         setTopClassName(null);
       } else if (middleClassName) {
         switch (rotationToBe) {
@@ -217,6 +220,7 @@ const RubiksCube = () => {
       window.removeEventListener("drop", drop);
     };
   });
+
   /*----------------------------------------------------------------------------------*/
   /*
   Two functions that rotate the model, and update the state
@@ -777,11 +781,8 @@ const RubiksCube = () => {
         return new Promise((resolve) => {
           setTimeout(() => {
             autoAnimate(item, modelRef.current);
-
-            console.log(Date.now() - time.current);
-            time.current = Date.now();
             resolve();
-          }, 1300);
+          }, 1450);
         });
       };
       funcArray.push(f);
@@ -815,7 +816,7 @@ const RubiksCube = () => {
         onMouseDown={initialRotation}
       >
         <div className={rotation} ref={plane}>
-          <div className={`topHorizontalPlane ${topClassName}`}>
+          <div className={`topHorizontalPlane ${topClassName}`} ref={topSlice}>
             <SingleCube info={faceData.jsxCubeData[0]} handler={initial} />
             <SingleCube info={faceData.jsxCubeData[1]} handler={initial} />
             <SingleCube info={faceData.jsxCubeData[2]} handler={initial} />
