@@ -1,5 +1,7 @@
 # Rubik's Cube Visualization
 
+live demo: https://mdar-rubikscube.herokuapp.com/
+
 This is an interactive simulation of a 3x3x3 Rubik's cube, with the following features.
 
 * State randomization 
